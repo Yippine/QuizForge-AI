@@ -1,0 +1,135 @@
+{
+  "project_name": "QuizForge-AI MVP Development (Plan B)",
+  "objective": "Build a functional quiz practice application within 4.5 hours for exam preparation in 3 days",
+  "target_user": "Multi-year full-stack web developer preparing for iPAS AI certification",
+  "development_approach": "Formula Contract automated development with Claude Code",
+  "increments": [
+    {
+      "id": "INC-001",
+      "name": "Project Initialization & Infrastructure Setup",
+      "business_description": "創建 Vite + Vue 3 項目基礎架構，配置 Tailwind CSS，建立標準項目結構，確保開發環境就緒",
+      "acceptance_criteria": [
+        "Vite + Vue 3 項目成功創建並可運行",
+        "Tailwind CSS 配置完成且樣式可用",
+        "項目結構清晰（components, composables, assets, public）",
+        "開發服務器可正常啟動"
+      ],
+      "estimated_time": "30min",
+      "priority": "P0",
+      "requires_user_acceptance": false
+    },
+    {
+      "id": "INC-002",
+      "name": "Question Bank Data Loading & Management",
+      "business_description": "實現題庫 JSON 數據載入機制，創建題目數據模型和狀態管理，實現按 Formula 主題和難度的數據過濾功能",
+      "acceptance_criteria": [
+        "成功載入 354 道題目的 JSON 數據",
+        "實現 Pinia store 管理題庫狀態",
+        "可按 Formula 主題篩選（L21101, L21102 等）",
+        "可按難度篩選（simple, medium, hard）",
+        "數據模型完整（question_id, topic, difficulty, options, answer, explanation 等）"
+      ],
+      "estimated_time": "1h",
+      "priority": "P0",
+      "requires_user_acceptance": false
+    },
+    {
+      "id": "INC-003",
+      "name": "Core Quiz Functionality - Question Display & Answer Checking",
+      "business_description": "實現核心答題功能，包括題目展示、選項選擇、答案驗證、即時反饋和詳細解析顯示",
+      "acceptance_criteria": [
+        "題目卡片組件完整展示題目內容",
+        "四個選項（A/B/C/D）可點擊選擇",
+        "提交答案後即時顯示正確/錯誤反饋",
+        "顯示詳細解析（explanation + keywords + reference）",
+        "可進入下一題",
+        "UI 美觀且符合備考場景"
+      ],
+      "estimated_time": "1.5h",
+      "priority": "P0",
+      "requires_user_acceptance": false
+    },
+    {
+      "id": "INC-004",
+      "name": "Wrong Questions Tracking & Practice History",
+      "business_description": "實現錯題本功能，使用 LocalStorage 保存答錯的題目和完整答題歷史，支持錯題重練模式",
+      "acceptance_criteria": [
+        "答錯的題目自動保存到 LocalStorage",
+        "完整答題歷史記錄（題目ID、用戶答案、是否正確、時間戳）",
+        "錯題本頁面可查看所有答錯題目",
+        "錯題重練模式：只顯示過去答錯的題目",
+        "可清空錯題記錄"
+      ],
+      "estimated_time": "1h",
+      "priority": "P0",
+      "requires_user_acceptance": false
+    },
+    {
+      "id": "INC-005",
+      "name": "Statistics & UI/UX Optimization - User Acceptance",
+      "business_description": "實現答題統計功能（總題數、正確率、按主題統計），優化 UI/UX，添加鍵盤快捷鍵，完成 MVP 並進行用戶驗收",
+      "acceptance_criteria": [
+        "統計頁面顯示：總答題數、正確率、各主題正確率",
+        "鍵盤快捷鍵：A/B/C/D 選擇選項，Enter 提交，Space 下一題",
+        "UI 優化：響應式設計、loading 狀態、錯誤處理",
+        "整體流程順暢：選主題 → 答題 → 查看解析 → 下一題 → 查看統計 → 錯題重練",
+        "**用戶驗收：前端可完整操作**"
+      ],
+      "estimated_time": "1.5h",
+      "priority": "P0",
+      "requires_user_acceptance": true,
+      "user_acceptance_note": "此增量完成後需要用戶進行前端操作驗收"
+    }
+  ],
+  "current_index": 0,
+  "total_count": 5,
+  "technical_stack": {
+    "frontend": "Vue 3 (Composition API) + Vite",
+    "styling": "Tailwind CSS",
+    "state_management": "Pinia",
+    "storage": "LocalStorage",
+    "deployment": "Vercel (考後)"
+  },
+  "automation_rules": {
+    "before_each_increment": [
+      "執行 /formula-archive 封存當前 FORMULA.md",
+      "複製 FORMULA.json 到 .claude/formula/history/FORMULA_{timestamp}.json",
+      "從 FORMULA.json 提取 current_index 對應的增量寫入 FORMULA.md"
+    ],
+    "during_each_increment": [
+      "調用 Task(formula-auto-planning) 進行技術規劃",
+      "驗證 formula-auto-planning.{log,json} 與 FORMULA.md 一致性",
+      "調用 Task(formula-auto-execution) 進行代碼實現",
+      "驗證 formula-auto-execution.{log,json} 與 FORMULA.md 一致性"
+    ],
+    "after_each_increment": [
+      "驗證實現成果是否符合 acceptance_criteria",
+      "git commit 並使用英文 commit message",
+      "更新 current_index++",
+      "如果 requires_user_acceptance=true，停止並等待用戶驗收"
+    ]
+  },
+  "supervisor_responsibilities": [
+    "業務需求拆分：將用戶需求拆解為清晰的業務增量",
+    "增量上下文控制：確保每個 FORMULA.md ≤ 100 行",
+    "Sub Agent 協調：調度 planning 和 execution agents",
+    "驗收嚴格性：親自驗證每個增量的實現成果",
+    "循環自動化：無需用戶干預的完整迭代（除驗收點外）",
+    "最終負責制：對交付品質負完全責任"
+  ],
+  "validation_checkpoints": [
+    {
+      "increment_id": "INC-005",
+      "type": "user_acceptance",
+      "description": "用戶進行前端完整功能驗收"
+    }
+  ],
+  "metadata": {
+    "created_at": "2025-11-05",
+    "created_by": "formula-auto-supervisor",
+    "formula_contract_version": "1.0",
+    "estimated_total_time": "5.5h",
+    "actual_start_time": null,
+    "actual_end_time": null
+  }
+}
