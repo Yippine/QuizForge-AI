@@ -1,296 +1,141 @@
 {
-  "business_increment": "INC-001: Project Initialization & Infrastructure Setup - 創建 Vite + Vue 3 項目基礎架構，配置 Tailwind CSS，建立標準項目結構，確保開發環境就緒",
-  "business_goals": [
-    "建立現代化前端開發環境",
-    "使用 Vite 提供快速開發體驗",
-    "使用 Vue 3 Composition API",
-    "使用 Tailwind CSS 實現快速 UI 開發"
-  ],
+  "business_increment": "INC-002: Question Bank Data Loading & Management",
+  "business_description": "實現題庫 JSON 數據載入機制，創建題目數據模型和狀態管理，實現按 Formula 主題和難度的數據過濾功能",
   "acceptance_criteria": [
-    "Vite + Vue 3 項目成功創建並可運行",
-    "Tailwind CSS 配置完成且樣式可用",
-    "項目結構清晰（components, composables, assets, public）",
-    "開發服務器可正常啟動（npm run dev）",
-    "基礎 Git 配置（.gitignore 包含 node_modules, dist 等）"
+    "成功載入 354 道題目的 JSON 數據",
+    "實現 Pinia store 管理題庫狀態",
+    "可按 Formula 主題篩選（L21101, L21102 等）",
+    "可按難度篩選（simple, medium, hard）",
+    "數據模型完整（question_id, topic, difficulty, options, answer, explanation 等）"
   ],
   "EngineeringStages": [
     "RequirementAnalysis",
     "ArchitectureDesign",
     "Implementation",
-    "Testing",
-    "Validation"
+    "Testing"
   ],
-  "current_stage_index": 0,
-  "current_stage": "RequirementAnalysis",
-  "WorkflowFormula": "EnvironmentPreparation -> ProjectScaffolding -> DependencyManagement -> ConfigurationSetup -> StructureCreation -> ValidationGates",
-  "WorkflowFormula_detailed": {
-    "formula": "EnvPrep -> Scaffold -> DepMgmt -> ConfigSetup -> StructCreate -> Validate",
-    "where": {
-      "EnvPrep": "NodeVersionCheck × NpmAvailability × WorkspaceClean",
-      "Scaffold": "ViteCreate(vue_template) -> ProjectName(QuizForge-AI)",
-      "DepMgmt": "NpmInstall(tailwindcss + postcss + autoprefixer) × NpmInstall(dev_dependencies)",
-      "ConfigSetup": "ViteConfig × TailwindConfig × PostCSSConfig × GitIgnore",
-      "StructCreate": "DirectoryStructure(src/{components,composables,stores,assets}) × EntryFiles(main.js,App.vue,index.html)",
-      "Validate": "DevServerTest × BuildTest × StyleTest"
-    },
-    "execution_flow": "EnvPrep => Scaffold => DepMgmt => ConfigSetup => StructCreate => Validate",
-    "quality_gates": [
-      "(NodeVersionCheck >= 18) -> proceed, ~ -> alert",
-      "(ViteCreate == success) -> proceed, ~ -> abort",
-      "(NpmInstall == success) -> proceed, ~ -> retry",
-      "(DevServerTest == running) -> proceed, ~ -> debug"
-    ]
-  },
-  "ImplementationFormula": "C(ScaffoldScripts + ValidationScripts) + F(ViteConfig + TailwindConfig + PostCSSConfig + GitIgnore + PackageJSON) + D(ProjectStructure + DirectoryLayout) + S(DevServerState + BuildState)",
-  "ImplementationFormula_detailed": {
-    "formula": "ProjectInit = C + F + D + S",
-    "C_Code": {
-      "scaffold_execution": "npm create vite@latest QuizForge-AI -- --template vue",
-      "dependency_installation": "npm install -D tailwindcss postcss autoprefixer && npx tailwindcss init -p",
-      "validation_scripts": {
-        "dev_server": "npm run dev",
-        "build_test": "npm run build",
-        "preview_test": "npm run preview"
-      }
-    },
-    "F_Files": {
-      "vite_config": {
-        "path": "vite.config.js",
-        "content_structure": "import { defineConfig } from 'vite'\nimport vue from '@vitejs/plugin-vue'\n\nexport default defineConfig({\n  plugins: [vue()],\n  server: {\n    port: 3000,\n    open: true\n  }\n})"
-      },
-      "tailwind_config": {
-        "path": "tailwind.config.js",
-        "content_structure": "/** @type {import('tailwindcss').Config} */\nexport default {\n  content: [\n    './index.html',\n    './src/**/*.{vue,js,ts,jsx,tsx}',\n  ],\n  theme: {\n    extend: {},\n  },\n  plugins: [],\n}"
-      },
-      "postcss_config": {
-        "path": "postcss.config.js",
-        "content_structure": "export default {\n  plugins: {\n    tailwindcss: {},\n    autoprefixer: {},\n  },\n}"
-      },
-      "gitignore": {
-        "path": ".gitignore",
-        "content_structure": "# Logs\nlogs\n*.log\nnpm-debug.log*\nyarn-debug.log*\nyarn-error.log*\npnpm-debug.log*\nlerna-debug.log*\n\nnode_modules\ndist\ndist-ssr\n*.local\n\n# Editor directories and files\n.vscode/*\n!.vscode/extensions.json\n.idea\n.DS_Store\n*.suo\n*.ntvs*\n*.njsproj\n*.sln\n*.sw?"
-      },
-      "main_css": {
-        "path": "src/style.css",
-        "content_structure": "@tailwind base;\n@tailwind components;\n@tailwind utilities;"
-      }
-    },
-    "D_Data": {
-      "project_structure": {
-        "src": {
-          "components": "Vue component files",
-          "composables": "Composition API reusable functions",
-          "stores": "Pinia state management",
-          "assets": "Static assets (images, fonts, etc)",
-          "App.vue": "Root component",
-          "main.js": "Application entry point",
-          "style.css": "Global styles with Tailwind directives"
-        },
-        "public": "Public static files (quiz data JSON)",
-        "index.html": "HTML template",
-        "vite.config.js": "Vite configuration",
-        "tailwind.config.js": "Tailwind CSS configuration",
-        "postcss.config.js": "PostCSS configuration",
-        "package.json": "Dependencies and scripts"
-      },
-      "directory_creation_sequence": [
-        "src/components",
-        "src/composables",
-        "src/stores",
-        "src/assets"
-      ]
-    },
-    "S_State": {
-      "validation_states": {
-        "project_created": "Check if QuizForge-AI directory exists",
-        "dependencies_installed": "Check if node_modules exists and package.json has correct dependencies",
-        "configs_present": "Check if vite.config.js, tailwind.config.js, postcss.config.js exist",
-        "structure_valid": "Check if src/{components,composables,stores,assets} directories exist",
-        "dev_server_running": "Check if dev server starts successfully on port 3000",
-        "build_success": "Check if build completes without errors",
-        "tailwind_working": "Check if Tailwind classes are applied correctly"
-      },
-      "success_criteria": "project_created & dependencies_installed & configs_present & structure_valid & dev_server_running & build_success & tailwind_working"
-    }
-  },
+  "current_stage_index": 1,
+  "current_stage": "ArchitectureDesign + Implementation",
+  "WorkflowFormula": "DependencySetup -> DataModelDefinition -> StateArchitecture -> FileOperations -> IntegrationValidation",
+  "WorkflowFormula_detailed": "PiniaInstall × PiniaConfig -> QuestionModel -> (StoreState + StoreGetters + StoreActions) -> (JSONCopy + JSONLoad) -> ComponentIntegration -> FunctionalTest",
+  "implementation_formula": "Pinia × QuestionBankStore × JSONAssets × FilterLogic",
+  "implementation_formula_detailed": "(npm_install(pinia) -> main_js(createPinia)) × (defineStore(questionBank) -> {State(questions + filteredQuestions + currentFilters) + Getters(questionsByTopic + questionsByDifficulty + topicList + difficultyStats) + Actions(loadQuestions + filterByTopic + filterByDifficulty + resetFilters)}) × (knowledge_base/questions/*.json -> public/questions/*.json -> fetch(/questions/*.json)) × ((topic_filter: questions.filter(q => q.topic === topic)) & (difficulty_filter: questions.filter(q => q.difficulty === difficulty)))",
   "ExecutionGuide": {
-    "overview": "本執行指導將引導 formula-auto-execution 完成 Vite + Vue 3 + Tailwind CSS 項目的初始化和配置",
-    "prerequisites": [
-      "Node.js version >= 18.0.0",
-      "npm package manager available",
-      "Git installed for version control",
-      "Terminal access to project directory"
-    ],
-    "execution_sequence": [
+    "overview": "實現 INC-002 需要完成 5 個核心步驟：安裝 Pinia 狀態管理、配置 Pinia 到 Vue 應用、複製 JSON 數據到 public 目錄、創建 questionBank store、實現數據載入和過濾邏輯",
+    "steps": [
       {
         "step": 1,
-        "name": "EnvironmentPreparation",
-        "formula": "NodeVersionCheck × NpmAvailability × WorkspaceClean",
+        "name": "DependencySetup - Install Pinia",
+        "formula": "npm_install(pinia) -> main_js(createPinia)",
         "actions": [
-          "Check Node.js version: node --version (expect >= 18.0.0)",
-          "Check npm availability: npm --version",
-          "Verify current directory is project root: pwd",
-          "Check if directory is clean or confirm overwrite"
+          "Execute: npm install pinia",
+          "Import createPinia from 'pinia' in main.js",
+          "Create Pinia instance: const pinia = createPinia()",
+          "Register Pinia: app.use(pinia)",
+          "Verify: npm list pinia should show installed version"
         ],
-        "validation": "All checks pass -> proceed, any failure -> alert and abort",
-        "commands": [
-          "node --version",
-          "npm --version",
-          "pwd"
-        ]
+        "validation": "Pinia should be listed in package.json dependencies and main.js should contain app.use(pinia)"
       },
       {
         "step": 2,
-        "name": "ProjectScaffolding",
-        "formula": "ViteCreate(vue_template) -> ProjectName(QuizForge-AI)",
+        "name": "FileOperations - Copy JSON Data",
+        "formula": "knowledge_base/questions/*.json -> public/questions/*.json",
         "actions": [
-          "Create Vite project with Vue template",
-          "Navigate into project directory",
-          "Verify basic project structure"
+          "Create directory: public/questions/",
+          "Copy: knowledge-base/ipas/4 questions/official-questions.json -> public/questions/official-questions.json",
+          "Copy: knowledge-base/ipas/4 questions/L21-mock-exam.json -> public/questions/L21-mock-exam.json",
+          "Copy: knowledge-base/ipas/4 questions/L23-mock-exam.json -> public/questions/L23-mock-exam.json",
+          "Verify: All 3 JSON files should exist in public/questions/ directory"
         ],
-        "validation": "Project directory created with package.json and src/",
-        "commands": [
-          "npm create vite@latest . -- --template vue",
-          "ls -la"
-        ],
-        "notes": "Using current directory (.) to avoid nested QuizForge-AI/QuizForge-AI structure"
+        "validation": "public/questions/ should contain exactly 3 JSON files with total 354 questions"
       },
       {
         "step": 3,
-        "name": "DependencyManagement",
-        "formula": "NpmInstall(tailwindcss + postcss + autoprefixer) × NpmInstall(dev_dependencies)",
+        "name": "DataModelDefinition - Define Question Interface",
+        "formula": "QuestionModel = {question_id + source + subject + chapter + topic + difficulty + question + options + answer + answer_text + explanation + keywords}",
         "actions": [
-          "Install base dependencies from package.json",
-          "Install Tailwind CSS and its peer dependencies",
-          "Initialize Tailwind configuration"
+          "Create TypeScript interface or JSDoc comment for Question model",
+          "Define all required fields based on actual JSON structure",
+          "Document field types and constraints",
+          "Note: This is for documentation and IDE support, no runtime validation needed for MVP"
         ],
-        "validation": "node_modules/ exists, tailwind.config.js and postcss.config.js created",
-        "commands": [
-          "npm install",
-          "npm install -D tailwindcss postcss autoprefixer",
-          "npx tailwindcss init -p"
-        ]
+        "validation": "Question model should match the structure in official-questions.json"
       },
       {
         "step": 4,
-        "name": "ConfigurationSetup",
-        "formula": "ViteConfig × TailwindConfig × PostCSSConfig × GitIgnore",
-        "actions": [
-          "Update vite.config.js with custom port and auto-open",
-          "Configure tailwind.config.js content paths",
-          "Verify postcss.config.js has correct plugins",
-          "Create/update .gitignore with node_modules, dist, etc",
-          "Update src/style.css with Tailwind directives",
-          "Import style.css in main.js"
-        ],
-        "validation": "All config files exist and contain required configurations",
-        "files_to_modify": [
+        "name": "StateArchitecture - Create QuestionBank Store",
+        "formula": "defineStore(questionBank) -> {State + Getters + Actions}",
+        "sub_steps": [
           {
-            "file": "vite.config.js",
-            "purpose": "Configure Vite server settings",
-            "key_content": "server: { port: 3000, open: true }"
+            "name": "State Definition",
+            "formula": "State = {questions: [] + filteredQuestions: [] + currentFilters: {topic: null, difficulty: null} + loading: false + error: null}",
+            "code_location": "src/stores/questionBank.js",
+            "implementation": "Define reactive state for all questions, filtered results, active filters, loading state, and error handling"
           },
           {
-            "file": "tailwind.config.js",
-            "purpose": "Configure Tailwind content paths",
-            "key_content": "content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}']"
+            "name": "Getters Definition",
+            "formula": "Getters = {questionsByTopic(topic) + questionsByDifficulty(difficulty) + topicList() + difficultyStats()}",
+            "implementation": [
+              "questionsByTopic: return questions filtered by topic parameter",
+              "questionsByDifficulty: return questions filtered by difficulty parameter",
+              "topicList: extract unique topics from all questions",
+              "difficultyStats: count questions per difficulty level"
+            ]
           },
           {
-            "file": "src/style.css",
-            "purpose": "Add Tailwind directives",
-            "key_content": "@tailwind base; @tailwind components; @tailwind utilities;"
-          },
-          {
-            "file": ".gitignore",
-            "purpose": "Ignore build artifacts and dependencies",
-            "key_content": "node_modules, dist, dist-ssr, *.local"
+            "name": "Actions Definition",
+            "formula": "Actions = {loadQuestions(source?) + filterByTopic(topic) + filterByDifficulty(difficulty) + resetFilters()}",
+            "implementation": [
+              "loadQuestions: fetch JSON from /questions/ directory, merge into state.questions",
+              "filterByTopic: set currentFilters.topic and update filteredQuestions",
+              "filterByDifficulty: set currentFilters.difficulty and update filteredQuestions",
+              "resetFilters: clear currentFilters and show all questions"
+            ]
           }
-        ]
+        ],
+        "validation": "Store should be importable and usable in Vue components with const store = useQuestionBankStore()"
       },
       {
         "step": 5,
-        "name": "StructureCreation",
-        "formula": "DirectoryStructure(src/{components,composables,stores,assets}) × EntryFiles(main.js,App.vue,index.html)",
+        "name": "IntegrationValidation - Test Data Loading",
+        "formula": "ComponentIntegration -> LoadTest -> FilterTest -> UIVerification",
         "actions": [
-          "Create src/components directory for Vue components",
-          "Create src/composables directory for composition functions",
-          "Create src/stores directory for Pinia state (future use)",
-          "Create src/assets directory for static resources",
-          "Verify src/main.js exists and imports style.css",
-          "Verify src/App.vue exists",
-          "Verify index.html exists"
+          "Create or update a component to use questionBank store",
+          "Call store.loadQuestions() on component mount",
+          "Verify state.questions contains 354 items",
+          "Test filterByTopic with 'L21101' - should return matching questions",
+          "Test filterByDifficulty with 'simple' - should return matching questions",
+          "Test combined filters - should return questions matching both criteria",
+          "Verify UI displays loaded questions correctly"
         ],
-        "validation": "All required directories and entry files exist",
-        "commands": [
-          "mkdir -p src/components src/composables src/stores src/assets",
-          "ls -la src/"
-        ]
-      },
-      {
-        "step": 6,
-        "name": "ValidationGates",
-        "formula": "DevServerTest × BuildTest × StyleTest",
-        "actions": [
-          "Start development server and verify it runs on port 3000",
-          "Check if browser opens automatically",
-          "Verify Tailwind CSS classes are applied (test in App.vue)",
-          "Run build command to ensure production build works",
-          "Run preview to test built application"
-        ],
-        "validation": "Dev server starts successfully, build completes, Tailwind styles work",
-        "commands": [
-          "npm run dev (check output for port 3000)",
-          "npm run build (check for dist/ directory)",
-          "npm run preview (verify built app works)"
-        ],
-        "success_indicators": [
-          "Terminal shows: 'Local: http://localhost:3000/'",
-          "No compilation errors",
-          "dist/ directory created with assets",
-          "Tailwind utility classes render correctly"
-        ]
+        "validation": "All 354 questions should load successfully and filtering should work correctly in browser DevTools"
       }
     ],
-    "rollback_strategy": {
-      "on_failure": "Delete project directory and restart from ProjectScaffolding",
-      "partial_success": "Continue from last successful step",
-      "dependency_issues": "Clear node_modules and package-lock.json, reinstall"
+    "technical_architecture": {
+      "file_structure": [
+        "src/stores/questionBank.js - Pinia store definition",
+        "src/main.js - Pinia plugin registration",
+        "public/questions/official-questions.json - 100 questions",
+        "public/questions/L21-mock-exam.json - 120 questions",
+        "public/questions/L23-mock-exam.json - 134 questions"
+      ],
+      "data_flow": "JSON Files -> fetch API -> Store Actions -> Store State -> Store Getters -> Vue Components",
+      "state_management": "Pinia centralized store with reactive state, computed getters, and async actions"
     },
-    "final_validation_checklist": [
-      "Project directory structure matches specification",
-      "All configuration files present and correct",
-      "npm run dev starts successfully",
-      "npm run build completes without errors",
-      "Tailwind CSS classes work in components",
-      ".gitignore properly configured",
-      "All directories (components, composables, stores, assets) exist"
+    "quality_gates": [
+      "Pinia must be properly installed and configured",
+      "All 3 JSON files must be accessible via /questions/ path",
+      "Store must successfully load all 354 questions",
+      "Filtering by topic must return correct subset",
+      "Filtering by difficulty must return correct subset",
+      "Combined filters must work correctly (AND logic)",
+      "No console errors during data loading"
     ]
   },
-  "completion_status": "planning_complete",
+  "completion_status": "stage_complete",
   "stage_results": {
-    "completed_stages": [
-      "BusinessAnalysis",
-      "StageSequencing",
-      "StageExecution"
-    ],
-    "current_progress": 1.0,
-    "next_actions": [
-      "Pass WorkflowFormula and ImplementationFormula to formula-auto-execution",
-      "Execute each step in ExecutionGuide sequentially",
-      "Validate completion using final_validation_checklist"
-    ]
-  },
-  "metadata": {
-    "planning_timestamp": "2025-11-05T00:00:00Z",
-    "estimated_execution_time": "30 minutes",
-    "priority": "P0",
-    "validation_mode": "automatic",
-    "technology_stack": {
-      "build_tool": "Vite 5.x",
-      "framework": "Vue 3.x",
-      "css_framework": "Tailwind CSS 3.x",
-      "state_management": "Pinia (future)",
-      "package_manager": "npm"
-    }
+    "completed_stages": ["RequirementAnalysis", "ArchitectureDesign + Implementation (Planning)"],
+    "current_progress": 0.75,
+    "next_actions": ["Execute implementation following ExecutionGuide", "Run functional tests", "Validate against acceptance_criteria"]
   }
 }

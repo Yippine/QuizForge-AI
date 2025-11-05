@@ -1,0 +1,296 @@
+{
+  "business_increment": "INC-001: Project Initialization & Infrastructure Setup - 創建 Vite + Vue 3 項目基礎架構，配置 Tailwind CSS，建立標準項目結構，確保開發環境就緒",
+  "business_goals": [
+    "建立現代化前端開發環境",
+    "使用 Vite 提供快速開發體驗",
+    "使用 Vue 3 Composition API",
+    "使用 Tailwind CSS 實現快速 UI 開發"
+  ],
+  "acceptance_criteria": [
+    "Vite + Vue 3 項目成功創建並可運行",
+    "Tailwind CSS 配置完成且樣式可用",
+    "項目結構清晰（components, composables, assets, public）",
+    "開發服務器可正常啟動（npm run dev）",
+    "基礎 Git 配置（.gitignore 包含 node_modules, dist 等）"
+  ],
+  "EngineeringStages": [
+    "RequirementAnalysis",
+    "ArchitectureDesign",
+    "Implementation",
+    "Testing",
+    "Validation"
+  ],
+  "current_stage_index": 0,
+  "current_stage": "RequirementAnalysis",
+  "WorkflowFormula": "EnvironmentPreparation -> ProjectScaffolding -> DependencyManagement -> ConfigurationSetup -> StructureCreation -> ValidationGates",
+  "WorkflowFormula_detailed": {
+    "formula": "EnvPrep -> Scaffold -> DepMgmt -> ConfigSetup -> StructCreate -> Validate",
+    "where": {
+      "EnvPrep": "NodeVersionCheck × NpmAvailability × WorkspaceClean",
+      "Scaffold": "ViteCreate(vue_template) -> ProjectName(QuizForge-AI)",
+      "DepMgmt": "NpmInstall(tailwindcss + postcss + autoprefixer) × NpmInstall(dev_dependencies)",
+      "ConfigSetup": "ViteConfig × TailwindConfig × PostCSSConfig × GitIgnore",
+      "StructCreate": "DirectoryStructure(src/{components,composables,stores,assets}) × EntryFiles(main.js,App.vue,index.html)",
+      "Validate": "DevServerTest × BuildTest × StyleTest"
+    },
+    "execution_flow": "EnvPrep => Scaffold => DepMgmt => ConfigSetup => StructCreate => Validate",
+    "quality_gates": [
+      "(NodeVersionCheck >= 18) -> proceed, ~ -> alert",
+      "(ViteCreate == success) -> proceed, ~ -> abort",
+      "(NpmInstall == success) -> proceed, ~ -> retry",
+      "(DevServerTest == running) -> proceed, ~ -> debug"
+    ]
+  },
+  "ImplementationFormula": "C(ScaffoldScripts + ValidationScripts) + F(ViteConfig + TailwindConfig + PostCSSConfig + GitIgnore + PackageJSON) + D(ProjectStructure + DirectoryLayout) + S(DevServerState + BuildState)",
+  "ImplementationFormula_detailed": {
+    "formula": "ProjectInit = C + F + D + S",
+    "C_Code": {
+      "scaffold_execution": "npm create vite@latest QuizForge-AI -- --template vue",
+      "dependency_installation": "npm install -D tailwindcss postcss autoprefixer && npx tailwindcss init -p",
+      "validation_scripts": {
+        "dev_server": "npm run dev",
+        "build_test": "npm run build",
+        "preview_test": "npm run preview"
+      }
+    },
+    "F_Files": {
+      "vite_config": {
+        "path": "vite.config.js",
+        "content_structure": "import { defineConfig } from 'vite'\nimport vue from '@vitejs/plugin-vue'\n\nexport default defineConfig({\n  plugins: [vue()],\n  server: {\n    port: 3000,\n    open: true\n  }\n})"
+      },
+      "tailwind_config": {
+        "path": "tailwind.config.js",
+        "content_structure": "/** @type {import('tailwindcss').Config} */\nexport default {\n  content: [\n    './index.html',\n    './src/**/*.{vue,js,ts,jsx,tsx}',\n  ],\n  theme: {\n    extend: {},\n  },\n  plugins: [],\n}"
+      },
+      "postcss_config": {
+        "path": "postcss.config.js",
+        "content_structure": "export default {\n  plugins: {\n    tailwindcss: {},\n    autoprefixer: {},\n  },\n}"
+      },
+      "gitignore": {
+        "path": ".gitignore",
+        "content_structure": "# Logs\nlogs\n*.log\nnpm-debug.log*\nyarn-debug.log*\nyarn-error.log*\npnpm-debug.log*\nlerna-debug.log*\n\nnode_modules\ndist\ndist-ssr\n*.local\n\n# Editor directories and files\n.vscode/*\n!.vscode/extensions.json\n.idea\n.DS_Store\n*.suo\n*.ntvs*\n*.njsproj\n*.sln\n*.sw?"
+      },
+      "main_css": {
+        "path": "src/style.css",
+        "content_structure": "@tailwind base;\n@tailwind components;\n@tailwind utilities;"
+      }
+    },
+    "D_Data": {
+      "project_structure": {
+        "src": {
+          "components": "Vue component files",
+          "composables": "Composition API reusable functions",
+          "stores": "Pinia state management",
+          "assets": "Static assets (images, fonts, etc)",
+          "App.vue": "Root component",
+          "main.js": "Application entry point",
+          "style.css": "Global styles with Tailwind directives"
+        },
+        "public": "Public static files (quiz data JSON)",
+        "index.html": "HTML template",
+        "vite.config.js": "Vite configuration",
+        "tailwind.config.js": "Tailwind CSS configuration",
+        "postcss.config.js": "PostCSS configuration",
+        "package.json": "Dependencies and scripts"
+      },
+      "directory_creation_sequence": [
+        "src/components",
+        "src/composables",
+        "src/stores",
+        "src/assets"
+      ]
+    },
+    "S_State": {
+      "validation_states": {
+        "project_created": "Check if QuizForge-AI directory exists",
+        "dependencies_installed": "Check if node_modules exists and package.json has correct dependencies",
+        "configs_present": "Check if vite.config.js, tailwind.config.js, postcss.config.js exist",
+        "structure_valid": "Check if src/{components,composables,stores,assets} directories exist",
+        "dev_server_running": "Check if dev server starts successfully on port 3000",
+        "build_success": "Check if build completes without errors",
+        "tailwind_working": "Check if Tailwind classes are applied correctly"
+      },
+      "success_criteria": "project_created & dependencies_installed & configs_present & structure_valid & dev_server_running & build_success & tailwind_working"
+    }
+  },
+  "ExecutionGuide": {
+    "overview": "本執行指導將引導 formula-auto-execution 完成 Vite + Vue 3 + Tailwind CSS 項目的初始化和配置",
+    "prerequisites": [
+      "Node.js version >= 18.0.0",
+      "npm package manager available",
+      "Git installed for version control",
+      "Terminal access to project directory"
+    ],
+    "execution_sequence": [
+      {
+        "step": 1,
+        "name": "EnvironmentPreparation",
+        "formula": "NodeVersionCheck × NpmAvailability × WorkspaceClean",
+        "actions": [
+          "Check Node.js version: node --version (expect >= 18.0.0)",
+          "Check npm availability: npm --version",
+          "Verify current directory is project root: pwd",
+          "Check if directory is clean or confirm overwrite"
+        ],
+        "validation": "All checks pass -> proceed, any failure -> alert and abort",
+        "commands": [
+          "node --version",
+          "npm --version",
+          "pwd"
+        ]
+      },
+      {
+        "step": 2,
+        "name": "ProjectScaffolding",
+        "formula": "ViteCreate(vue_template) -> ProjectName(QuizForge-AI)",
+        "actions": [
+          "Create Vite project with Vue template",
+          "Navigate into project directory",
+          "Verify basic project structure"
+        ],
+        "validation": "Project directory created with package.json and src/",
+        "commands": [
+          "npm create vite@latest . -- --template vue",
+          "ls -la"
+        ],
+        "notes": "Using current directory (.) to avoid nested QuizForge-AI/QuizForge-AI structure"
+      },
+      {
+        "step": 3,
+        "name": "DependencyManagement",
+        "formula": "NpmInstall(tailwindcss + postcss + autoprefixer) × NpmInstall(dev_dependencies)",
+        "actions": [
+          "Install base dependencies from package.json",
+          "Install Tailwind CSS and its peer dependencies",
+          "Initialize Tailwind configuration"
+        ],
+        "validation": "node_modules/ exists, tailwind.config.js and postcss.config.js created",
+        "commands": [
+          "npm install",
+          "npm install -D tailwindcss postcss autoprefixer",
+          "npx tailwindcss init -p"
+        ]
+      },
+      {
+        "step": 4,
+        "name": "ConfigurationSetup",
+        "formula": "ViteConfig × TailwindConfig × PostCSSConfig × GitIgnore",
+        "actions": [
+          "Update vite.config.js with custom port and auto-open",
+          "Configure tailwind.config.js content paths",
+          "Verify postcss.config.js has correct plugins",
+          "Create/update .gitignore with node_modules, dist, etc",
+          "Update src/style.css with Tailwind directives",
+          "Import style.css in main.js"
+        ],
+        "validation": "All config files exist and contain required configurations",
+        "files_to_modify": [
+          {
+            "file": "vite.config.js",
+            "purpose": "Configure Vite server settings",
+            "key_content": "server: { port: 3000, open: true }"
+          },
+          {
+            "file": "tailwind.config.js",
+            "purpose": "Configure Tailwind content paths",
+            "key_content": "content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}']"
+          },
+          {
+            "file": "src/style.css",
+            "purpose": "Add Tailwind directives",
+            "key_content": "@tailwind base; @tailwind components; @tailwind utilities;"
+          },
+          {
+            "file": ".gitignore",
+            "purpose": "Ignore build artifacts and dependencies",
+            "key_content": "node_modules, dist, dist-ssr, *.local"
+          }
+        ]
+      },
+      {
+        "step": 5,
+        "name": "StructureCreation",
+        "formula": "DirectoryStructure(src/{components,composables,stores,assets}) × EntryFiles(main.js,App.vue,index.html)",
+        "actions": [
+          "Create src/components directory for Vue components",
+          "Create src/composables directory for composition functions",
+          "Create src/stores directory for Pinia state (future use)",
+          "Create src/assets directory for static resources",
+          "Verify src/main.js exists and imports style.css",
+          "Verify src/App.vue exists",
+          "Verify index.html exists"
+        ],
+        "validation": "All required directories and entry files exist",
+        "commands": [
+          "mkdir -p src/components src/composables src/stores src/assets",
+          "ls -la src/"
+        ]
+      },
+      {
+        "step": 6,
+        "name": "ValidationGates",
+        "formula": "DevServerTest × BuildTest × StyleTest",
+        "actions": [
+          "Start development server and verify it runs on port 3000",
+          "Check if browser opens automatically",
+          "Verify Tailwind CSS classes are applied (test in App.vue)",
+          "Run build command to ensure production build works",
+          "Run preview to test built application"
+        ],
+        "validation": "Dev server starts successfully, build completes, Tailwind styles work",
+        "commands": [
+          "npm run dev (check output for port 3000)",
+          "npm run build (check for dist/ directory)",
+          "npm run preview (verify built app works)"
+        ],
+        "success_indicators": [
+          "Terminal shows: 'Local: http://localhost:3000/'",
+          "No compilation errors",
+          "dist/ directory created with assets",
+          "Tailwind utility classes render correctly"
+        ]
+      }
+    ],
+    "rollback_strategy": {
+      "on_failure": "Delete project directory and restart from ProjectScaffolding",
+      "partial_success": "Continue from last successful step",
+      "dependency_issues": "Clear node_modules and package-lock.json, reinstall"
+    },
+    "final_validation_checklist": [
+      "Project directory structure matches specification",
+      "All configuration files present and correct",
+      "npm run dev starts successfully",
+      "npm run build completes without errors",
+      "Tailwind CSS classes work in components",
+      ".gitignore properly configured",
+      "All directories (components, composables, stores, assets) exist"
+    ]
+  },
+  "completion_status": "planning_complete",
+  "stage_results": {
+    "completed_stages": [
+      "BusinessAnalysis",
+      "StageSequencing",
+      "StageExecution"
+    ],
+    "current_progress": 1.0,
+    "next_actions": [
+      "Pass WorkflowFormula and ImplementationFormula to formula-auto-execution",
+      "Execute each step in ExecutionGuide sequentially",
+      "Validate completion using final_validation_checklist"
+    ]
+  },
+  "metadata": {
+    "planning_timestamp": "2025-11-05T00:00:00Z",
+    "estimated_execution_time": "30 minutes",
+    "priority": "P0",
+    "validation_mode": "automatic",
+    "technology_stack": {
+      "build_tool": "Vite 5.x",
+      "framework": "Vue 3.x",
+      "css_framework": "Tailwind CSS 3.x",
+      "state_management": "Pinia (future)",
+      "package_manager": "npm"
+    }
+  }
+}
