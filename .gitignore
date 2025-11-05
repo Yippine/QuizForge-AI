@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Formula-Contract work files
+.claude/
+FORMULA.md
