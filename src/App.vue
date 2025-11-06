@@ -3,14 +3,23 @@
  * QuizForge AI - Main Application
  * Formula: App = QuestionBankStore × QuestionCard × NavigationState × WrongQuestionsPanel × PracticeMode
  */
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, onErrorCaptured } from 'vue'
 import { useQuestionBankStore } from './stores/questionBank'
 import { useAnswerTracking } from './composables/useAnswerTracking'
+import { useKeyboardShortcuts } from './composables/useKeyboardShortcuts'
 import QuestionCard from './components/QuestionCard.vue'
 import WrongQuestionsPanel from './components/WrongQuestionsPanel.vue'
+import StatisticsPanel from './components/StatisticsPanel.vue'
+import LoadingSpinner from './components/LoadingSpinner.vue'
+import ErrorBoundary from './components/ErrorBoundary.vue'
 
 const store = useQuestionBankStore()
-const { getWrongQuestions, wrongQuestionsCount } = useAnswerTracking()
+const { getWrongQuestions, wrongQuestionsCount, saveAnswer } = useAnswerTracking()
+const { registerDefaultHandlers, showHelp, toggleHelp, shortcutsHelp } = useKeyboardShortcuts()
+
+// 錯誤邊界狀態
+const hasError = ref(false)
+const errorMessage = ref(null)
 
 /**
  * Application State
@@ -21,7 +30,7 @@ const currentQuestionIndex = ref(0)
 // 答題記錄
 const answerHistory = ref([])
 
-// 顯示模式 ('loading' | 'quiz' | 'result' | 'wrong-questions')
+// 顯示模式 ('loading' | 'quiz' | 'result' | 'wrong-questions' | 'statistics')
 const viewMode = ref('loading')
 
 // 練習模式 ('normal' | 'wrong-practice')
@@ -69,32 +78,138 @@ const stats = computed(() => {
  */
 
 /**
+ * 錯誤捕獲
+ */
+onErrorCaptured((error, instance, info) => {
+  console.error('App.vue caught an error:', error, info)
+  hasError.value = true
+  errorMessage.value = error.message
+  return false
+})
+
+/**
  * 載入題庫並初始化
  */
 onMounted(async () => {
   console.log('🚀 QuizForge AI - Loading...')
-  await store.loadQuestions()
 
-  if (store.questions.length > 0) {
-    viewMode.value = 'quiz'
-    console.log('✅ QuizForge AI - Ready!')
-    console.log(`📚 Loaded ${store.questions.length} questions`)
-  } else {
-    console.error('❌ Failed to load questions')
+  try {
+    await store.loadQuestions()
+
+    if (store.questions.length > 0) {
+      viewMode.value = 'quiz'
+      console.log('✅ QuizForge AI - Ready!')
+      console.log(`📚 Loaded ${store.questions.length} questions`)
+
+      // 初始化鍵盤快捷鍵
+      initializeKeyboardShortcuts()
+    } else {
+      console.error('❌ Failed to load questions')
+    }
+  } catch (error) {
+    console.error('❌ Application initialization failed:', error)
+    hasError.value = true
+    errorMessage.value = error.message
   }
 })
+
+/**
+ * 初始化鍵盤快捷鍵
+ */
+const initializeKeyboardShortcuts = () => {
+  const cleanup = registerDefaultHandlers({
+    // 答案選擇
+    onSelectOption: (optionIndex) => {
+      if (viewMode.value === 'quiz' && currentQuestion.value) {
+        // 通知 QuestionCard 組件選擇選項
+        const event = new CustomEvent('select-option', { detail: { optionIndex } })
+        window.dispatchEvent(event)
+      }
+    },
+
+    // 提交答案
+    onSubmit: () => {
+      if (viewMode.value === 'quiz') {
+        const event = new CustomEvent('submit-answer')
+        window.dispatchEvent(event)
+      }
+    },
+
+    // 下一題
+    onNext: () => {
+      if (viewMode.value === 'quiz') {
+        handleNextQuestion()
+      }
+    },
+
+    // 上一題
+    onPrevious: () => {
+      if (viewMode.value === 'quiz') {
+        handlePreviousQuestion()
+      }
+    },
+
+    // 顯示幫助
+    onHelp: () => {
+      toggleHelp()
+    },
+
+    // 統計頁面
+    onStatistics: () => {
+      viewMode.value = viewMode.value === 'statistics' ? 'quiz' : 'statistics'
+    },
+
+    // 重新開始
+    onRestart: () => {
+      startQuiz()
+    },
+
+    // 退出/關閉
+    onEscape: () => {
+      if (showHelp.value) {
+        showHelp.value = false
+      } else if (viewMode.value === 'wrong-questions') {
+        viewMode.value = 'quiz'
+      } else if (viewMode.value === 'statistics') {
+        viewMode.value = 'quiz'
+      }
+    }
+  })
+
+  // 組件卸載時清理
+  onUnmounted(() => {
+    cleanup()
+  })
+}
 
 /**
  * 處理答案提交
  */
 const handleAnswerSubmitted = (answerData) => {
+  // 增強答案數據
+  const enhancedAnswerData = {
+    ...answerData,
+    timestamp: answerData.timestamp || new Date().toISOString(),
+    topic: currentQuestion.value?.topic || '',
+    difficulty: currentQuestion.value?.difficulty || '',
+    timeSpent: answerData.timeSpent || 0
+  }
+
   // 記錄答題歷史
-  answerHistory.value.push(answerData)
+  answerHistory.value.push(enhancedAnswerData)
+
+  // 保存到 useAnswerTracking
+  saveAnswer(enhancedAnswerData)
+
+  // 更新統計快取
+  store.calculateUserStatistics()
 
   console.log('📝 Answer submitted:', {
     question: currentQuestionIndex.value + 1,
     correct: answerData.isCorrect,
-    stats: stats.value
+    stats: stats.value,
+    topic: enhancedAnswerData.topic,
+    difficulty: enhancedAnswerData.difficulty
   })
 }
 
@@ -132,6 +247,15 @@ const startQuiz = () => {
  */
 const viewResults = () => {
   viewMode.value = 'result'
+}
+
+/**
+ * 查看統計頁面
+ */
+const viewStatistics = () => {
+  viewMode.value = 'statistics'
+  // 確保統計資料是最新的
+  store.calculateUserStatistics()
 }
 
 /**
@@ -202,10 +326,25 @@ const exitWrongPractice = () => {
   answerHistory.value = []
   console.log('退出錯題重練模式')
 }
+
+/**
+ * 應用重試處理
+ */
+const handleAppRetry = () => {
+  hasError.value = false
+  errorMessage.value = null
+  location.reload()
+}
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-8 px-4">
+  <ErrorBoundary
+    :show-details="true"
+    :show-retry="true"
+    :show-report="true"
+    @retry="handleAppRetry"
+  >
+    <div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-8 px-4">
     <!-- Header -->
     <header class="max-w-4xl mx-auto mb-8">
       <div class="text-center">
@@ -243,14 +382,45 @@ const exitWrongPractice = () => {
           <div class="text-xl font-bold text-purple-600">{{ stats.accuracy }}%</div>
         </div>
       </div>
+
+      <!-- Keyboard Shortcuts Help -->
+      <div v-if="showHelp" class="mt-4">
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-lg font-semibold text-blue-900">鍵盤快捷鍵</h3>
+            <button
+              @click="showHelp = false"
+              class="text-blue-600 hover:text-blue-800"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+            <div
+              v-for="shortcut in shortcutsHelp.shortcuts"
+              :key="shortcut.key"
+              class="flex items-center justify-between"
+            >
+              <span class="text-gray-700">{{ shortcut.description }}</span>
+              <kbd class="px-2 py-1 text-xs bg-white border border-gray-300 rounded">{{ shortcut.key }}</kbd>
+            </div>
+          </div>
+        </div>
+      </div>
     </header>
 
     <!-- Main Content -->
     <main class="max-w-4xl mx-auto">
       <!-- Loading State -->
       <div v-if="viewMode === 'loading'" class="text-center py-16">
-        <div class="inline-block animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mb-4"></div>
-        <p class="text-gray-600 text-lg">載入題庫中...</p>
+        <LoadingSpinner
+          size="xl"
+          color="primary"
+          text="載入題庫中..."
+          :fullscreen="false"
+        />
       </div>
 
       <!-- Quiz Mode -->
@@ -303,7 +473,24 @@ const exitWrongPractice = () => {
               @click="viewResults"
               class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors"
             >
-              查看統計
+              基本統計
+            </button>
+
+            <!-- View Detailed Statistics -->
+            <button
+              v-if="answerHistory.length > 0"
+              @click="viewStatistics"
+              class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors"
+            >
+              詳細分析
+            </button>
+
+            <!-- Keyboard Help -->
+            <button
+              @click="toggleHelp"
+              class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors"
+            >
+              快捷鍵
             </button>
 
             <!-- Restart Quiz -->
@@ -397,6 +584,13 @@ const exitWrongPractice = () => {
         </div>
       </div>
 
+      <!-- Statistics Mode -->
+      <div v-else-if="viewMode === 'statistics'">
+        <StatisticsPanel
+          @start-practice="startQuiz"
+        />
+      </div>
+
       <!-- Empty State -->
       <div v-else class="text-center py-16 bg-white rounded-lg shadow">
         <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -414,10 +608,11 @@ const exitWrongPractice = () => {
 
     <!-- Footer -->
     <footer class="max-w-4xl mx-auto mt-8 text-center text-sm text-gray-500">
-      <p>QuizForge AI - INC-004: Wrong Questions Tracking & Practice History</p>
+      <p>QuizForge AI - INC-005: Statistics & UI/UX Optimization - User Acceptance</p>
       <p class="mt-1">Formula-Contract Methodology | Generated with Claude Code</p>
     </footer>
-  </div>
+    </div>
+  </ErrorBoundary>
 </template>
 
 <style scoped>

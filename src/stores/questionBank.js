@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { useAnswerTracking } from '../composables/useAnswerTracking'
 
 /**
  * Question Data Model
@@ -54,6 +55,15 @@ export const useQuestionBankStore = defineStore('questionBank', {
       bySubject: {},
       byTopic: {},
       byDifficulty: {}
+    },
+
+    // 統計計算快取
+    statisticsCache: {
+      lastUpdated: null,
+      userStats: null,
+      topicPerformance: null,
+      difficultyPerformance: null,
+      timeSeriesData: null
     }
   }),
 
@@ -142,6 +152,64 @@ export const useQuestionBankStore = defineStore('questionBank', {
       return !!(state.currentFilters.topic ||
                 state.currentFilters.difficulty ||
                 state.currentFilters.subject)
+    },
+
+    /**
+     * 取得使用者統計資訊
+     * @returns {Object} 用戶答題統計
+     */
+    userStatistics: (state) => {
+      if (!state.statisticsCache.userStats) {
+        return {
+          totalAnswered: 0,
+          correctAnswers: 0,
+          incorrectAnswers: 0,
+          accuracy: 0,
+          averageTimePerQuestion: 0,
+          currentStreak: 0,
+          bestStreak: 0,
+          studyDays: 0,
+          lastStudyDate: null
+        }
+      }
+      return state.statisticsCache.userStats
+    },
+
+    /**
+     * 取得主題表現統計
+     * @returns {Array} 主題表現資料
+     */
+    topicPerformance: (state) => {
+      if (!state.statisticsCache.topicPerformance) {
+        return []
+      }
+      return state.statisticsCache.topicPerformance
+    },
+
+    /**
+     * 取得難度表現統計
+     * @returns {Array} 難度表現資料
+     */
+    difficultyPerformance: (state) => {
+      if (!state.statisticsCache.difficultyPerformance) {
+        return []
+      }
+      return state.statisticsCache.difficultyPerformance
+    },
+
+    /**
+     * 取得時間序列資料
+     * @returns {Object} 時間趨勢資料
+     */
+    timeSeriesData: (state) => {
+      if (!state.statisticsCache.timeSeriesData) {
+        return {
+          dailyData: [],
+          weeklyData: [],
+          monthlyData: []
+        }
+      }
+      return state.statisticsCache.timeSeriesData
     }
   },
 
@@ -314,6 +382,348 @@ export const useQuestionBankStore = defineStore('questionBank', {
       const source = this.hasActiveFilters ? this.filteredQuestions : this.questions
       const shuffled = [...source].sort(() => Math.random() - 0.5)
       return shuffled.slice(0, count)
+    },
+
+    /**
+     * 計算使用者統計資訊
+     * Formula: calculateUserStatistics() -> UserStats & PerformanceAnalysis & TimeSeries
+     */
+    calculateUserStatistics() {
+      const { getAnswerHistory } = useAnswerTracking()
+      const answerHistory = getAnswerHistory()
+
+      if (answerHistory.length === 0) {
+        // 沒有答題記錄時返回預設值
+        this.statisticsCache.userStats = {
+          totalAnswered: 0,
+          correctAnswers: 0,
+          incorrectAnswers: 0,
+          accuracy: 0,
+          averageTimePerQuestion: 0,
+          currentStreak: 0,
+          bestStreak: 0,
+          studyDays: 0,
+          lastStudyDate: null
+        }
+        this.statisticsCache.topicPerformance = []
+        this.statisticsCache.difficultyPerformance = []
+        this.statisticsCache.timeSeriesData = {
+          dailyData: [],
+          weeklyData: [],
+          monthlyData: []
+        }
+        this.statisticsCache.lastUpdated = new Date().toISOString()
+        return
+      }
+
+      // 計算基本統計
+      const totalAnswered = answerHistory.length
+      const correctAnswers = answerHistory.filter(a => a.isCorrect).length
+      const incorrectAnswers = totalAnswered - correctAnswers
+      const accuracy = totalAnswered > 0 ? Math.round((correctAnswers / totalAnswered) * 100) : 0
+
+      // 計算平均答題時間
+      const totalTime = answerHistory.reduce((sum, a) => sum + (a.timeSpent || 0), 0)
+      const averageTimePerQuestion = totalAnswered > 0 ? Math.round(totalTime / totalAnswered / 1000) : 0
+
+      // 計算連勝記錄
+      const { currentStreak, bestStreak } = this.calculateStreaks(answerHistory)
+
+      // 計算學習天數
+      const uniqueDates = new Set(answerHistory.map(a => new Date(a.timestamp).toDateString()))
+      const studyDays = uniqueDates.size
+
+      // 最後學習日期
+      const lastStudyDate = answerHistory.length > 0
+        ? new Date(Math.max(...answerHistory.map(a => new Date(a.timestamp))))
+        : null
+
+      // 更新用戶統計
+      this.statisticsCache.userStats = {
+        totalAnswered,
+        correctAnswers,
+        incorrectAnswers,
+        accuracy,
+        averageTimePerQuestion,
+        currentStreak,
+        bestStreak,
+        studyDays,
+        lastStudyDate: lastStudyDate ? lastStudyDate.toISOString() : null
+      }
+
+      // 計算主題表現
+      this.statisticsCache.topicPerformance = this.calculateTopicPerformance(answerHistory)
+
+      // 計算難度表現
+      this.statisticsCache.difficultyPerformance = this.calculateDifficultyPerformance(answerHistory)
+
+      // 計算時間序列資料
+      this.statisticsCache.timeSeriesData = this.calculateTimeSeriesData(answerHistory)
+
+      this.statisticsCache.lastUpdated = new Date().toISOString()
+
+      console.log('📊 User statistics calculated and cached')
+    },
+
+    /**
+     * 計算連勝記錄
+     * @param {Array} answerHistory - 答題歷史
+     * @returns {Object} 連勝統計
+     */
+    calculateStreaks(answerHistory) {
+      let currentStreak = 0
+      let bestStreak = 0
+      let tempStreak = 0
+
+      for (const answer of answerHistory) {
+        if (answer.isCorrect) {
+          tempStreak++
+          bestStreak = Math.max(bestStreak, tempStreak)
+        } else {
+          tempStreak = 0
+        }
+      }
+
+      // 計算當前連勝（從最後開始往回數）
+      currentStreak = 0
+      for (let i = answerHistory.length - 1; i >= 0; i--) {
+        if (answerHistory[i].isCorrect) {
+          currentStreak++
+        } else {
+          break
+        }
+      }
+
+      return { currentStreak, bestStreak }
+    },
+
+    /**
+     * 計算主題表現
+     * @param {Array} answerHistory - 答題歷史
+     * @returns {Array} 主題表現統計
+     */
+    calculateTopicPerformance(answerHistory) {
+      const topicMap = new Map()
+
+      answerHistory.forEach(answer => {
+        const topic = answer.topic || '未知主題'
+        if (!topicMap.has(topic)) {
+          topicMap.set(topic, {
+            topic,
+            total: 0,
+            correct: 0,
+            incorrect: 0,
+            accuracy: 0,
+            totalTime: 0,
+            averageTime: 0
+          })
+        }
+
+        const stats = topicMap.get(topic)
+        stats.total++
+        stats.totalTime += answer.timeSpent || 0
+
+        if (answer.isCorrect) {
+          stats.correct++
+        } else {
+          stats.incorrect++
+        }
+      })
+
+      // 計算最終統計
+      const performance = Array.from(topicMap.values()).map(stats => ({
+        ...stats,
+        accuracy: stats.total > 0 ? Math.round((stats.correct / stats.total) * 100) : 0,
+        averageTime: stats.total > 0 ? Math.round(stats.totalTime / stats.total / 1000) : 0
+      }))
+
+      // 按總題數排序
+      return performance.sort((a, b) => b.total - a.total)
+    },
+
+    /**
+     * 計算難度表現
+     * @param {Array} answerHistory - 答題歷史
+     * @returns {Array} 難度表現統計
+     */
+    calculateDifficultyPerformance(answerHistory) {
+      const difficultyMap = new Map()
+      const difficultyNames = {
+        'simple': '簡單',
+        'medium': '中等',
+        'hard': '困難'
+      }
+
+      answerHistory.forEach(answer => {
+        const difficulty = answer.difficulty || 'unknown'
+        if (!difficultyMap.has(difficulty)) {
+          difficultyMap.set(difficulty, {
+            difficulty: difficultyNames[difficulty] || difficulty,
+            total: 0,
+            correct: 0,
+            incorrect: 0,
+            accuracy: 0,
+            totalTime: 0,
+            averageTime: 0
+          })
+        }
+
+        const stats = difficultyMap.get(difficulty)
+        stats.total++
+        stats.totalTime += answer.timeSpent || 0
+
+        if (answer.isCorrect) {
+          stats.correct++
+        } else {
+          stats.incorrect++
+        }
+      })
+
+      // 計算最終統計
+      const performance = Array.from(difficultyMap.values()).map(stats => ({
+        ...stats,
+        accuracy: stats.total > 0 ? Math.round((stats.correct / stats.total) * 100) : 0,
+        averageTime: stats.total > 0 ? Math.round(stats.totalTime / stats.total / 1000) : 0
+      }))
+
+      // 按難度排序：簡單 -> 中等 -> 困難
+      const difficultyOrder = ['simple', 'medium', 'hard', 'unknown']
+      return performance.sort((a, b) => {
+        const aIndex = difficultyOrder.indexOf(a.difficulty)
+        const bIndex = difficultyOrder.indexOf(b.difficulty)
+        return aIndex - bIndex
+      })
+    },
+
+    /**
+     * 計算時間序列資料
+     * @param {Array} answerHistory - 答題歷史
+     * @returns {Object} 時間序列資料
+     */
+    calculateTimeSeriesData(answerHistory) {
+      const dailyMap = new Map()
+      const weeklyMap = new Map()
+      const monthlyMap = new Map()
+
+      answerHistory.forEach(answer => {
+        const date = new Date(answer.timestamp)
+
+        // 每日資料
+        const dayKey = date.toLocaleDateString('zh-TW')
+        if (!dailyMap.has(dayKey)) {
+          dailyMap.set(dayKey, { date: dayKey, correct: 0, incorrect: 0, total: 0 })
+        }
+        const dayStats = dailyMap.get(dayKey)
+        dayStats.total++
+        if (answer.isCorrect) {
+          dayStats.correct++
+        } else {
+          dayStats.incorrect++
+        }
+
+        // 每週資料
+        const weekKey = this.getWeekKey(date)
+        if (!weeklyMap.has(weekKey)) {
+          weeklyMap.set(weekKey, { week: weekKey, correct: 0, incorrect: 0, total: 0 })
+        }
+        const weekStats = weeklyMap.get(weekKey)
+        weekStats.total++
+        if (answer.isCorrect) {
+          weekStats.correct++
+        } else {
+          weekStats.incorrect++
+        }
+
+        // 每月資料
+        const monthKey = date.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long' })
+        if (!monthlyMap.has(monthKey)) {
+          monthlyMap.set(monthKey, { month: monthKey, correct: 0, incorrect: 0, total: 0 })
+        }
+        const monthStats = monthlyMap.get(monthKey)
+        monthStats.total++
+        if (answer.isCorrect) {
+          monthStats.correct++
+        } else {
+          monthStats.incorrect++
+        }
+      })
+
+      return {
+        dailyData: Array.from(dailyMap.values()).slice(-30), // 最近30天
+        weeklyData: Array.from(weeklyMap.values()).slice(-12), // 最近12週
+        monthlyData: Array.from(monthlyMap.values()) // 所有月份
+      }
+    },
+
+    /**
+     * 取得週的標識符
+     * @param {Date} date - 日期
+     * @returns {string} 週標識符
+     */
+    getWeekKey(date) {
+      const startOfYear = new Date(date.getFullYear(), 0, 1)
+      const weekNumber = Math.ceil(((date - startOfYear) / 86400000 + startOfYear.getDay() + 1) / 7)
+      return `${date.getFullYear()}-W${weekNumber.toString().padStart(2, '0')}`
+    },
+
+    /**
+     * 清除統計快取
+     */
+    clearStatisticsCache() {
+      this.statisticsCache = {
+        lastUpdated: null,
+        userStats: null,
+        topicPerformance: null,
+        difficultyPerformance: null,
+        timeSeriesData: null
+      }
+    },
+
+    /**
+     * 檢查統計快取是否需要更新
+     * @returns {boolean} 是否需要更新
+     */
+    needsStatisticsUpdate() {
+      const { getAnswerHistory } = useAnswerTracking()
+      const answerHistory = getAnswerHistory()
+
+      // 如果沒有快取，需要更新
+      if (!this.statisticsCache.lastUpdated) {
+        return true
+      }
+
+      // 如果答題記錄變化，需要更新
+      if (answerHistory.length === 0 && this.statisticsCache.userStats?.totalAnswered > 0) {
+        return true
+      }
+
+      if (answerHistory.length !== this.statisticsCache.userStats?.totalAnswered) {
+        return true
+      }
+
+      // 如果快取超過5分鐘，可以考慮更新（可選）
+      const cacheAge = new Date() - new Date(this.statisticsCache.lastUpdated)
+      const fiveMinutes = 5 * 60 * 1000
+
+      return cacheAge > fiveMinutes
+    },
+
+    /**
+     * 取得統計資料（自動更新快取）
+     * @returns {Object} 完整統計資料
+     */
+    getStatisticsData() {
+      if (this.needsStatisticsUpdate()) {
+        this.calculateUserStatistics()
+      }
+
+      return {
+        userStats: this.userStatistics,
+        topicPerformance: this.topicPerformance,
+        difficultyPerformance: this.difficultyPerformance,
+        timeSeriesData: this.timeSeriesData,
+        lastUpdated: this.statisticsCache.lastUpdated
+      }
     }
   }
 })
