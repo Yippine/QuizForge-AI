@@ -163,10 +163,10 @@ onMounted(async () => {
             </div>
           </div>
           <p class="text-gray-600 mb-4">
-            選擇特定主題進行針對性練習，涵蓋官方題目、L21101-L23402 全部 22 個考試主題
+            選擇特定主題進行針對性練習，涵蓋官方題目、科目一、科目三全部 30 個考試主題
           </p>
           <div class="flex items-center justify-between">
-            <span class="text-sm text-primary-600 font-semibold">22 個主題可選</span>
+            <span class="text-sm text-primary-600 font-semibold">30 個主題可選</span>
             <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>

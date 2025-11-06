@@ -237,13 +237,111 @@ export const TOPICS_L23: TopicType[] = [
  */
 export const OFFICIAL_TOPIC: TopicType = {
   id: 'OFFICIAL',
-  subjectId: 'L21', // 跨科目，預設為 L21
+  subjectId: 'OFFICIAL', // 獨立科目，不屬於 L21 或 L23
   name: '官方題目',
   fullName: 'OFFICIAL-官方題目',
   description: '講義練習題與範例試題',
   sequence: 0,
   icon: '📘'
 }
+
+/**
+ * 官方題目子主題列表 (9 個主題)
+ * Formula: OFFICIAL_TOPICS = TopicType[] (9 topics: OFF_L21, OFF_L23, OFF_L211-OFF_L234)
+ * Data Source: official-questions.json breakdown
+ */
+export const OFFICIAL_TOPICS: TopicType[] = [
+  {
+    id: 'OFF_L21',
+    subjectId: 'OFFICIAL',
+    name: '人工智慧技術應用與規劃',
+    fullName: 'OFF_L21-人工智慧技術應用與規劃',
+    description: '官方樣題-科目1',
+    sequence: 1,
+    icon: '🎯',
+    sourcePattern: '官方樣題-科目1'
+  },
+  {
+    id: 'OFF_L23',
+    subjectId: 'OFFICIAL',
+    name: '機器學習技術與應用',
+    fullName: 'OFF_L23-機器學習技術與應用',
+    description: '官方樣題-科目3',
+    sequence: 2,
+    icon: '🎯',
+    sourcePattern: '官方樣題-科目3'
+  },
+  {
+    id: 'OFF_L211',
+    subjectId: 'OFFICIAL',
+    name: 'AI相關技術應用',
+    fullName: 'OFF_L211-AI相關技術應用',
+    description: '講義練習題-第3章',
+    sequence: 3,
+    icon: '💬',
+    sourcePattern: '講義練習題-科目1-第3章'
+  },
+  {
+    id: 'OFF_L212',
+    subjectId: 'OFFICIAL',
+    name: 'AI導入評估規劃',
+    fullName: 'OFF_L212-AI導入評估規劃',
+    description: '講義練習題-第4章',
+    sequence: 4,
+    icon: '📋',
+    sourcePattern: '講義練習題-科目1-第4章'
+  },
+  {
+    id: 'OFF_L213',
+    subjectId: 'OFFICIAL',
+    name: 'AI技術應用與系統部署',
+    fullName: 'OFF_L213-AI技術應用與系統部署',
+    description: '講義練習題-第5章',
+    sequence: 5,
+    icon: '🚀',
+    sourcePattern: '講義練習題-科目1-第5章'
+  },
+  {
+    id: 'OFF_L231',
+    subjectId: 'OFFICIAL',
+    name: '機器學習基礎數學',
+    fullName: 'OFF_L231-機器學習基礎數學',
+    description: '講義練習題-第3章',
+    sequence: 6,
+    icon: '📈',
+    sourcePattern: '講義練習題-科目3-第3章'
+  },
+  {
+    id: 'OFF_L232',
+    subjectId: 'OFFICIAL',
+    name: '機器學習與深度學習',
+    fullName: 'OFF_L232-機器學習與深度學習',
+    description: '講義練習題-第4章',
+    sequence: 7,
+    icon: '🧠',
+    sourcePattern: '講義練習題-科目3-第4章'
+  },
+  {
+    id: 'OFF_L233',
+    subjectId: 'OFFICIAL',
+    name: '機器學習建模與參數調校',
+    fullName: 'OFF_L233-機器學習建模與參數調校',
+    description: '講義練習題-第5章',
+    sequence: 8,
+    icon: '⚙️',
+    sourcePattern: '講義練習題-科目3-第5章'
+  },
+  {
+    id: 'OFF_L234',
+    subjectId: 'OFFICIAL',
+    name: '機器學習治理',
+    fullName: 'OFF_L234-機器學習治理',
+    description: '講義練習題-第6章',
+    sequence: 9,
+    icon: '🔒',
+    sourcePattern: '講義練習題-科目3-第6章'
+  }
+]
 
 /**
  * 所有主題列表

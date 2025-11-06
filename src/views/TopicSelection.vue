@@ -8,7 +8,7 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuestionBankStore } from '../stores/questionBank'
-import { extractTopicID, OFFICIAL_TOPIC } from '../constants/ipas'
+import { extractTopicID, OFFICIAL_TOPIC, OFFICIAL_TOPICS } from '../constants/ipas'
 import TopicCard from '../components/TopicCard.vue'
 
 const router = useRouter()
@@ -17,7 +17,7 @@ const store = useQuestionBankStore()
 /**
  * State
  */
-const selectedSubject = ref(null) // INC-011: 新增科目選擇狀態 (null | 'L21' | 'L23')
+const selectedSubject = ref(null) // 科目選擇狀態 (null | 'L21' | 'L23' | 'OFFICIAL')
 const selectedTopic = ref(null)
 const selectedDifficulty = ref(null)
 const searchQuery = ref('')
@@ -33,11 +33,18 @@ const topicList = computed(() => store.topicList)
  * Computed
  */
 const filteredTopics = computed(() => {
-  let topics = topicList.value
+  let topics = []
 
-  // INC-011: 按科目過濾
-  if (selectedSubject.value) {
-    topics = topics.filter(t => t.subjectId === selectedSubject.value)
+  // 根據選擇的科目決定主題列表
+  if (selectedSubject.value === 'OFFICIAL') {
+    // 官方題目：使用 OFFICIAL_TOPICS (9 個主題)
+    topics = OFFICIAL_TOPICS
+  } else if (selectedSubject.value) {
+    // 一般科目：從 store.topicList 過濾
+    topics = topicList.value.filter(t => t.subjectId === selectedSubject.value)
+  } else {
+    // 未選擇科目：顯示所有主題（排除官方題目）
+    topics = topicList.value.filter(t => t.subjectId !== 'OFFICIAL')
   }
 
   // 按搜尋過濾
@@ -57,15 +64,29 @@ const canStartPractice = computed(() => {
 
 /**
  * Topic Statistics
- * INC-013-HOTFIX: 使用 extractTopicID 進行精確主題ID匹配
+ * 支援一般主題和官方題目主題的統計
  */
 const getTopicStats = (topicId) => {
-  // 找出符合該主題的題目
-  const topicQuestions = store.questions.filter(q => {
-    // 使用 extractTopicID 標準化主題ID進行比對
-    const questionTopicId = extractTopicID(q.topic) || q.topic
-    return questionTopicId === topicId
-  })
+  let topicQuestions = []
+
+  if (topicId === 'OFFICIAL') {
+    // 官方題目總計：所有以 OFF_ 開頭的題目
+    topicQuestions = store.questions.filter(q => q.question_id.startsWith('OFF_'))
+  } else if (topicId.startsWith('OFF_')) {
+    // 官方題目子主題：根據 sourcePattern 過濾
+    const topic = OFFICIAL_TOPICS.find(t => t.id === topicId)
+    if (topic && topic.sourcePattern) {
+      topicQuestions = store.questions.filter(q =>
+        q.source && q.source.includes(topic.sourcePattern)
+      )
+    }
+  } else {
+    // 一般主題：使用 extractTopicID 進行精確匹配
+    topicQuestions = store.questions.filter(q => {
+      const questionTopicId = extractTopicID(q.topic) || q.topic
+      return questionTopicId === topicId
+    })
+  }
 
   return {
     total: topicQuestions.length,
@@ -80,18 +101,11 @@ const getTopicStats = (topicId) => {
 /**
  * Actions
  */
-// INC-011: 新增科目選擇函數
-// INC-013-HOTFIX: 支援官方題目直接跳轉
+// 科目選擇函數
 const selectSubject = (subjectId) => {
-  // INC-013-HOTFIX: 官方題目直接開始練習
-  if (subjectId === 'OFFICIAL') {
-    selectedTopic.value = 'OFFICIAL'
-    startPractice()
-    return
-  }
-
   selectedSubject.value = subjectId
   searchQuery.value = '' // 清除搜尋
+  selectedTopic.value = null // 清除已選主題
 }
 
 const selectTopic = (topicId) => {
@@ -154,7 +168,7 @@ const goBack = () => {
           <h2 class="text-2xl font-bold mb-3">{{ OFFICIAL_TOPIC.name }}</h2>
           <p class="text-blue-100 mb-4">{{ OFFICIAL_TOPIC.description }}</p>
           <div class="text-sm text-blue-200">
-            <span class="font-semibold">{{ getTopicStats('OFFICIAL').total }} 題</span>
+            <span class="font-semibold">9 個主題</span>
           </div>
         </div>
 
@@ -163,6 +177,7 @@ const goBack = () => {
           @click="selectSubject('L21')"
           class="bg-white rounded-xl shadow-lg p-8 cursor-pointer hover:shadow-2xl transform hover:scale-105 transition-all"
         >
+          <div class="text-5xl mb-4">🤖</div>
           <h2 class="text-3xl font-bold text-primary-700 mb-4">科目一</h2>
           <p class="text-xl text-gray-700 mb-4">人工智慧技術應用與規劃</p>
           <div class="text-sm text-gray-600">
@@ -175,6 +190,7 @@ const goBack = () => {
           @click="selectSubject('L23')"
           class="bg-white rounded-xl shadow-lg p-8 cursor-pointer hover:shadow-2xl transform hover:scale-105 transition-all"
         >
+          <div class="text-5xl mb-4">📊</div>
           <h2 class="text-3xl font-bold text-secondary-700 mb-4">科目三</h2>
           <p class="text-xl text-gray-700 mb-4">機器學習技術與應用</p>
           <div class="text-sm text-gray-600">

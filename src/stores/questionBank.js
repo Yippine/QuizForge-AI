@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { useAnswerTracking } from '../composables/useAnswerTracking'
 import { loadAllQuestions } from '../utils/ipasQuestionLoader'
-import { ALL_TOPICS, SUBJECTS, extractTopicID } from '../constants/ipas'
+import { ALL_TOPICS, SUBJECTS, OFFICIAL_TOPICS, extractTopicID } from '../constants/ipas'
 
 /**
  * Question Data Model
@@ -321,6 +321,7 @@ export const useQuestionBankStore = defineStore('questionBank', {
      * 套用所有過濾條件 (AND 邏輯)
      * Formula: questions.filter(topic & difficulty & subject)
      * INC-013-HOTFIX: 使用 extractTopicID 進行主題ID比對
+     * INC-014: 支援官方題目子主題過濾 (使用 sourcePattern)
      */
     applyFilters() {
       let result = this.questions
@@ -332,13 +333,30 @@ export const useQuestionBankStore = defineStore('questionBank', {
 
       // 按 Formula 主題過濾
       // INC-013-HOTFIX: 統一提取主題ID進行比對
+      // INC-014: 官方題目子主題過濾 (使用 sourcePattern)
       if (this.currentFilters.topic) {
         const targetTopicId = this.currentFilters.topic
-        result = result.filter(q => {
-          // 標準化題目的主題ID (處理可能的完整格式)
-          const questionTopicId = extractTopicID(q.topic) || q.topic
-          return questionTopicId === targetTopicId
-        })
+
+        // INC-014: 檢查是否為官方題目子主題
+        if (targetTopicId === 'OFFICIAL') {
+          // OFFICIAL 主題：顯示所有官方題目
+          result = result.filter(q => q.question_id.startsWith('OFF_'))
+        } else if (targetTopicId.startsWith('OFF_')) {
+          // 官方題目子主題：根據 sourcePattern 過濾
+          const officialTopic = OFFICIAL_TOPICS.find(t => t.id === targetTopicId)
+          if (officialTopic && officialTopic.sourcePattern) {
+            result = result.filter(q =>
+              q.source && q.source.includes(officialTopic.sourcePattern)
+            )
+          }
+        } else {
+          // 一般主題：使用 extractTopicID 進行主題ID比對
+          result = result.filter(q => {
+            // 標準化題目的主題ID (處理可能的完整格式)
+            const questionTopicId = extractTopicID(q.topic) || q.topic
+            return questionTopicId === targetTopicId
+          })
+        }
       }
 
       // 按難度過濾

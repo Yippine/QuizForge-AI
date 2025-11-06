@@ -20,13 +20,14 @@ export interface SubjectType {
  * Formula: TopicType = {id: string, subjectId: SubjectId, name: string, fullName: string, description?: string, sequence: number}
  */
 export interface TopicType {
-  id: string // e.g., "L21101", "L23201"
-  subjectId: 'L21' | 'L23'
+  id: string // e.g., "L21101", "L23201", "OFFICIAL", "OFF_L21"
+  subjectId: 'L21' | 'L23' | 'OFFICIAL' // 支援官方題目獨立科目
   name: string // 簡短名稱，e.g., "自然語言處理技術與應用"
   fullName: string // 完整名稱，e.g., "L21101-自然語言處理技術與應用"
   description?: string
   sequence: number // 排序編號
   icon?: string // 圖示 emoji
+  sourcePattern?: string // 用於過濾官方題目的來源模式
 }
 
 /**
