@@ -1,4 +1,6 @@
 <script setup>
+import { computed } from 'vue'
+
 /**
  * QuizForge AI - Loading Spinner Component
  * Formula: LoadingSpinner = VisualFeedback × ResponsiveDesign × Accessibility
