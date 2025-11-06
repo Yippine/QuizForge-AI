@@ -151,41 +151,21 @@ const resetState = () => {
 }
 
 /**
- * Keyboard Shortcuts
- * Formula: KeyboardEvents = {a|b|c|d -> selectAnswer, enter|space -> submitAnswer, left|right -> navigate}
+ * Custom Event Listeners
+ * Formula: CustomEvents = {select-option, submit-answer} -> ComponentActions
+ * Note: Keyboard shortcuts are handled by App.vue through useKeyboardShortcuts
  */
-const handleKeyPress = (event) => {
-  // 忽略修飾鍵組合
-  if (event.ctrlKey || event.altKey || event.metaKey) return
-
-  // 忽略在 input/textarea 內的按鍵
-  const tagName = event.target.tagName.toLowerCase()
-  if (tagName === 'input' || tagName === 'textarea') return
-
-  const key = event.key.toLowerCase()
-
-  // A/B/C/D 鍵 - 選擇答案
-  if (['a', 'b', 'c', 'd'].includes(key)) {
-    event.preventDefault()
-    selectAnswer(key.toUpperCase())
+const handleSelectOption = (event) => {
+  const { optionIndex } = event.detail
+  const options = ['A', 'B', 'C', 'D']
+  if (optionIndex >= 0 && optionIndex < options.length) {
+    selectAnswer(options[optionIndex])
   }
+}
 
-  // Enter / Space 鍵 - 提交答案
-  if ((key === 'enter' || key === ' ') && canSubmit.value) {
-    event.preventDefault()
+const handleSubmitAnswer = () => {
+  if (canSubmit.value) {
     submitAnswer()
-  }
-
-  // 左方向鍵 - 上一題
-  if (key === 'arrowleft' && canGoPrevious.value) {
-    event.preventDefault()
-    previousQuestion()
-  }
-
-  // 右方向鍵 - 下一題
-  if (key === 'arrowright' && canGoNext.value) {
-    event.preventDefault()
-    nextQuestion()
   }
 }
 
@@ -193,11 +173,14 @@ const handleKeyPress = (event) => {
  * Lifecycle Hooks
  */
 onMounted(() => {
-  window.addEventListener('keydown', handleKeyPress)
+  // Listen to custom events dispatched by App.vue keyboard shortcuts
+  window.addEventListener('select-option', handleSelectOption)
+  window.addEventListener('submit-answer', handleSubmitAnswer)
 })
 
 onUnmounted(() => {
-  window.removeEventListener('keydown', handleKeyPress)
+  window.removeEventListener('select-option', handleSelectOption)
+  window.removeEventListener('submit-answer', handleSubmitAnswer)
 })
 
 /**
@@ -209,9 +192,9 @@ watch(() => props.questionIndex, () => {
 </script>
 
 <template>
-  <div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+  <div class="max-w-4xl mx-auto p-4 md:p-6 bg-white rounded-lg shadow-lg">
     <!-- Header: 題目編號 & 進度 -->
-    <div class="flex justify-between items-center mb-4 text-sm text-gray-600">
+    <div class="flex justify-between items-center mb-3 md:mb-4 text-xs md:text-sm text-gray-600">
       <div class="font-medium">
         題目 {{ questionNumber }} / {{ totalQuestions }}
       </div>
@@ -226,8 +209,8 @@ watch(() => props.questionIndex, () => {
     </div>
 
     <!-- Question Text -->
-    <div class="mb-6">
-      <h2 class="text-xl font-semibold text-gray-900 leading-relaxed">
+    <div class="mb-4 md:mb-6">
+      <h2 class="text-base md:text-xl font-semibold text-gray-900 leading-relaxed">
         {{ questionData.question }}
       </h2>
     </div>

@@ -1,0 +1,263 @@
+<script setup>
+/**
+ * TopicSelection Component
+ * Formula: TopicSelection = TopicFilters + TopicGrid + DifficultySelector + StartButton
+ * Responsibility: 主題選擇界面，支持主題和難度篩選
+ */
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useQuestionBankStore } from '../stores/questionBank'
+import TopicCard from '../components/TopicCard.vue'
+
+const router = useRouter()
+const store = useQuestionBankStore()
+
+/**
+ * State
+ */
+const selectedTopic = ref(null)
+const selectedDifficulty = ref(null)
+const searchQuery = ref('')
+
+/**
+ * Topic List (L21101-L21203)
+ */
+const topicList = [
+  { id: 'L21101', name: 'AI基礎概念', description: 'AI基本原理與發展', icon: '🤖' },
+  { id: 'L21102', name: '機器學習', description: '監督式與非監督式學習', icon: '📊' },
+  { id: 'L21103', name: '深度學習', description: '神經網路與深度學習', icon: '🧠' },
+  { id: 'L21104', name: '自然語言處理', description: 'NLP與文字分析', icon: '💬' },
+  { id: 'L21105', name: '電腦視覺', description: '影像識別與處理', icon: '👁️' },
+  { id: 'L21106', name: '語音識別', description: '語音技術與應用', icon: '🎤' },
+  { id: 'L21107', name: 'AI倫理', description: 'AI倫理與社會影響', icon: '⚖️' },
+  { id: 'L21108', name: '數據處理', description: '數據收集與預處理', icon: '📁' },
+  { id: 'L21109', name: '模型評估', description: '模型驗證與優化', icon: '📈' },
+  { id: 'L21110', name: 'AI應用場景', description: '產業應用與案例', icon: '🏭' },
+  { id: 'L21201', name: 'AI專案管理', description: '專案規劃與執行', icon: '📋' },
+  { id: 'L21202', name: '需求分析', description: '業務需求識別', icon: '🔍' },
+  { id: 'L21203', name: 'AI技術選型', description: '技術評估與選擇', icon: '🛠️' }
+]
+
+/**
+ * Computed
+ */
+const filteredTopics = computed(() => {
+  return topicList.filter(topic => {
+    const matchesSearch = searchQuery.value === '' ||
+      topic.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      topic.description.toLowerCase().includes(searchQuery.value.toLowerCase())
+
+    return matchesSearch
+  })
+})
+
+const canStartPractice = computed(() => {
+  return selectedTopic.value !== null
+})
+
+/**
+ * Topic Statistics
+ */
+const getTopicStats = (topicId) => {
+  const topicQuestions = store.questions.filter(q => q.topic === topicId)
+  return {
+    total: topicQuestions.length,
+    difficulties: {
+      easy: topicQuestions.filter(q => q.difficulty === 'easy').length,
+      medium: topicQuestions.filter(q => q.difficulty === 'medium').length,
+      hard: topicQuestions.filter(q => q.difficulty === 'hard').length
+    }
+  }
+}
+
+/**
+ * Actions
+ */
+const selectTopic = (topicId) => {
+  selectedTopic.value = topicId === selectedTopic.value ? null : topicId
+}
+
+const selectDifficulty = (difficulty) => {
+  selectedDifficulty.value = difficulty === selectedDifficulty.value ? null : difficulty
+}
+
+const startPractice = () => {
+  if (!canStartPractice.value) return
+
+  // Apply filters
+  store.filterByTopic(selectedTopic.value)
+  if (selectedDifficulty.value) {
+    store.filterByDifficulty(selectedDifficulty.value)
+  }
+
+  // Navigate to quiz
+  router.push('/quiz')
+}
+
+const goBack = () => {
+  router.push('/')
+}
+</script>
+
+<template>
+  <div class="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 py-8 px-4">
+    <div class="max-w-7xl mx-auto">
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <button
+            @click="goBack"
+            class="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            返回主頁
+          </button>
+          <h1 class="text-4xl font-bold text-gray-900 mb-2">主題選擇</h1>
+          <p class="text-gray-600">選擇一個主題開始練習</p>
+        </div>
+      </div>
+
+      <!-- Search & Filters -->
+      <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Search -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">搜尋主題</label>
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="搜尋主題名稱或描述..."
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-600 focus:border-transparent transition-all"
+            />
+          </div>
+
+          <!-- Difficulty Filter -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">難度篩選</label>
+            <div class="flex gap-3">
+              <button
+                @click="selectDifficulty('easy')"
+                :class="[
+                  'flex-1 py-3 px-4 rounded-lg font-medium transition-all',
+                  selectedDifficulty === 'easy'
+                    ? 'bg-accent-600 text-white shadow-lg'
+                    : 'bg-accent-100 text-accent-800 hover:bg-accent-200'
+                ]"
+              >
+                簡單
+              </button>
+              <button
+                @click="selectDifficulty('medium')"
+                :class="[
+                  'flex-1 py-3 px-4 rounded-lg font-medium transition-all',
+                  selectedDifficulty === 'medium'
+                    ? 'bg-warning-600 text-white shadow-lg'
+                    : 'bg-warning-100 text-warning-800 hover:bg-warning-200'
+                ]"
+              >
+                中等
+              </button>
+              <button
+                @click="selectDifficulty('hard')"
+                :class="[
+                  'flex-1 py-3 px-4 rounded-lg font-medium transition-all',
+                  selectedDifficulty === 'hard'
+                    ? 'bg-red-600 text-white shadow-lg'
+                    : 'bg-red-100 text-red-800 hover:bg-red-200'
+                ]"
+              >
+                困難
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Selected Info -->
+        <div v-if="selectedTopic" class="mt-6 p-4 bg-primary-50 border border-primary-200 rounded-lg">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-sm font-semibold text-primary-900">已選擇主題:</span>
+              <span class="ml-2 text-primary-700">
+                {{ topicList.find(t => t.id === selectedTopic)?.name }}
+              </span>
+              <span v-if="selectedDifficulty" class="ml-2 text-primary-600">
+                ({{ selectedDifficulty === 'easy' ? '簡單' : selectedDifficulty === 'medium' ? '中等' : '困難' }})
+              </span>
+            </div>
+            <button
+              @click="selectTopic(null)"
+              class="text-primary-600 hover:text-primary-800 text-sm font-medium"
+            >
+              清除選擇
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Topic Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <TopicCard
+          v-for="topic in filteredTopics"
+          :key="topic.id"
+          :topic="topic"
+          :stats="getTopicStats(topic.id)"
+          :is-selected="selectedTopic === topic.id"
+          @select="selectTopic(topic.id)"
+        />
+      </div>
+
+      <!-- Empty State -->
+      <div v-if="filteredTopics.length === 0" class="text-center py-16">
+        <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <p class="text-gray-600 text-lg">找不到符合條件的主題</p>
+        <button
+          @click="searchQuery = ''"
+          class="mt-4 px-6 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium transition-colors"
+        >
+          清除搜尋
+        </button>
+      </div>
+
+      <!-- Start Practice Button -->
+      <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-xl p-4 md:p-6">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+          <div class="text-sm text-gray-600">
+            <span v-if="selectedTopic">已選擇 1 個主題</span>
+            <span v-else>請選擇一個主題</span>
+          </div>
+          <button
+            @click="startPractice"
+            :disabled="!canStartPractice"
+            :class="[
+              'px-8 py-3 rounded-lg font-bold text-lg transition-all shadow-lg',
+              canStartPractice
+                ? 'bg-primary-600 hover:bg-primary-700 text-white cursor-pointer hover:shadow-xl transform hover:scale-105'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            ]"
+          >
+            開始練習
+            <svg class="inline-block w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Bottom Spacer -->
+      <div class="h-24"></div>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+/* Fixed bottom bar on mobile */
+@media (max-width: 768px) {
+  .fixed {
+    padding: 1rem;
+  }
+}
+</style>

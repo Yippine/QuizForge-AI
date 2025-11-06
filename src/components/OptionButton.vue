@@ -48,7 +48,7 @@ const emit = defineEmits(['option-selected'])
  * Formula: StateStyle = (answerState × isSelected × isCorrect) -> CSSClasses
  */
 const buttonClasses = computed(() => {
-  const baseClasses = 'w-full p-4 text-left rounded-lg border-2 transition-all duration-200 flex items-center gap-3'
+  const baseClasses = 'w-full p-3 md:p-4 text-left rounded-lg border-2 transition-all duration-200 flex items-center gap-2 md:gap-3 min-h-touch active:scale-95'
 
   // 已答題狀態 - 顯示正確/錯誤
   if (props.answerState !== 'unanswered') {
@@ -79,7 +79,7 @@ const buttonClasses = computed(() => {
  * Formula: LabelStyle = (isSelected × isCorrect) -> LabelClasses
  */
 const labelClasses = computed(() => {
-  const baseClasses = 'flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm'
+  const baseClasses = 'flex-shrink-0 w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center font-bold text-xs md:text-sm'
 
   if (props.answerState !== 'unanswered') {
     if (props.isCorrect) {
@@ -121,7 +121,7 @@ const handleClick = () => {
     </div>
 
     <!-- 選項內容 -->
-    <div class="flex-1 text-base">
+    <div class="flex-1 text-sm md:text-base leading-relaxed">
       {{ option }}
     </div>
 
