@@ -161,10 +161,23 @@ onMounted(async () => {
     await store.loadQuestions()
   }
 
-  // INC-011: 從路由取得 topicId 並過濾題目
+  // INC-012: 從路由取得 mode 和參數
   const route = router.currentRoute.value
+  const mode = route.query.mode
   const topicId = route.params.topicId || route.query.topic
-  if (topicId) {
+
+  // INC-012: Wrong questions mode 初始化
+  if (mode === 'wrong-questions') {
+    practiceMode.value = 'wrong-practice'
+    const ids = route.query.ids
+    if (ids) {
+      wrongPracticeQuestions.value = ids.split(',')
+      console.log(`📝 Wrong questions mode: ${wrongPracticeQuestions.value.length} questions loaded`)
+    } else {
+      console.warn('⚠️ Wrong questions mode activated but no question IDs provided')
+    }
+  } else if (topicId) {
+    // INC-011: Topic filter mode
     store.filterByTopic(topicId)
     console.log(`🔍 Topic filter applied: ${topicId}, filtered questions: ${store.filteredQuestions.length}`)
   }

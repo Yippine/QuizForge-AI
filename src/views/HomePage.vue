@@ -8,6 +8,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuestionBankStore } from '../stores/questionBank'
 import { useAnswerTracking } from '../composables/useAnswerTracking'
+import WrongQuestionsPanel from '../components/WrongQuestionsPanel.vue'
 
 const router = useRouter()
 const store = useQuestionBankStore()
@@ -22,6 +23,7 @@ const stats = ref({
   correct: 0,
   accuracy: 0
 })
+const showWrongQuestionsPanel = ref(false)
 
 /**
  * Computed
@@ -41,7 +43,29 @@ const startRandomPractice = () => {
 }
 
 const viewWrongQuestions = () => {
-  router.push('/wrong-questions')
+  showWrongQuestionsPanel.value = true
+}
+
+/**
+ * Handle start wrong practice event from WrongQuestionsPanel
+ * Formula: handleStartWrongPractice(questionIds) -> router.push({ path: '/quiz', query: { mode: 'wrong-questions', ids: questionIds } })
+ */
+const handleStartWrongPractice = (questionIds) => {
+  router.push({
+    path: '/quiz',
+    query: {
+      mode: 'wrong-questions',
+      ids: questionIds.join(',')
+    }
+  })
+}
+
+/**
+ * Handle close panel event from WrongQuestionsPanel
+ * Formula: handleClosePanel() -> showWrongQuestionsPanel.value = false
+ */
+const handleClosePanel = () => {
+  showWrongQuestionsPanel.value = false
 }
 
 const viewStatistics = () => {
@@ -233,6 +257,23 @@ onMounted(async () => {
         <p class="mt-1">INC-006: UI/UX Comprehensive Redesign & Bug Fixes</p>
       </div>
     </div>
+
+    <!-- Wrong Questions Panel Modal -->
+    <Teleport to="body">
+      <div
+        v-if="showWrongQuestionsPanel"
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+        @click.self="handleClosePanel"
+      >
+        <div class="max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <WrongQuestionsPanel
+            mode="view"
+            @start-wrong-practice="handleStartWrongPractice"
+            @close-panel="handleClosePanel"
+          />
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 
