@@ -32,7 +32,7 @@ const handleReset = () => emit('reset')
 <template>
   <!-- Mobile Bottom Navigation - Only visible on mobile -->
   <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-xl z-50">
-    <div class="grid grid-cols-4 gap-1 p-2">
+    <div class="grid grid-cols-4 gap-3 p-4">
       <!-- Home -->
       <button
         @click="handleHome"

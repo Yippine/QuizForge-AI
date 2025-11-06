@@ -50,7 +50,7 @@ const handleSelect = () => {
   <div
     @click="handleSelect"
     :class="[
-      'bg-white rounded-xl shadow-lg p-6 cursor-pointer transition-all duration-normal',
+      'bg-white rounded-xl shadow-lg p-6 md:p-8 cursor-pointer transition-all duration-normal',
       'border-2 hover:shadow-2xl transform hover:scale-105',
       isSelected
         ? 'border-primary-600 ring-4 ring-primary-200'

@@ -216,7 +216,7 @@ watch(() => props.questionIndex, () => {
     </div>
 
     <!-- Options Grid -->
-    <div class="space-y-3 mb-6">
+    <div class="space-y-4 mb-6">
       <OptionButton
         v-for="(option, key) in questionData.options"
         :key="key"

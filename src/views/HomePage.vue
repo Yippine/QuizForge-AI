@@ -98,22 +98,22 @@ onMounted(async () => {
       </div>
 
       <!-- Quick Stats -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-5 md:gap-6 mb-12">
         <div class="bg-white rounded-xl shadow-lg p-6 text-center transform hover:scale-105 transition-all duration-normal">
           <div class="text-3xl font-bold text-primary-600">{{ questionBankSize }}</div>
-          <div class="text-sm text-gray-600 mt-2">題庫總題數</div>
+          <div class="text-sm text-gray-600 mt-3">題庫總題數</div>
         </div>
         <div class="bg-white rounded-xl shadow-lg p-6 text-center transform hover:scale-105 transition-all duration-normal">
           <div class="text-3xl font-bold text-accent-600">{{ stats.total }}</div>
-          <div class="text-sm text-gray-600 mt-2">已答題數</div>
+          <div class="text-sm text-gray-600 mt-3">已答題數</div>
         </div>
         <div class="bg-white rounded-xl shadow-lg p-6 text-center transform hover:scale-105 transition-all duration-normal">
           <div class="text-3xl font-bold text-secondary-600">{{ stats.accuracy }}%</div>
-          <div class="text-sm text-gray-600 mt-2">正確率</div>
+          <div class="text-sm text-gray-600 mt-3">正確率</div>
         </div>
         <div class="bg-white rounded-xl shadow-lg p-6 text-center transform hover:scale-105 transition-all duration-normal relative">
           <div class="text-3xl font-bold text-warning-600">{{ wrongQuestionsCount }}</div>
-          <div class="text-sm text-gray-600 mt-2">錯題數量</div>
+          <div class="text-sm text-gray-600 mt-3">錯題數量</div>
           <span v-if="wrongQuestionsCount > 0" class="absolute top-2 right-2 bg-warning-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
             !
           </span>

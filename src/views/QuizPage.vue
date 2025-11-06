@@ -198,21 +198,21 @@ onMounted(async () => {
       </div>
 
       <!-- Stats Bar -->
-      <div v-if="answerHistory.length > 0" class="flex justify-center gap-2 md:gap-4 text-xs md:text-base">
-        <div class="bg-white rounded-lg shadow px-3 md:px-4 py-2 text-center min-w-[60px] md:min-w-[80px]">
-          <div class="text-[10px] md:text-xs text-gray-600">已答</div>
+      <div v-if="answerHistory.length > 0" class="flex justify-center gap-4 md:gap-6 text-xs md:text-base mb-8">
+        <div class="bg-white rounded-lg shadow px-5 md:px-6 py-4 text-center min-w-[80px] min-h-[52px] md:min-w-[100px]">
+          <div class="text-xs md:text-sm text-gray-600 mb-1">已答</div>
           <div class="text-lg md:text-xl font-bold text-primary-600">{{ stats.total }}</div>
         </div>
-        <div class="bg-white rounded-lg shadow px-3 md:px-4 py-2 text-center min-w-[60px] md:min-w-[80px]">
-          <div class="text-[10px] md:text-xs text-gray-600">正確</div>
+        <div class="bg-white rounded-lg shadow px-5 md:px-6 py-4 text-center min-w-[80px] min-h-[52px] md:min-w-[100px]">
+          <div class="text-xs md:text-sm text-gray-600 mb-1">正確</div>
           <div class="text-lg md:text-xl font-bold text-accent-600">{{ stats.correct }}</div>
         </div>
-        <div class="bg-white rounded-lg shadow px-3 md:px-4 py-2 text-center min-w-[60px] md:min-w-[80px]">
-          <div class="text-[10px] md:text-xs text-gray-600">錯誤</div>
+        <div class="bg-white rounded-lg shadow px-5 md:px-6 py-4 text-center min-w-[80px] min-h-[52px] md:min-w-[100px]">
+          <div class="text-xs md:text-sm text-gray-600 mb-1">錯誤</div>
           <div class="text-lg md:text-xl font-bold text-red-600">{{ stats.incorrect }}</div>
         </div>
-        <div class="bg-white rounded-lg shadow px-3 md:px-4 py-2 text-center min-w-[60px] md:min-w-[80px]">
-          <div class="text-[10px] md:text-xs text-gray-600">正確率</div>
+        <div class="bg-white rounded-lg shadow px-5 md:px-6 py-4 text-center min-w-[80px] min-h-[52px] md:min-w-[100px]">
+          <div class="text-xs md:text-sm text-gray-600 mb-1">正確率</div>
           <div class="text-lg md:text-xl font-bold text-secondary-600">{{ stats.accuracy }}%</div>
         </div>
       </div>
