@@ -13,7 +13,7 @@
       "L23_textbook_ch6": 10,
       "L23_sample": 15
     },
-    "description": "iPAS AI應用規劃師中級能力鑑定官方完整題庫（含講義練習題70題與官方樣題30題）",
+    "description": "iPAS AI 應用規劃師中級能力鑑定官方完整題庫（含講義練習題70題與官方樣題30題）",
     "last_updated": "2025-11-04"
   },
   "questions": [
@@ -1985,7 +1985,13 @@
       "answer": "A",
       "answer_text": "c → a → b → d",
       "explanation": "正確流程：(c)載入資料並準備特徵與標籤 → (a)分割訓練集與測試集 → (b)建立並訓練模型 → (d)使用模型進行預測。",
-      "keywords": ["機器學習流程", "資料分割", "模型訓練", "預測", "scikit-learn"]
+      "keywords": [
+        "機器學習流程",
+        "資料分割",
+        "模型訓練",
+        "預測",
+        "scikit-learn"
+      ]
     }
   ]
 }
