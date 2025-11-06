@@ -120,11 +120,11 @@ const goBack = () => {
       </div>
 
       <!-- Search & Filters -->
-      <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+      <div class="bg-white rounded-xl shadow-lg p-7 md:p-8 mb-8">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Search -->
           <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">搜尋主題</label>
+            <label class="block text-sm font-semibold text-gray-700 mb-3">搜尋主題</label>
             <input
               v-model="searchQuery"
               type="text"
@@ -135,8 +135,8 @@ const goBack = () => {
 
           <!-- Difficulty Filter -->
           <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">難度篩選</label>
-            <div class="flex gap-3">
+            <label class="block text-sm font-semibold text-gray-700 mb-3">難度篩選</label>
+            <div class="flex gap-3 md:gap-4">
               <button
                 @click="selectDifficulty('easy')"
                 :class="[
@@ -175,7 +175,7 @@ const goBack = () => {
         </div>
 
         <!-- Selected Info -->
-        <div v-if="selectedTopic" class="mt-6 p-4 bg-primary-50 border border-primary-200 rounded-lg">
+        <div v-if="selectedTopic" class="mt-6 p-5 md:p-6 bg-primary-50 border border-primary-200 rounded-lg">
           <div class="flex items-center justify-between">
             <div>
               <span class="text-sm font-semibold text-primary-900">已選擇主題:</span>
@@ -197,7 +197,7 @@ const goBack = () => {
       </div>
 
       <!-- Topic Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-8">
         <TopicCard
           v-for="topic in filteredTopics"
           :key="topic.id"
@@ -223,7 +223,7 @@ const goBack = () => {
       </div>
 
       <!-- Start Practice Button -->
-      <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-xl p-4 md:p-6">
+      <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-xl p-5 md:p-7">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
           <div class="text-sm text-gray-600">
             <span v-if="selectedTopic">已選擇 1 個主題</span>

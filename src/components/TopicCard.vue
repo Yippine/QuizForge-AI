@@ -50,7 +50,7 @@ const handleSelect = () => {
   <div
     @click="handleSelect"
     :class="[
-      'bg-white rounded-xl shadow-lg p-6 md:p-8 cursor-pointer transition-all duration-normal',
+      'bg-white rounded-xl shadow-lg p-7 md:p-8 cursor-pointer transition-all duration-normal',
       'border-2 hover:shadow-2xl transform hover:scale-105',
       isSelected
         ? 'border-primary-600 ring-4 ring-primary-200'
@@ -58,7 +58,7 @@ const handleSelect = () => {
     ]"
   >
     <!-- Icon & Title -->
-    <div class="flex items-center gap-4 mb-4">
+    <div class="flex items-center gap-4 mb-5 md:mb-6">
       <div class="text-4xl">{{ topic.icon }}</div>
       <div class="flex-1">
         <h3 class="text-lg font-bold text-gray-900">{{ topic.name }}</h3>
@@ -75,10 +75,10 @@ const handleSelect = () => {
     </div>
 
     <!-- Description -->
-    <p class="text-sm text-gray-600 mb-4">{{ topic.description }}</p>
+    <p class="text-sm text-gray-600 mb-5 md:mb-6">{{ topic.description }}</p>
 
     <!-- Stats -->
-    <div class="space-y-3">
+    <div class="space-y-4">
       <!-- Total Questions -->
       <div class="flex items-center justify-between text-sm">
         <span class="text-gray-600">題目數量</span>

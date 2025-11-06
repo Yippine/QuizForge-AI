@@ -87,11 +87,11 @@ onMounted(async () => {
     <!-- Main Content -->
     <div v-else class="max-w-6xl mx-auto">
       <!-- Hero Section -->
-      <div class="text-center mb-12">
-        <h1 class="text-5xl font-bold text-gray-900 mb-4">
+      <div class="text-center mb-14 md:mb-16">
+        <h1 class="text-5xl font-bold text-gray-900 mb-5 md:mb-6">
           QuizForge AI
         </h1>
-        <p class="text-xl text-gray-600 mb-2">iPAS AI應用規劃師 - 智能題庫系統</p>
+        <p class="text-xl text-gray-600 mb-3 md:mb-4">iPAS AI應用規劃師 - 智能題庫系統</p>
         <p class="text-base text-gray-500">
           開始你的學習之旅，掌握 AI 應用規劃核心知識
         </p>
@@ -121,7 +121,7 @@ onMounted(async () => {
       </div>
 
       <!-- Mode Selection Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-14 md:mb-16">
         <!-- Topic Selection Mode -->
         <div
           @click="startTopicSelection"
@@ -178,7 +178,7 @@ onMounted(async () => {
       </div>
 
       <!-- Additional Features -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-7 md:gap-8">
         <!-- Wrong Questions -->
         <button
           v-if="wrongQuestionsCount > 0"

@@ -192,9 +192,9 @@ watch(() => props.questionIndex, () => {
 </script>
 
 <template>
-  <div class="max-w-4xl mx-auto p-4 md:p-6 bg-white rounded-lg shadow-lg">
+  <div class="max-w-4xl mx-auto p-5 md:p-7 lg:p-8 bg-white rounded-lg shadow-lg">
     <!-- Header: 題目編號 & 進度 -->
-    <div class="flex justify-between items-center mb-3 md:mb-4 text-xs md:text-sm text-gray-600">
+    <div class="flex justify-between items-center mb-4 md:mb-5 text-xs md:text-sm text-gray-600">
       <div class="font-medium">
         題目 {{ questionNumber }} / {{ totalQuestions }}
       </div>
@@ -209,14 +209,14 @@ watch(() => props.questionIndex, () => {
     </div>
 
     <!-- Question Text -->
-    <div class="mb-4 md:mb-6">
+    <div class="mb-5 md:mb-7 lg:mb-8">
       <h2 class="text-base md:text-xl font-semibold text-gray-900 leading-relaxed">
         {{ questionData.question }}
       </h2>
     </div>
 
     <!-- Options Grid -->
-    <div class="space-y-4 mb-6">
+    <div class="space-y-4 md:space-y-5 mb-6">
       <OptionButton
         v-for="(option, key) in questionData.options"
         :key="key"
@@ -230,7 +230,7 @@ watch(() => props.questionIndex, () => {
     </div>
 
     <!-- Submit Button -->
-    <div v-if="answerState === 'unanswered'" class="mb-6">
+    <div v-if="answerState === 'unanswered'" class="mb-7 md:mb-8">
       <button
         :disabled="!canSubmit"
         :class="[
@@ -262,7 +262,7 @@ watch(() => props.questionIndex, () => {
     />
 
     <!-- Navigation Controls -->
-    <div v-if="answerState !== 'unanswered'" class="flex gap-3 mt-6">
+    <div v-if="answerState !== 'unanswered'" class="flex gap-3 md:gap-4 mt-6">
       <!-- Previous Button -->
       <button
         v-if="canGoPrevious"
