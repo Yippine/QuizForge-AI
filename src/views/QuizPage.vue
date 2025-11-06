@@ -161,6 +161,14 @@ onMounted(async () => {
     await store.loadQuestions()
   }
 
+  // INC-011: 從路由取得 topicId 並過濾題目
+  const route = router.currentRoute.value
+  const topicId = route.params.topicId || route.query.topic
+  if (topicId) {
+    store.filterByTopic(topicId)
+    console.log(`🔍 Topic filter applied: ${topicId}, filtered questions: ${store.filteredQuestions.length}`)
+  }
+
   initializeKeyboardShortcuts()
 })
 </script>

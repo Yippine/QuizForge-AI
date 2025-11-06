@@ -4,6 +4,7 @@
  * Formula: StatisticsPanel = OverallStats + TopicPerformance + DifficultyAnalysis + ProgressTracking
  */
 import { ref, computed, onMounted, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import { useQuestionBankStore } from '../stores/questionBank'
 import { useAnswerTracking } from '../composables/useAnswerTracking'
 import {
@@ -33,6 +34,7 @@ ChartJS.register(
   ArcElement
 )
 
+const router = useRouter()
 const store = useQuestionBankStore()
 const { getAnswerHistory, getStatistics } = useAnswerTracking()
 
@@ -343,6 +345,11 @@ const exportStats = () => {
   a.click()
   URL.revokeObjectURL(url)
 }
+
+// INC-011: 新增開始練習導航函數
+const startPractice = () => {
+  router.push('/topic-selection')
+}
 </script>
 
 <template>
@@ -521,7 +528,7 @@ const exportStats = () => {
       <p class="text-gray-600 text-lg mb-4">尚無統計數據</p>
       <p class="text-gray-500 mb-6">開始答題後即可查看詳細的學習統計</p>
       <button
-        @click="$emit('start-practice')"
+        @click="startPractice"
         class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors"
       >
         開始練習

@@ -28,7 +28,7 @@ const routes = [
     }
   },
   {
-    path: '/quiz',
+    path: '/quiz/:topicId?',
     name: 'quiz',
     component: () => import('../views/QuizPage.vue'),
     meta: {

@@ -16,6 +16,7 @@ const store = useQuestionBankStore()
 /**
  * State
  */
+const selectedSubject = ref(null) // INC-011: 新增科目選擇狀態 (null | 'L21' | 'L23')
 const selectedTopic = ref(null)
 const selectedDifficulty = ref(null)
 const searchQuery = ref('')
@@ -31,7 +32,15 @@ const topicList = computed(() => store.topicList)
  * Computed
  */
 const filteredTopics = computed(() => {
-  return topicList.value.filter(topic => {
+  let topics = topicList.value
+
+  // INC-011: 按科目過濾
+  if (selectedSubject.value) {
+    topics = topics.filter(t => t.subjectId === selectedSubject.value)
+  }
+
+  // 按搜尋過濾
+  return topics.filter(topic => {
     const matchesSearch = searchQuery.value === '' ||
       topic.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
       (topic.description && topic.description.toLowerCase().includes(searchQuery.value.toLowerCase())) ||
@@ -70,6 +79,12 @@ const getTopicStats = (topicId) => {
 /**
  * Actions
  */
+// INC-011: 新增科目選擇函數
+const selectSubject = (subjectId) => {
+  selectedSubject.value = subjectId
+  searchQuery.value = '' // 清除搜尋
+}
+
 const selectTopic = (topicId) => {
   selectedTopic.value = topicId === selectedTopic.value ? null : topicId
 }
@@ -87,8 +102,11 @@ const startPractice = () => {
     store.filterByDifficulty(selectedDifficulty.value)
   }
 
-  // Navigate to quiz
-  router.push('/quiz')
+  // INC-011: Navigate to quiz with topicId params
+  router.push({
+    path: '/quiz',
+    params: { topicId: selectedTopic.value }
+  })
 }
 
 const goBack = () => {
@@ -115,6 +133,43 @@ const goBack = () => {
           <p class="text-gray-600">選擇一個主題開始練習</p>
         </div>
       </div>
+
+      <!-- INC-011: 階段 1 - 科目選擇 -->
+      <div v-if="!selectedSubject" class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+        <div
+          @click="selectSubject('L21')"
+          class="bg-white rounded-xl shadow-lg p-8 cursor-pointer hover:shadow-2xl transform hover:scale-105 transition-all"
+        >
+          <h2 class="text-3xl font-bold text-primary-700 mb-4">科目一</h2>
+          <p class="text-xl text-gray-700 mb-4">人工智慧技術應用與規劃</p>
+          <div class="text-sm text-gray-600">
+            <span class="font-semibold">9 個主題</span>
+          </div>
+        </div>
+        <div
+          @click="selectSubject('L23')"
+          class="bg-white rounded-xl shadow-lg p-8 cursor-pointer hover:shadow-2xl transform hover:scale-105 transition-all"
+        >
+          <h2 class="text-3xl font-bold text-secondary-700 mb-4">科目三</h2>
+          <p class="text-xl text-gray-700 mb-4">機器學習技術與應用</p>
+          <div class="text-sm text-gray-600">
+            <span class="font-semibold">12 個主題</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- INC-011: 階段 2 - 主題選擇 (原有內容) -->
+      <div v-else>
+        <!-- 返回科目選擇按鈕 -->
+        <button
+          @click="selectedSubject = null"
+          class="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6 transition-colors"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          返回科目選擇
+        </button>
 
       <!-- Search & Filters -->
       <div class="bg-white rounded-xl shadow-lg p-7 md:p-8 mb-8">
@@ -242,6 +297,9 @@ const goBack = () => {
             </svg>
           </button>
         </div>
+      </div>
+
+      <!-- INC-011: 關閉科目選擇的 v-else div -->
       </div>
 
       <!-- Bottom Spacer -->
