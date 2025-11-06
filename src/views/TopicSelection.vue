@@ -8,6 +8,7 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuestionBankStore } from '../stores/questionBank'
+import { extractTopicID, OFFICIAL_TOPIC } from '../constants/ipas'
 import TopicCard from '../components/TopicCard.vue'
 
 const router = useRouter()
@@ -56,14 +57,14 @@ const canStartPractice = computed(() => {
 
 /**
  * Topic Statistics
- * 更新為使用正確的主題匹配邏輯
- * 支援兩種格式：fullName (L21101-自然語言處理技術與應用) 和 topicId (L21101)
+ * INC-013-HOTFIX: 使用 extractTopicID 進行精確主題ID匹配
  */
 const getTopicStats = (topicId) => {
   // 找出符合該主題的題目
   const topicQuestions = store.questions.filter(q => {
-    // 直接使用 topic 欄位進行匹配（支援完整名稱）
-    return q.topic && q.topic.includes(topicId)
+    // 使用 extractTopicID 標準化主題ID進行比對
+    const questionTopicId = extractTopicID(q.topic) || q.topic
+    return questionTopicId === topicId
   })
 
   return {
@@ -80,7 +81,15 @@ const getTopicStats = (topicId) => {
  * Actions
  */
 // INC-011: 新增科目選擇函數
+// INC-013-HOTFIX: 支援官方題目直接跳轉
 const selectSubject = (subjectId) => {
+  // INC-013-HOTFIX: 官方題目直接開始練習
+  if (subjectId === 'OFFICIAL') {
+    selectedTopic.value = 'OFFICIAL'
+    startPractice()
+    return
+  }
+
   selectedSubject.value = subjectId
   searchQuery.value = '' // 清除搜尋
 }
@@ -134,8 +143,22 @@ const goBack = () => {
         </div>
       </div>
 
-      <!-- INC-011: 階段 1 - 科目選擇 -->
-      <div v-if="!selectedSubject" class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+      <!-- INC-011: 階段 1 - 科目選擇 + INC-013-HOTFIX: 官方題目卡片 -->
+      <div v-if="!selectedSubject" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+        <!-- INC-013-HOTFIX: 官方題目卡片 -->
+        <div
+          @click="selectSubject('OFFICIAL')"
+          class="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg p-8 cursor-pointer hover:shadow-2xl transform hover:scale-105 transition-all text-white"
+        >
+          <div class="text-5xl mb-4">{{ OFFICIAL_TOPIC.icon }}</div>
+          <h2 class="text-2xl font-bold mb-3">{{ OFFICIAL_TOPIC.name }}</h2>
+          <p class="text-blue-100 mb-4">{{ OFFICIAL_TOPIC.description }}</p>
+          <div class="text-sm text-blue-200">
+            <span class="font-semibold">{{ getTopicStats('OFFICIAL').total }} 題</span>
+          </div>
+        </div>
+
+        <!-- 科目一 -->
         <div
           @click="selectSubject('L21')"
           class="bg-white rounded-xl shadow-lg p-8 cursor-pointer hover:shadow-2xl transform hover:scale-105 transition-all"
@@ -146,6 +169,8 @@ const goBack = () => {
             <span class="font-semibold">9 個主題</span>
           </div>
         </div>
+
+        <!-- 科目三 -->
         <div
           @click="selectSubject('L23')"
           class="bg-white rounded-xl shadow-lg p-8 cursor-pointer hover:shadow-2xl transform hover:scale-105 transition-all"

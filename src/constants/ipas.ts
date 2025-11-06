@@ -232,10 +232,24 @@ export const TOPICS_L23: TopicType[] = [
 ]
 
 /**
- * 所有主題列表
- * Formula: ALL_TOPICS = TOPICS_L21 + TOPICS_L23 (21 topics total)
+ * 官方題目主題定義
+ * Formula: OFFICIAL_TOPIC = Virtual Topic for Official Questions
  */
-export const ALL_TOPICS: TopicType[] = [...TOPICS_L21, ...TOPICS_L23]
+export const OFFICIAL_TOPIC: TopicType = {
+  id: 'OFFICIAL',
+  subjectId: 'L21', // 跨科目，預設為 L21
+  name: '官方題目',
+  fullName: 'OFFICIAL-官方題目',
+  description: '講義練習題與範例試題',
+  sequence: 0,
+  icon: '📘'
+}
+
+/**
+ * 所有主題列表
+ * Formula: ALL_TOPICS = OFFICIAL_TOPIC + TOPICS_L21 + TOPICS_L23 (22 topics total)
+ */
+export const ALL_TOPICS: TopicType[] = [OFFICIAL_TOPIC, ...TOPICS_L21, ...TOPICS_L23]
 
 /**
  * 官方題目配置
@@ -317,4 +331,26 @@ export function getTopicsBySubject(subjectId: 'L21' | 'L23'): TopicType[] {
  */
 export function getTopicByFullName(fullName: string): TopicType | undefined {
   return ALL_TOPICS.find(topic => topic.fullName === fullName)
+}
+
+/**
+ * 從主題字串提取主題ID
+ * Formula: extractTopicID(topic: string) -> string
+ * Purpose: 統一處理不同格式的主題字串，提取標準化的主題ID
+ *
+ * 支援格式:
+ * - "L21101_自然語言處理技術與應用" -> "L21101"
+ * - "L21201-AI導入評估" -> "L21201"
+ * - "L23101" -> "L23101"
+ * - "自然語言處理技術與應用" -> null (無法提取)
+ *
+ * @param topic - 主題字串（來自 question.topic 欄位）
+ * @returns 主題ID (L21xxx 或 L23xxx) 或 null
+ */
+export function extractTopicID(topic: string): string | null {
+  if (!topic) return null
+
+  // 匹配格式: L21101_xxx 或 L21101-xxx 或 L21101
+  const match = topic.match(/^(L2[13]\d{3})/)
+  return match ? match[1] : null
 }

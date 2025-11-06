@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { useAnswerTracking } from '../composables/useAnswerTracking'
 import { loadAllQuestions } from '../utils/ipasQuestionLoader'
-import { ALL_TOPICS, SUBJECTS } from '../constants/ipas'
+import { ALL_TOPICS, SUBJECTS, extractTopicID } from '../constants/ipas'
 
 /**
  * Question Data Model
@@ -255,6 +255,7 @@ export const useQuestionBankStore = defineStore('questionBank', {
 
     /**
      * 計算題庫統計資訊
+     * INC-013-HOTFIX: 使用 extractTopicID 標準化主題ID進行統計
      */
     calculateStats() {
       this.stats.totalQuestions = this.questions.length
@@ -272,8 +273,10 @@ export const useQuestionBankStore = defineStore('questionBank', {
       }, {})
 
       // 按 Formula 主題統計
+      // INC-013-HOTFIX: 標準化主題ID進行統計
       this.stats.byTopic = this.questions.reduce((acc, q) => {
-        acc[q.topic] = (acc[q.topic] || 0) + 1
+        const topicId = extractTopicID(q.topic) || q.topic
+        acc[topicId] = (acc[topicId] || 0) + 1
         return acc
       }, {})
 
@@ -317,6 +320,7 @@ export const useQuestionBankStore = defineStore('questionBank', {
     /**
      * 套用所有過濾條件 (AND 邏輯)
      * Formula: questions.filter(topic & difficulty & subject)
+     * INC-013-HOTFIX: 使用 extractTopicID 進行主題ID比對
      */
     applyFilters() {
       let result = this.questions
@@ -327,8 +331,14 @@ export const useQuestionBankStore = defineStore('questionBank', {
       }
 
       // 按 Formula 主題過濾
+      // INC-013-HOTFIX: 統一提取主題ID進行比對
       if (this.currentFilters.topic) {
-        result = result.filter(q => q.topic === this.currentFilters.topic)
+        const targetTopicId = this.currentFilters.topic
+        result = result.filter(q => {
+          // 標準化題目的主題ID (處理可能的完整格式)
+          const questionTopicId = extractTopicID(q.topic) || q.topic
+          return questionTopicId === targetTopicId
+        })
       }
 
       // 按難度過濾

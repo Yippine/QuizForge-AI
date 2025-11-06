@@ -6,7 +6,7 @@
  */
 
 import type { QuestionType, ValidationResult, SubjectId } from '../types/ipas'
-import { ALL_TOPICS, getTopicById, getTopicByFullName } from '../constants/ipas'
+import { ALL_TOPICS, getTopicById, getTopicByFullName, extractTopicID } from '../constants/ipas'
 
 /**
  * 從 question_id 提取主題 ID
@@ -52,13 +52,24 @@ export function isOfficialQuestion(questionId: string): boolean {
  * 標準化題目格式
  * Formula: normalizeQuestionFormat(rawQuestion) -> QuestionType
  * Purpose: 統一處理 mock exam 和 official questions 的不同資料格式
+ * INC-013-HOTFIX: 官方題目的 topic 欄位標準化為主題ID (L21101 格式)
  */
 export function normalizeQuestionFormat(rawQuestion: any): QuestionType {
+  // 處理主題欄位：官方題目需要從完整名稱提取ID
+  let normalizedTopic = rawQuestion.topic
+  if (isOfficialQuestion(rawQuestion.question_id)) {
+    // 官方題目：從 "L21101_自然語言處理技術與應用" 提取 "L21101"
+    const extractedTopicID = extractTopicID(rawQuestion.topic)
+    if (extractedTopicID) {
+      normalizedTopic = extractedTopicID
+    }
+  }
+
   // 基本欄位
   const normalized: QuestionType = {
     question_id: rawQuestion.question_id,
     subject: rawQuestion.subject || extractSubjectId(rawQuestion.question_id) || 'L21',
-    topic: rawQuestion.topic,
+    topic: normalizedTopic,
     difficulty: rawQuestion.difficulty,
     question: rawQuestion.question,
     options: rawQuestion.options,
