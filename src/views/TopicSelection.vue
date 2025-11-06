@@ -3,6 +3,7 @@
  * TopicSelection Component
  * Formula: TopicSelection = TopicFilters + TopicGrid + DifficultySelector + StartButton
  * Responsibility: 主題選擇界面，支持主題和難度篩選
+ * Updated: 使用 ALL_TOPICS 常量替代硬編碼主題列表
  */
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
@@ -20,32 +21,21 @@ const selectedDifficulty = ref(null)
 const searchQuery = ref('')
 
 /**
- * Topic List (L21101-L21203)
+ * Topic List - 從 store.topicList 取得完整的 21 個主題
+ * Formula: topicList = store.topicList (ALL_TOPICS from constants)
+ * 包含: L21 (9個主題) + L23 (12個主題) = 21個主題
  */
-const topicList = [
-  { id: 'L21101', name: 'AI基礎概念', description: 'AI基本原理與發展', icon: '🤖' },
-  { id: 'L21102', name: '機器學習', description: '監督式與非監督式學習', icon: '📊' },
-  { id: 'L21103', name: '深度學習', description: '神經網路與深度學習', icon: '🧠' },
-  { id: 'L21104', name: '自然語言處理', description: 'NLP與文字分析', icon: '💬' },
-  { id: 'L21105', name: '電腦視覺', description: '影像識別與處理', icon: '👁️' },
-  { id: 'L21106', name: '語音識別', description: '語音技術與應用', icon: '🎤' },
-  { id: 'L21107', name: 'AI倫理', description: 'AI倫理與社會影響', icon: '⚖️' },
-  { id: 'L21108', name: '數據處理', description: '數據收集與預處理', icon: '📁' },
-  { id: 'L21109', name: '模型評估', description: '模型驗證與優化', icon: '📈' },
-  { id: 'L21110', name: 'AI應用場景', description: '產業應用與案例', icon: '🏭' },
-  { id: 'L21201', name: 'AI專案管理', description: '專案規劃與執行', icon: '📋' },
-  { id: 'L21202', name: '需求分析', description: '業務需求識別', icon: '🔍' },
-  { id: 'L21203', name: 'AI技術選型', description: '技術評估與選擇', icon: '🛠️' }
-]
+const topicList = computed(() => store.topicList)
 
 /**
  * Computed
  */
 const filteredTopics = computed(() => {
-  return topicList.filter(topic => {
+  return topicList.value.filter(topic => {
     const matchesSearch = searchQuery.value === '' ||
       topic.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      topic.description.toLowerCase().includes(searchQuery.value.toLowerCase())
+      (topic.description && topic.description.toLowerCase().includes(searchQuery.value.toLowerCase())) ||
+      topic.fullName.toLowerCase().includes(searchQuery.value.toLowerCase())
 
     return matchesSearch
   })
@@ -57,13 +47,20 @@ const canStartPractice = computed(() => {
 
 /**
  * Topic Statistics
+ * 更新為使用正確的主題匹配邏輯
+ * 支援兩種格式：fullName (L21101-自然語言處理技術與應用) 和 topicId (L21101)
  */
 const getTopicStats = (topicId) => {
-  const topicQuestions = store.questions.filter(q => q.topic === topicId)
+  // 找出符合該主題的題目
+  const topicQuestions = store.questions.filter(q => {
+    // 直接使用 topic 欄位進行匹配（支援完整名稱）
+    return q.topic && q.topic.includes(topicId)
+  })
+
   return {
     total: topicQuestions.length,
     difficulties: {
-      easy: topicQuestions.filter(q => q.difficulty === 'easy').length,
+      simple: topicQuestions.filter(q => q.difficulty === 'simple').length,
       medium: topicQuestions.filter(q => q.difficulty === 'medium').length,
       hard: topicQuestions.filter(q => q.difficulty === 'hard').length
     }
@@ -138,10 +135,10 @@ const goBack = () => {
             <label class="block text-sm font-semibold text-gray-700 mb-3">難度篩選</label>
             <div class="flex gap-3 md:gap-4">
               <button
-                @click="selectDifficulty('easy')"
+                @click="selectDifficulty('simple')"
                 :class="[
                   'flex-1 py-3 px-4 rounded-lg font-medium transition-all',
-                  selectedDifficulty === 'easy'
+                  selectedDifficulty === 'simple'
                     ? 'bg-accent-600 text-white shadow-lg'
                     : 'bg-accent-100 text-accent-800 hover:bg-accent-200'
                 ]"
@@ -183,7 +180,7 @@ const goBack = () => {
                 {{ topicList.find(t => t.id === selectedTopic)?.name }}
               </span>
               <span v-if="selectedDifficulty" class="ml-2 text-primary-600">
-                ({{ selectedDifficulty === 'easy' ? '簡單' : selectedDifficulty === 'medium' ? '中等' : '困難' }})
+                ({{ selectedDifficulty === 'simple' ? '簡單' : selectedDifficulty === 'medium' ? '中等' : '困難' }})
               </span>
             </div>
             <button

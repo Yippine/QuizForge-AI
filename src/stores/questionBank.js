@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 import { useAnswerTracking } from '../composables/useAnswerTracking'
+import { loadAllQuestions } from '../utils/ipasQuestionLoader'
+import { ALL_TOPICS, SUBJECTS } from '../constants/ipas'
 
 /**
  * Question Data Model
@@ -103,21 +105,19 @@ export const useQuestionBankStore = defineStore('questionBank', {
     },
 
     /**
-     * 取得所有 Formula 主題列表
-     * @returns {string[]}
+     * 取得所有 Formula 主題列表 (從 constants 取得完整定義)
+     * @returns {TopicType[]} 包含完整主題資訊的陣列
      */
-    topicList: (state) => {
-      const topics = new Set(state.questions.map(q => q.topic))
-      return Array.from(topics).sort()
+    topicList: () => {
+      return ALL_TOPICS
     },
 
     /**
-     * 取得所有科目列表
-     * @returns {string[]}
+     * 取得所有科目列表 (從 constants 取得完整定義)
+     * @returns {SubjectType[]} 包含完整科目資訊的陣列
      */
-    subjectList: (state) => {
-      const subjects = new Set(state.questions.map(q => q.subject))
-      return Array.from(subjects).sort()
+    subjectList: () => {
+      return Object.values(SUBJECTS)
     },
 
     /**
@@ -219,30 +219,19 @@ export const useQuestionBankStore = defineStore('questionBank', {
    */
   actions: {
     /**
-     * 載入題庫 JSON 資料
-     * Formula: fetch(/questions/*.json) -> merge -> state.questions
-     * @param {string[]} sources - 要載入的資料來源 (預設載入全部)
+     * 載入題庫 JSON 資料 (使用 ipasQuestionLoader 統一載入)
+     * Formula: loadAllQuestions() -> normalize -> merge -> state.questions
      */
-    async loadQuestions(sources = ['official-questions', 'L21-mock-exam', 'L23-mock-exam']) {
+    async loadQuestions() {
       this.loading = true
       this.error = null
 
       try {
-        const allQuestions = []
+        // 使用新的 loadAllQuestions 函數統一載入所有題庫
+        const allQuestions = await loadAllQuestions()
 
-        // 載入所有指定的 JSON 檔案
-        for (const source of sources) {
-          const response = await fetch(`/questions/${source}.json`)
-          if (!response.ok) {
-            throw new Error(`Failed to load ${source}.json: ${response.statusText}`)
-          }
-
-          const data = await response.json()
-
-          // 合併題目陣列
-          if (data.questions && Array.isArray(data.questions)) {
-            allQuestions.push(...data.questions)
-          }
+        if (allQuestions.length === 0) {
+          throw new Error('No questions loaded. Please check question files.')
         }
 
         // 更新 state
@@ -252,7 +241,9 @@ export const useQuestionBankStore = defineStore('questionBank', {
         // 計算統計資訊
         this.calculateStats()
 
-        console.log(`✅ Successfully loaded ${allQuestions.length} questions`)
+        console.log(`✅ Successfully loaded ${allQuestions.length} questions from IPAS question loader`)
+        console.log(`📊 Stats: ${this.stats.bySubject.L21 || 0} L21 questions, ${this.stats.bySubject.L23 || 0} L23 questions`)
+        console.log(`📚 Topics available: ${ALL_TOPICS.length} topics`)
 
       } catch (err) {
         this.error = err.message
