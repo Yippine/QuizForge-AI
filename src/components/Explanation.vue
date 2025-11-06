@@ -41,7 +41,12 @@ const formattedReferences = computed(() => {
   }
 
   // 如果是字串，嘗試以換行符分割
-  return props.references.split('\n').filter(ref => ref.trim().length > 0)
+  if (typeof props.references === 'string') {
+    return props.references.split('\n').filter(ref => ref.trim().length > 0)
+  }
+
+  // 其他類型（如數字、物件等），回傳空陣列
+  return []
 })
 
 /**
