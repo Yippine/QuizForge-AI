@@ -116,6 +116,10 @@ const selectDifficulty = (difficulty) => {
   selectedDifficulty.value = difficulty === selectedDifficulty.value ? null : difficulty
 }
 
+/**
+ * INC-015: Start Practice Mode
+ * Formula: startPractice() -> router.push({ path: '/quiz', query: { mode: 'practice' } })
+ */
 const startPractice = () => {
   if (!canStartPractice.value) return
 
@@ -125,10 +129,30 @@ const startPractice = () => {
     store.filterByDifficulty(selectedDifficulty.value)
   }
 
-  // INC-011: Navigate to quiz with topicId params
+  // INC-015: Navigate to quiz with mode=practice parameter
   router.push({
     path: '/quiz',
-    params: { topicId: selectedTopic.value }
+    query: { mode: 'practice' }
+  })
+}
+
+/**
+ * INC-015: Start Exam Mode
+ * Formula: startExam() -> router.push({ path: '/quiz', query: { mode: 'exam' } })
+ */
+const startExam = () => {
+  if (!canStartPractice.value) return
+
+  // Apply filters
+  store.filterByTopic(selectedTopic.value)
+  if (selectedDifficulty.value) {
+    store.filterByDifficulty(selectedDifficulty.value)
+  }
+
+  // INC-015: Navigate to quiz with mode=exam parameter
+  router.push({
+    path: '/quiz',
+    query: { mode: 'exam' }
   })
 }
 
@@ -315,28 +339,51 @@ const goBack = () => {
         </button>
       </div>
 
-      <!-- Start Practice Button -->
+      <!-- INC-015: Start Practice/Exam Buttons -->
       <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-xl p-5 md:p-7">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
-          <div class="text-sm text-gray-600">
+        <div class="max-w-7xl mx-auto">
+          <!-- Selection Status -->
+          <div class="text-sm text-gray-600 mb-4 text-center">
             <span v-if="selectedTopic">已選擇 1 個主題</span>
             <span v-else>請選擇一個主題</span>
           </div>
-          <button
-            @click="startPractice"
-            :disabled="!canStartPractice"
-            :class="[
-              'px-8 py-3 rounded-lg font-bold text-lg transition-all shadow-lg',
-              canStartPractice
-                ? 'bg-primary-600 hover:bg-primary-700 text-white cursor-pointer hover:shadow-xl transform hover:scale-105'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            ]"
-          >
-            開始練習
-            <svg class="inline-block w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </button>
+
+          <!-- Dual Button Layout -->
+          <div class="flex gap-4">
+            <!-- Practice Button (Blue) -->
+            <button
+              @click="startPractice"
+              :disabled="!canStartPractice"
+              :class="[
+                'flex-1 px-6 py-3 rounded-lg font-bold text-lg transition-all shadow-lg',
+                canStartPractice
+                  ? 'bg-blue-600 hover:bg-blue-700 text-white cursor-pointer hover:shadow-xl transform hover:scale-105'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              ]"
+            >
+              開始練習
+              <svg class="inline-block w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </button>
+
+            <!-- Exam Button (Red) -->
+            <button
+              @click="startExam"
+              :disabled="!canStartPractice"
+              :class="[
+                'flex-1 px-6 py-3 rounded-lg font-bold text-lg transition-all shadow-lg',
+                canStartPractice
+                  ? 'bg-red-600 hover:bg-red-700 text-white cursor-pointer hover:shadow-xl transform hover:scale-105'
+                  : 'bg-gray-700 text-gray-400 cursor-not-allowed'
+              ]"
+            >
+              開始考試
+              <svg class="inline-block w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 

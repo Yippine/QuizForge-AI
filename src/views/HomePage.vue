@@ -196,8 +196,8 @@ onMounted(async () => {
               </svg>
             </div>
             <div>
-              <h2 class="text-2xl font-bold text-gray-900">主題練習</h2>
-              <p class="text-sm text-gray-500">Topic Practice</p>
+              <h2 class="text-2xl font-bold text-gray-900">主題學習</h2>
+              <p class="text-sm text-gray-500">Topic Learning</p>
             </div>
           </div>
           <p class="text-gray-600 mb-4">
