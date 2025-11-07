@@ -27,6 +27,10 @@ const answerHistory = ref([])
 const practiceMode = ref('normal') // 'normal' | 'wrong-practice'
 const wrongPracticeQuestions = ref([])
 const swipeTarget = ref(null)
+// INC-016: Mode state for practice/exam mode
+const mode = ref('practice') // 'practice' | 'exam'
+// INC-016: Answer states memory - 存儲每道題目的答題狀態
+const answerStates = ref(new Map()) // key: question_id, value: { selectedAnswer, answerState }
 
 /**
  * Computed
@@ -58,6 +62,12 @@ const stats = computed(() => {
   return { total, correct, incorrect, accuracy }
 })
 
+// INC-016: 獲取當前題目的初始答題狀態
+const currentQuestionState = computed(() => {
+  if (!currentQuestion.value) return null
+  return answerStates.value.get(currentQuestion.value.question_id) || null
+})
+
 /**
  * Swipe Gesture Support
  */
@@ -86,6 +96,14 @@ const handleAnswerSubmitted = (answerData) => {
   answerHistory.value.push(enhancedAnswerData)
   saveAnswer(enhancedAnswerData)
   store.calculateUserStatistics()
+
+  // INC-016: 保存答題狀態到記憶中
+  if (currentQuestion.value) {
+    answerStates.value.set(currentQuestion.value.question_id, {
+      selectedAnswer: answerData.userAnswer,
+      answerState: answerData.isCorrect ? 'correct' : 'incorrect'
+    })
+  }
 }
 
 const handleNextQuestion = () => {
@@ -163,11 +181,17 @@ onMounted(async () => {
 
   // INC-012: 從路由取得 mode 和參數
   const route = router.currentRoute.value
-  const mode = route.query.mode
+  const routeMode = route.query.mode
   const topicId = route.params.topicId || route.query.topic
 
+  // INC-016: 設定練習/考試模式 (practice | exam)
+  if (routeMode === 'exam' || routeMode === 'practice') {
+    mode.value = routeMode
+    console.log(`🎯 Mode set to: ${mode.value}`)
+  }
+
   // INC-012: Wrong questions mode 初始化
-  if (mode === 'wrong-questions') {
+  if (routeMode === 'wrong-questions') {
     practiceMode.value = 'wrong-practice'
     const ids = route.query.ids
     if (ids) {
@@ -276,6 +300,8 @@ onMounted(async () => {
           :question-data="currentQuestion"
           :question-index="currentQuestionIndex"
           :total-questions="totalQuestions"
+          :mode="mode"
+          :initial-state="currentQuestionState"
           @answer-submitted="handleAnswerSubmitted"
           @next-question="handleNextQuestion"
           @previous-question="handlePreviousQuestion"

@@ -38,6 +38,12 @@ const props = defineProps({
     type: String,
     default: 'unanswered',
     validator: (value) => ['unanswered', 'correct', 'incorrect'].includes(value)
+  },
+  // INC-016: 模式 ('practice' | 'exam')
+  mode: {
+    type: String,
+    default: 'practice',
+    validator: (value) => ['practice', 'exam'].includes(value)
   }
 })
 
@@ -45,12 +51,23 @@ const emit = defineEmits(['option-selected'])
 
 /**
  * 計算按鈕樣式類別
- * Formula: StateStyle = (answerState × isSelected × isCorrect) -> CSSClasses
+ * Formula: StateStyle = (mode × answerState × isSelected × isCorrect) -> CSSClasses
+ * INC-016: 考試模式不顯示對錯反饋
  */
 const buttonClasses = computed(() => {
   const baseClasses = 'w-full p-4 md:p-5 text-left rounded-lg border-2 transition-all duration-200 flex items-center gap-3 md:gap-4 min-h-touch active:scale-95'
 
-  // 已答題狀態 - 顯示正確/錯誤
+  // INC-016: 考試模式不顯示對錯反饋
+  if (props.mode === 'exam') {
+    if (props.isSelected) {
+      // 已選中 - 藍色
+      return `${baseClasses} border-blue-500 bg-blue-100 text-blue-900 cursor-pointer`
+    }
+    // 預設狀態
+    return `${baseClasses} border-gray-300 hover:border-blue-400 hover:bg-blue-50 cursor-pointer`
+  }
+
+  // 練習模式：已答題狀態 - 顯示正確/錯誤
   if (props.answerState !== 'unanswered') {
     if (props.isCorrect) {
       // 正確答案 - 綠色
@@ -76,11 +93,21 @@ const buttonClasses = computed(() => {
 
 /**
  * 標籤樣式
- * Formula: LabelStyle = (isSelected × isCorrect) -> LabelClasses
+ * Formula: LabelStyle = (mode × isSelected × isCorrect) -> LabelClasses
+ * INC-016: 考試模式不顯示對錯反饋
  */
 const labelClasses = computed(() => {
   const baseClasses = 'flex-shrink-0 w-8 h-8 md:w-9 md:h-9 rounded-full flex items-center justify-center font-bold text-xs md:text-sm'
 
+  // INC-016: 考試模式不顯示對錯反饋
+  if (props.mode === 'exam') {
+    if (props.isSelected) {
+      return `${baseClasses} bg-blue-500 text-white`
+    }
+    return `${baseClasses} bg-gray-200 text-gray-700`
+  }
+
+  // 練習模式：顯示對錯反饋
   if (props.answerState !== 'unanswered') {
     if (props.isCorrect) {
       return `${baseClasses} bg-green-500 text-white`
@@ -125,15 +152,15 @@ const handleClick = () => {
       {{ option }}
     </div>
 
-    <!-- 正確答案標記 -->
-    <div v-if="answerState !== 'unanswered' && isCorrect" class="flex-shrink-0 text-green-600">
+    <!-- INC-016: 正確答案標記（僅練習模式） -->
+    <div v-if="mode === 'practice' && answerState !== 'unanswered' && isCorrect" class="flex-shrink-0 text-green-600">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
       </svg>
     </div>
 
-    <!-- 錯誤選擇標記 -->
-    <div v-if="answerState !== 'unanswered' && isSelected && !isCorrect" class="flex-shrink-0 text-red-600">
+    <!-- INC-016: 錯誤選擇標記（僅練習模式） -->
+    <div v-if="mode === 'practice' && answerState !== 'unanswered' && isSelected && !isCorrect" class="flex-shrink-0 text-red-600">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
       </svg>

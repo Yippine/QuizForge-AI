@@ -25,6 +25,17 @@ const props = defineProps({
   totalQuestions: {
     type: Number,
     required: true
+  },
+  // INC-016: 練習/考試模式
+  mode: {
+    type: String,
+    default: 'practice',
+    validator: (value) => ['practice', 'exam'].includes(value)
+  },
+  // INC-016: 初始答題狀態 (用於恢復已作答題目)
+  initialState: {
+    type: Object,
+    default: null
   }
 })
 
@@ -71,6 +82,11 @@ const submitButtonText = computed(() => {
   return '已提交'
 })
 
+// INC-016: 查看解析按鈕文字
+const explanationButtonText = computed(() => {
+  return showExplanation.value ? '收起解析' : '查看解析'
+})
+
 /**
  * Interaction Logic
  * Formula: InteractionFlow = SelectAnswer -> ValidateAnswer -> ShowFeedback -> (ShowExplanation & EnableNavigation)
@@ -89,6 +105,7 @@ const selectAnswer = (option) => {
 /**
  * 提交答案並驗證
  * Formula: submitAnswer() -> validateAnswer(selectedAnswer, correctAnswer) -> (answerState = result) & recordHistory() & saveToStorage()
+ * INC-016: 考試模式自動跳到下一題
  */
 const submitAnswer = () => {
   if (!canSubmit.value) return
@@ -96,9 +113,6 @@ const submitAnswer = () => {
   // 驗證答案
   const isCorrect = selectedAnswer.value === props.questionData.answer
   answerState.value = isCorrect ? 'correct' : 'incorrect'
-
-  // 自動顯示解析
-  showExplanation.value = true
 
   // 準備答題數據
   const answerData = {
@@ -116,6 +130,14 @@ const submitAnswer = () => {
 
   // 發送事件給父組件
   emit('answer-submitted', answerData)
+}
+
+/**
+ * INC-016: 切換解析顯示狀態
+ * Formula: toggleExplanation() -> (showExplanation = !showExplanation)
+ */
+const toggleExplanation = () => {
+  showExplanation.value = !showExplanation.value
 }
 
 /**
@@ -185,10 +207,33 @@ onUnmounted(() => {
 
 /**
  * Watch for question changes
+ * INC-016: 切換題目時恢復答題狀態
  */
 watch(() => props.questionIndex, () => {
-  resetState()
+  // INC-016: 恢復答題狀態而不是重置
+  if (props.initialState) {
+    selectedAnswer.value = props.initialState.selectedAnswer
+    answerState.value = props.initialState.answerState
+  } else {
+    resetState()
+  }
+  // INC-016: 確保解析狀態被重置
+  showExplanation.value = false
 })
+
+/**
+ * Watch for initialState changes (when switching questions)
+ * INC-016: 當切換到已作答題目時恢復狀態
+ */
+watch(() => props.initialState, (newState) => {
+  if (newState) {
+    selectedAnswer.value = newState.selectedAnswer
+    answerState.value = newState.answerState
+  } else {
+    resetState()
+  }
+  showExplanation.value = false
+}, { immediate: true })
 </script>
 
 <template>
@@ -225,36 +270,68 @@ watch(() => props.questionIndex, () => {
         :is-selected="selectedAnswer === key"
         :is-correct="key === questionData.answer"
         :answer-state="answerState"
+        :mode="mode"
         @option-selected="selectAnswer"
       />
     </div>
 
-    <!-- Submit Button -->
+    <!-- Submit Button / INC-016: 練習模式並排顯示查看解析和提交答案 -->
     <div v-if="answerState === 'unanswered'" class="mb-7 md:mb-8">
+      <div :class="mode === 'practice' ? 'flex gap-3' : ''">
+        <!-- INC-016: 查看解析按鈕（練習模式，左側） -->
+        <button
+          v-if="mode === 'practice'"
+          :class="[
+            'flex-1 py-3 px-6 rounded-lg font-semibold transition-all duration-200',
+            'bg-gray-200 hover:bg-gray-300 text-gray-800 cursor-pointer'
+          ]"
+          @click="toggleExplanation"
+        >
+          {{ explanationButtonText }}
+        </button>
+
+        <!-- 提交答案按鈕（右側） -->
+        <button
+          :disabled="!canSubmit"
+          :class="[
+            mode === 'practice' ? 'flex-1' : 'w-full',
+            'py-3 px-6 rounded-lg font-semibold text-white transition-all duration-200',
+            canSubmit
+              ? 'bg-blue-600 hover:bg-blue-700 cursor-pointer'
+              : 'bg-gray-300 cursor-not-allowed'
+          ]"
+          @click="submitAnswer"
+        >
+          {{ submitButtonText }}
+          <span v-if="canSubmit" class="text-sm ml-2">(Enter / Space)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- INC-016: View Explanation Button (練習模式且已作答) -->
+    <div v-if="mode === 'practice' && answerState !== 'unanswered'" class="mb-6">
       <button
-        :disabled="!canSubmit"
         :class="[
-          'w-full py-3 px-6 rounded-lg font-semibold text-white transition-all duration-200',
-          canSubmit
-            ? 'bg-blue-600 hover:bg-blue-700 cursor-pointer'
-            : 'bg-gray-300 cursor-not-allowed'
+          'w-full py-3 px-6 rounded-lg font-semibold transition-all duration-200',
+          'bg-gray-200 hover:bg-gray-300 text-gray-800 cursor-pointer'
         ]"
-        @click="submitAnswer"
+        @click="toggleExplanation"
       >
-        {{ submitButtonText }}
-        <span v-if="canSubmit" class="text-sm ml-2">(Enter / Space)</span>
+        {{ explanationButtonText }}
       </button>
     </div>
 
-    <!-- Answer Feedback -->
+    <!-- Answer Feedback (練習模式) -->
     <AnswerFeedback
+      v-if="mode === 'practice'"
       :answer-state="answerState"
       :correct-answer="questionData.answer"
       :user-answer="selectedAnswer"
     />
 
-    <!-- Explanation -->
+    <!-- Explanation (練習模式) -->
     <Explanation
+      v-if="mode === 'practice'"
       :show="showExplanation"
       :explanation="questionData.explanation"
       :keywords="questionData.keywords"
