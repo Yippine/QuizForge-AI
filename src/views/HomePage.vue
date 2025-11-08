@@ -37,9 +37,9 @@ const startTopicSelection = () => {
   router.push("/topics");
 };
 
-const startRandomPractice = () => {
+const startExamSettings = () => {
   store.resetFilters();
-  router.push("/quiz");
+  router.push("/exam-settings");
 };
 
 const viewWrongQuestions = () => {
@@ -224,17 +224,17 @@ onMounted(async () => {
           </div>
         </div>
 
-        <!-- Random Practice Mode -->
+        <!-- Mock Exam Mode (INC-018: 原本的隨機練習改為模擬考試) -->
         <div
-          @click="startRandomPractice"
-          class="bg-white rounded-2xl shadow-xl p-8 cursor-pointer transform hover:scale-105 hover:shadow-2xl transition-all duration-normal border-2 border-transparent hover:border-accent-600"
+          @click="startExamSettings"
+          class="bg-white rounded-2xl shadow-xl p-8 cursor-pointer transform hover:scale-105 hover:shadow-2xl transition-all duration-normal border-2 border-transparent hover:border-secondary-600"
         >
           <div class="flex items-center gap-4 mb-4">
             <div
-              class="w-16 h-16 bg-accent-100 rounded-xl flex items-center justify-center"
+              class="w-16 h-16 bg-secondary-100 rounded-xl flex items-center justify-center"
             >
               <svg
-                class="w-8 h-8 text-accent-600"
+                class="w-8 h-8 text-secondary-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -243,22 +243,22 @@ onMounted(async () => {
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
-                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
                 />
               </svg>
             </div>
             <div>
-              <h2 class="text-2xl font-bold text-gray-900">隨機練習</h2>
-              <p class="text-sm text-gray-500">Random Practice</p>
+              <h2 class="text-2xl font-bold text-gray-900">模擬考試</h2>
+              <p class="text-sm text-gray-500">Mock Exam</p>
             </div>
           </div>
           <p class="text-gray-600 mb-4">
-            隨機抽取題目進行全面練習，快速開始，全面覆蓋所有知識點
+            設定題數和時間限制，隨機抽取題目模擬真實考試環境，檢驗學習成果
           </p>
           <div class="flex items-center justify-between">
-            <span class="text-sm text-accent-600 font-semibold">立即開始</span>
+            <span class="text-sm text-secondary-600 font-semibold">開始設定</span>
             <svg
-              class="w-6 h-6 text-accent-600"
+              class="w-6 h-6 text-secondary-600"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"

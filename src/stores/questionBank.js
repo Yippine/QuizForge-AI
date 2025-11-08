@@ -37,6 +37,9 @@ export const useQuestionBankStore = defineStore('questionBank', {
     // 過濾後的題目
     filteredQuestions: [],
 
+    // INC-019: 打亂後的題目（用於隨機模式）
+    shuffledQuestions: null,
+
     // 當前過濾條件
     currentFilters: {
       topic: null,      // Formula 主題代碼 (e.g., "L21201")
@@ -136,9 +139,14 @@ export const useQuestionBankStore = defineStore('questionBank', {
 
     /**
      * 取得當前過濾結果
+     * INC-019: 優先返回打亂的題目（如果有設定）
      * @returns {Question[]}
      */
     currentQuestions: (state) => {
+      // INC-019: 如果有打亂的題目，優先返回
+      if (state.shuffledQuestions !== null) {
+        return state.shuffledQuestions
+      }
       return state.filteredQuestions.length > 0
         ? state.filteredQuestions
         : state.questions
@@ -380,7 +388,25 @@ export const useQuestionBankStore = defineStore('questionBank', {
         subject: null
       }
       this.filteredQuestions = []
+      this.shuffledQuestions = null  // INC-019: 同時清除打亂的題目
       console.log('🔄 Filters reset - showing all questions')
+    },
+
+    /**
+     * INC-019: 設置打亂的題目
+     * @param {Question[]} questions - 打亂後的題目陣列
+     */
+    setShuffledQuestions(questions) {
+      this.shuffledQuestions = questions
+      console.log(`🔀 Shuffled questions set: ${questions.length} questions`)
+    },
+
+    /**
+     * INC-019: 清除打亂的題目
+     */
+    clearShuffledQuestions() {
+      this.shuffledQuestions = null
+      console.log('🔄 Shuffled questions cleared')
     },
 
     /**

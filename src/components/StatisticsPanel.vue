@@ -110,7 +110,7 @@ const difficultyStats = computed(() => {
   })
 
   return Array.from(difficultyMap.entries()).map(([difficulty, stats]) => ({
-    difficulty: difficulty === 'easy' ? '簡單' : difficulty === 'medium' ? '中等' : difficulty === 'hard' ? '困難' : '未知',
+    difficulty: difficulty === 'simple' ? '簡單' : difficulty === 'medium' ? '中等' : difficulty === 'hard' ? '困難' : '未知',
     ...stats,
     accuracy: stats.total > 0 ? Math.round((stats.correct / stats.total) * 100) : 0
   }))
@@ -356,6 +356,17 @@ const startPractice = () => {
   <div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-8 px-4">
     <!-- Header -->
     <div class="max-w-7xl mx-auto mb-8">
+      <!-- Back Button -->
+      <button
+        @click="router.push('/')"
+        class="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors text-sm md:text-base"
+      >
+        <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        返回主頁
+      </button>
+
       <div class="flex items-center justify-between">
         <div>
           <h1 class="text-3xl font-bold text-gray-900">學習統計</h1>

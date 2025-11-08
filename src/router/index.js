@@ -28,6 +28,15 @@ const routes = [
     }
   },
   {
+    path: '/exam-settings',
+    name: 'exam-settings',
+    component: () => import('../views/ExamSettings.vue'),
+    meta: {
+      title: 'QuizForge AI - 模擬考試設定',
+      requiresAuth: false
+    }
+  },
+  {
     path: '/quiz/:topicId?',
     name: 'quiz',
     component: () => import('../views/QuizPage.vue'),
@@ -51,6 +60,15 @@ const routes = [
     component: () => import('../components/WrongQuestionsPanel.vue'),
     meta: {
       title: 'QuizForge AI - 錯題本',
+      requiresAuth: false
+    }
+  },
+  {
+    path: '/results',
+    name: 'results',
+    component: () => import('../views/ResultsPage.vue'),
+    meta: {
+      title: 'QuizForge AI - 答題結果',
       requiresAuth: false
     }
   },

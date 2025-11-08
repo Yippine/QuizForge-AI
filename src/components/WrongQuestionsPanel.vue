@@ -43,6 +43,19 @@ const extendedStats = computed(() => {
   }
 })
 
+// 難度中文顯示映射
+const getDifficultyText = (difficulty) => {
+  const difficultyMap = {
+    'simple': '簡單',
+    'Simple': '簡單',
+    'medium': '中等',
+    'Medium': '中等',
+    'hard': '困難',
+    'Hard': '困難'
+  }
+  return difficultyMap[difficulty] || difficulty
+}
+
 /**
  * Start wrong questions practice mode
  * Formula: startWrongPractice() -> emit('start-wrong-practice', wrongQuestionIds)
@@ -192,7 +205,7 @@ const formatDate = (timestamp) => {
                     v-if="question.difficulty"
                     class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-xs"
                   >
-                    {{ question.difficulty }}
+                    {{ getDifficultyText(question.difficulty) }}
                   </span>
                 </div>
 

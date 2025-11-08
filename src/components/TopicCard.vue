@@ -29,10 +29,10 @@ const emit = defineEmits(['select'])
 const totalQuestions = computed(() => props.stats.total)
 
 const difficultyBreakdown = computed(() => {
-  const { easy, medium, hard } = props.stats.difficulties
-  const total = easy + medium + hard
+  const { simple, medium, hard } = props.stats.difficulties
+  const total = simple + medium + hard
   return {
-    easy: total > 0 ? Math.round((easy / total) * 100) : 0,
+    simple: total > 0 ? Math.round((simple / total) * 100) : 0,
     medium: total > 0 ? Math.round((medium / total) * 100) : 0,
     hard: total > 0 ? Math.round((hard / total) * 100) : 0
   }
@@ -90,10 +90,10 @@ const handleSelect = () => {
         <div class="text-xs text-gray-600 mb-2">難度分佈</div>
         <div class="flex gap-1 h-2 rounded-full overflow-hidden bg-gray-200">
           <div
-            v-if="difficultyBreakdown.easy > 0"
-            :style="{ width: `${difficultyBreakdown.easy}%` }"
+            v-if="difficultyBreakdown.simple > 0"
+            :style="{ width: `${difficultyBreakdown.simple}%` }"
             class="bg-accent-500"
-            :title="`簡單: ${difficultyBreakdown.easy}%`"
+            :title="`簡單: ${difficultyBreakdown.simple}%`"
           ></div>
           <div
             v-if="difficultyBreakdown.medium > 0"
@@ -109,7 +109,7 @@ const handleSelect = () => {
           ></div>
         </div>
         <div class="flex justify-between text-xs text-gray-500 mt-1">
-          <span>簡單 {{ stats.difficulties.easy }}</span>
+          <span>簡單 {{ stats.difficulties.simple }}</span>
           <span>中等 {{ stats.difficulties.medium }}</span>
           <span>困難 {{ stats.difficulties.hard }}</span>
         </div>

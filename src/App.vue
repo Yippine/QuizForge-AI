@@ -8,8 +8,6 @@ import { ref, onMounted, onErrorCaptured } from 'vue'
 import { useQuestionBankStore } from './stores/questionBank'
 import ErrorBoundary from './components/ErrorBoundary.vue'
 
-const store = useQuestionBankStore()
-
 /**
  * State
  */
@@ -33,6 +31,9 @@ onMounted(async () => {
   console.log('🚀 QuizForge AI - Loading...')
 
   try {
+    // Initialize store after mounting to ensure Pinia is ready
+    const store = useQuestionBankStore()
+
     // Pre-load question bank for better UX
     await store.loadQuestions()
     console.log('✅ QuizForge AI - Ready!')
