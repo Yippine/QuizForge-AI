@@ -42,6 +42,10 @@ const startExamSettings = () => {
   router.push("/exam-settings");
 };
 
+const startLectures = () => {
+  router.push("/lectures");
+};
+
 const viewWrongQuestions = () => {
   showWrongQuestionsPanel.value = true;
 };
@@ -171,11 +175,62 @@ onMounted(async () => {
       </div>
 
       <!-- Mode Selection Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-14 md:mb-16">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-14 md:mb-16">
+        <!-- Lecture Notes Mode -->
+        <div
+          @click="startLectures"
+          class="bg-white rounded-2xl shadow-xl p-8 cursor-pointer transform hover:scale-105 hover:shadow-2xl transition-all duration-normal border-2 border-transparent hover:border-accent-600 flex flex-col"
+        >
+          <div class="flex items-center gap-4 mb-4">
+            <div
+              class="w-16 h-16 bg-accent-100 rounded-xl flex items-center justify-center"
+            >
+              <svg
+                class="w-8 h-8 text-accent-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                />
+              </svg>
+            </div>
+            <div>
+              <h2 class="text-2xl font-bold text-gray-900">講義精華</h2>
+              <p class="text-sm text-gray-500">Lecture Notes</p>
+            </div>
+          </div>
+          <p class="text-gray-600 mb-4 flex-grow">
+            查看科目一和科目三的完整講義內容，系統化學習考試知識體系
+          </p>
+          <div class="flex items-center justify-between mt-auto">
+            <span class="text-sm text-accent-600 font-semibold"
+              >科目一 & 科目三</span
+            >
+            <svg
+              class="w-6 h-6 text-accent-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 7l5 5m0 0l-5 5m5-5H6"
+              />
+            </svg>
+          </div>
+        </div>
+
         <!-- Topic Selection Mode -->
         <div
           @click="startTopicSelection"
-          class="bg-white rounded-2xl shadow-xl p-8 cursor-pointer transform hover:scale-105 hover:shadow-2xl transition-all duration-normal border-2 border-transparent hover:border-primary-600"
+          class="bg-white rounded-2xl shadow-xl p-8 cursor-pointer transform hover:scale-105 hover:shadow-2xl transition-all duration-normal border-2 border-transparent hover:border-primary-600 flex flex-col"
         >
           <div class="flex items-center gap-4 mb-4">
             <div
@@ -200,11 +255,11 @@ onMounted(async () => {
               <p class="text-sm text-gray-500">Topic Learning</p>
             </div>
           </div>
-          <p class="text-gray-600 mb-4">
+          <p class="text-gray-600 mb-4 flex-grow">
             選擇特定主題進行針對性練習，涵蓋官方題目、科目一、科目三全部 30
             個考試主題
           </p>
-          <div class="flex items-center justify-between">
+          <div class="flex items-center justify-between mt-auto">
             <span class="text-sm text-primary-600 font-semibold"
               >30 個主題可選</span
             >
@@ -227,7 +282,7 @@ onMounted(async () => {
         <!-- Mock Exam Mode (INC-018: 原本的隨機練習改為模擬考試) -->
         <div
           @click="startExamSettings"
-          class="bg-white rounded-2xl shadow-xl p-8 cursor-pointer transform hover:scale-105 hover:shadow-2xl transition-all duration-normal border-2 border-transparent hover:border-secondary-600"
+          class="bg-white rounded-2xl shadow-xl p-8 cursor-pointer transform hover:scale-105 hover:shadow-2xl transition-all duration-normal border-2 border-transparent hover:border-secondary-600 flex flex-col"
         >
           <div class="flex items-center gap-4 mb-4">
             <div
@@ -252,10 +307,10 @@ onMounted(async () => {
               <p class="text-sm text-gray-500">Mock Exam</p>
             </div>
           </div>
-          <p class="text-gray-600 mb-4">
+          <p class="text-gray-600 mb-4 flex-grow">
             設定題數和時間限制，隨機抽取題目模擬真實考試環境，檢驗學習成果
           </p>
-          <div class="flex items-center justify-between">
+          <div class="flex items-center justify-between mt-auto">
             <span class="text-sm text-secondary-600 font-semibold">開始設定</span>
             <svg
               class="w-6 h-6 text-secondary-600"

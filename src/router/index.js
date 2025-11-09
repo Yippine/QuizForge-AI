@@ -28,6 +28,33 @@ const routes = [
     }
   },
   {
+    path: '/lectures',
+    name: 'lectures',
+    component: () => import('../views/LectureSubjects.vue'),
+    meta: {
+      title: 'QuizForge AI - 講義科目',
+      requiresAuth: false
+    }
+  },
+  {
+    path: '/lectures/:subjectId',
+    name: 'subject-lectures',
+    component: () => import('../views/SubjectLectures.vue'),
+    meta: {
+      title: 'QuizForge AI - 講義列表',
+      requiresAuth: false
+    }
+  },
+  {
+    path: '/lectures/:subjectId/:lectureId',
+    name: 'lecture-detail',
+    component: () => import('../views/LectureDetail.vue'),
+    meta: {
+      title: 'QuizForge AI - 講義詳情',
+      requiresAuth: false
+    }
+  },
+  {
     path: '/exam-settings',
     name: 'exam-settings',
     component: () => import('../views/ExamSettings.vue'),

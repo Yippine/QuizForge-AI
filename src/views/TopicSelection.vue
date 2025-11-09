@@ -19,7 +19,7 @@ const store = useQuestionBankStore()
  */
 const selectedSubject = ref(null) // 科目選擇狀態 (null | 'L21' | 'L23' | 'OFFICIAL')
 const selectedTopic = ref(null)
-const selectedDifficulty = ref(null)
+const selectedDifficulty = ref([]) // INC-021: 改為陣列支援複選 (string[])
 const searchQuery = ref('')
 
 /**
@@ -65,8 +65,9 @@ const canStartPractice = computed(() => {
 /**
  * Topic Statistics
  * 支援一般主題和官方題目主題的統計
+ * INC-021: 支援難度過濾參數（selectedDifficulties）
  */
-const getTopicStats = (topicId) => {
+const getTopicStats = (topicId, selectedDifficulties = []) => {
   let topicQuestions = []
 
   if (topicId === 'OFFICIAL') {
@@ -86,6 +87,11 @@ const getTopicStats = (topicId) => {
       const questionTopicId = extractTopicID(q.topic) || q.topic
       return questionTopicId === topicId
     })
+  }
+
+  // INC-021: 根據選中的難度過濾題目
+  if (selectedDifficulties.length > 0) {
+    topicQuestions = topicQuestions.filter(q => selectedDifficulties.includes(q.difficulty))
   }
 
   return {
@@ -112,21 +118,30 @@ const selectTopic = (topicId) => {
   selectedTopic.value = topicId === selectedTopic.value ? null : topicId
 }
 
+// INC-021: 複選模式 - toggle 邏輯
 const selectDifficulty = (difficulty) => {
-  selectedDifficulty.value = difficulty === selectedDifficulty.value ? null : difficulty
+  if (selectedDifficulty.value.includes(difficulty)) {
+    // 已選中 -> 移除
+    selectedDifficulty.value = selectedDifficulty.value.filter(d => d !== difficulty)
+  } else {
+    // 未選中 -> 加入
+    selectedDifficulty.value.push(difficulty)
+  }
 }
 
 /**
  * INC-015: Start Practice Mode
  * Formula: startPractice() -> router.push({ path: '/quiz', query: { mode: 'practice' } })
+ * INC-021: 使用 filterByDifficulties 支援複選
  */
 const startPractice = () => {
   if (!canStartPractice.value) return
 
   // Apply filters
   store.filterByTopic(selectedTopic.value)
-  if (selectedDifficulty.value) {
-    store.filterByDifficulty(selectedDifficulty.value)
+  // INC-021: 使用 filterByDifficulties 處理陣列
+  if (selectedDifficulty.value.length > 0) {
+    store.filterByDifficulties(selectedDifficulty.value)
   }
 
   // INC-015: Navigate to quiz with mode=practice parameter
@@ -139,14 +154,16 @@ const startPractice = () => {
 /**
  * INC-015: Start Exam Mode
  * Formula: startExam() -> router.push({ path: '/quiz', query: { mode: 'exam' } })
+ * INC-021: 使用 filterByDifficulties 支援複選
  */
 const startExam = () => {
   if (!canStartPractice.value) return
 
   // Apply filters
   store.filterByTopic(selectedTopic.value)
-  if (selectedDifficulty.value) {
-    store.filterByDifficulty(selectedDifficulty.value)
+  // INC-021: 使用 filterByDifficulties 處理陣列
+  if (selectedDifficulty.value.length > 0) {
+    store.filterByDifficulties(selectedDifficulty.value)
   }
 
   // INC-015: Navigate to quiz with mode=exam parameter
@@ -258,7 +275,7 @@ const goBack = () => {
                 @click="selectDifficulty('simple')"
                 :class="[
                   'flex-1 py-3 px-4 rounded-lg font-medium transition-all',
-                  selectedDifficulty === 'simple'
+                  selectedDifficulty.includes('simple')
                     ? 'bg-accent-600 text-white shadow-lg'
                     : 'bg-accent-100 text-accent-800 hover:bg-accent-200'
                 ]"
@@ -269,7 +286,7 @@ const goBack = () => {
                 @click="selectDifficulty('medium')"
                 :class="[
                   'flex-1 py-3 px-4 rounded-lg font-medium transition-all',
-                  selectedDifficulty === 'medium'
+                  selectedDifficulty.includes('medium')
                     ? 'bg-warning-600 text-white shadow-lg'
                     : 'bg-warning-100 text-warning-800 hover:bg-warning-200'
                 ]"
@@ -280,7 +297,7 @@ const goBack = () => {
                 @click="selectDifficulty('hard')"
                 :class="[
                   'flex-1 py-3 px-4 rounded-lg font-medium transition-all',
-                  selectedDifficulty === 'hard'
+                  selectedDifficulty.includes('hard')
                     ? 'bg-red-600 text-white shadow-lg'
                     : 'bg-red-100 text-red-800 hover:bg-red-200'
                 ]"
@@ -299,8 +316,8 @@ const goBack = () => {
               <span class="ml-2 text-primary-700">
                 {{ topicList.find(t => t.id === selectedTopic)?.name }}
               </span>
-              <span v-if="selectedDifficulty" class="ml-2 text-primary-600">
-                ({{ selectedDifficulty === 'simple' ? '簡單' : selectedDifficulty === 'medium' ? '中等' : '困難' }})
+              <span v-if="selectedDifficulty.length > 0" class="ml-2 text-primary-600">
+                ({{ selectedDifficulty.map(d => d === 'simple' ? '簡單' : d === 'medium' ? '中等' : '困難').join('、') }})
               </span>
             </div>
             <button
@@ -319,7 +336,7 @@ const goBack = () => {
           v-for="topic in filteredTopics"
           :key="topic.id"
           :topic="topic"
-          :stats="getTopicStats(topic.id)"
+          :stats="getTopicStats(topic.id, selectedDifficulty)"
           :is-selected="selectedTopic === topic.id"
           @select="selectTopic(topic.id)"
         />

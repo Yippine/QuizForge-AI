@@ -1,19 +1,27 @@
 <script setup>
 /**
  * ExamSettings Page
- * Formula: ExamSettings = QuestionCountSelector + TimeLimitSelector + ModeButtons
- * Responsibility: 模擬考試設定頁面，用於設定題數和時間限制
+ * Formula: ExamSettings = RangeSelector + [EmptyWarningBlock(isRangeEmpty)] + QuestionCountSelector(filteredQuestionOptions, smartDefaultIndex) + TimeLimitSelector + ModeButtons
+ * Responsibility: 模擬考試設定頁面，用於設定題目範圍、題數和時間限制
  * INC-018: Exam settings interface
+ * INC-019: 模擬考試主題範圍選擇器
+ * INC-020: 智慧題數選項調整（動態過濾 + 智慧預設 + 響應式重置）
+ * INC-021: UI 優化與使用者體驗提升（空範圍警告 + Footer 更新）
  */
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useQuestionBankStore } from '../stores/questionBank'
+import { extractTopicID } from '../constants/ipas'
 import OptionSelector from '../components/OptionSelector.vue'
 
 const router = useRouter()
+const store = useQuestionBankStore()
 
 /**
  * State
+ * INC-019: 新增 selectedRange 狀態
  */
+const selectedRange = ref('all') // 預設「全部題目」
 const questionCount = ref(20) // 預設 20 題
 const timeLimit = ref(null) // 預設不限時
 const isQuestionCountValid = ref(true)
@@ -21,12 +29,20 @@ const isTimeLimitValid = ref(true)
 
 /**
  * Options
+ * INC-019: 新增 rangeOptions（步驟 1）
  */
+const rangeOptions = [
+  { label: '全部主題', value: 'all', description: '從所有題庫出題' },
+  { label: '官方題目', value: 'official', description: '官方考試題目' },
+  { label: '科目一', value: 'L21', description: '人工智慧技術應用與規劃' },
+  { label: '科目三', value: 'L23', description: '機器學習技術與應用' }
+]
+
 const questionOptions = [
   { label: '10題', value: 10 },
   { label: '20題', value: 20 },
   { label: '30題', value: 30 },
-  { label: '50題', value: 50 },
+  { label: '全部題目', value: null },
   { label: '自訂', value: 'custom' }
 ]
 
@@ -40,33 +56,129 @@ const timeOptions = [
 
 /**
  * Computed
+ * INC-019: 新增 availableQuestions 和 rangeQuestionCount（步驟 3-4）
  */
+// 步驟 3: 題目過濾邏輯（參考 TopicSelection.vue:69-89）
+const availableQuestions = computed(() => {
+  const allQuestions = store.questions
+
+  if (selectedRange.value === 'all') {
+    // 全部題目
+    return allQuestions
+  } else if (selectedRange.value === 'official') {
+    // 官方題目：過濾 question_id.startsWith('OFF_')
+    return allQuestions.filter(q => q.question_id.startsWith('OFF_'))
+  } else if (selectedRange.value === 'L21' || selectedRange.value === 'L23') {
+    // 科目過濾：使用 extractTopicID 判斷科目歸屬
+    return allQuestions.filter(q => {
+      const topicId = extractTopicID(q.topic) || q.topic
+      // 檢查主題ID是否以 L21 或 L23 開頭
+      return topicId.startsWith(selectedRange.value)
+    })
+  }
+
+  return allQuestions
+})
+
+// 步驟 4: 動態題數計算
+const rangeQuestionCount = computed(() => {
+  return availableQuestions.value.length
+})
+
+/**
+ * INC-020 步驟 1: 動態過濾題數選項
+ * Formula: filteredQuestionOptions = questionOptions.filter(opt => (opt.value === null | opt.value === 'custom' | opt.value <= rangeQuestionCount.value))
+ */
+const filteredQuestionOptions = computed(() => {
+  const maxCount = rangeQuestionCount.value
+
+  // 過濾掉超過範圍的固定選項
+  return questionOptions.filter(opt => {
+    // 全部題目、自訂選項始終保留
+    if (opt.value === null || opt.value === 'custom') return true
+    // 固定數字選項：只保留 <= maxCount 的選項
+    return opt.value <= maxCount
+  })
+})
+
+/**
+ * INC-020 步驟 2: 智慧預設索引
+ * Formula: smartDefaultIndex = FindOptimalIndex(filteredQuestionOptions, 20, rangeQuestionCount)
+ * 邏輯：優先選擇 20 題，若超範圍則選最大有效選項，兜底為索引 0
+ */
+const smartDefaultIndex = computed(() => {
+  const maxCount = rangeQuestionCount.value
+  const validOptions = filteredQuestionOptions.value
+
+  // 目標：找到最接近 20 題的有效選項
+  const targetValue = 20
+
+  // 如果 20 題在範圍內，返回其索引
+  const targetIndex = validOptions.findIndex(opt => opt.value === targetValue)
+  if (targetIndex !== -1) return targetIndex
+
+  // 如果 20 題超過範圍，找到最大的固定數字選項
+  let maxValidIndex = 0
+  for (let i = 0; i < validOptions.length; i++) {
+    const opt = validOptions[i]
+    if (typeof opt.value === 'number' && opt.value <= maxCount) {
+      maxValidIndex = i
+    }
+  }
+
+  return maxValidIndex
+})
+
+/**
+ * INC-021 步驟 1: 空範圍檢測
+ * Formula: isRangeEmpty = computed(() => rangeQuestionCount.value === 0)
+ */
+const isRangeEmpty = computed(() => rangeQuestionCount.value === 0)
+
 const canStartQuiz = computed(() => {
-  return isQuestionCountValid.value && isTimeLimitValid.value && questionCount.value !== null
+  return isQuestionCountValid.value && isTimeLimitValid.value
 })
 
 /**
  * Actions
+ * INC-019: 新增 handleRangeUpdate
  */
+const handleRangeUpdate = (value) => {
+  selectedRange.value = value
+  // 當範圍改變時，重置題數如果超過新範圍的總題數
+  if (questionCount.value > rangeQuestionCount.value) {
+    questionCount.value = Math.min(questionCount.value, rangeQuestionCount.value)
+  }
+}
+
 const handleQuestionCountUpdate = (value) => {
   questionCount.value = value
-  isQuestionCountValid.value = value !== null
+  // null 代表「全部題目」，是有效的選擇
+  // 數字代表具體題數，也是有效的
+  isQuestionCountValid.value = true
 }
 
 const handleTimeLimitUpdate = (value) => {
   timeLimit.value = value
-  isTimeLimitValid.value = value !== 'custom' || value !== null
+  // null 代表「不限時」，是有效的選擇
+  // 數字代表具體時間限制，也是有效的
+  isTimeLimitValid.value = true
 }
 
 const startPractice = () => {
   if (!canStartQuiz.value) return
 
+  // INC-019 步驟 8: 擴展路由參數（新增 range 參數）
+  // 如果 questionCount 為 null（全部題目），使用 rangeQuestionCount
+  const finalQuestionCount = questionCount.value !== null ? questionCount.value : rangeQuestionCount.value
+
   router.push({
     path: '/quiz',
     query: {
       mode: 'practice',
-      questionCount: questionCount.value,
-      timeLimit: timeLimit.value || undefined
+      questionCount: finalQuestionCount,
+      timeLimit: timeLimit.value || undefined,
+      range: selectedRange.value
     }
   })
 }
@@ -74,12 +186,17 @@ const startPractice = () => {
 const startExam = () => {
   if (!canStartQuiz.value) return
 
+  // INC-019 步驟 8: 擴展路由參數（新增 range 參數）
+  // 如果 questionCount 為 null（全部題目），使用 rangeQuestionCount
+  const finalQuestionCount = questionCount.value !== null ? questionCount.value : rangeQuestionCount.value
+
   router.push({
     path: '/quiz',
     query: {
       mode: 'exam',
-      questionCount: questionCount.value,
-      timeLimit: timeLimit.value || undefined
+      questionCount: finalQuestionCount,
+      timeLimit: timeLimit.value || undefined,
+      range: selectedRange.value
     }
   })
 }
@@ -116,11 +233,38 @@ const goBack = () => {
     <!-- Main Content -->
     <main class="max-w-3xl mx-auto">
       <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 space-y-8">
-        <!-- Question Count Selector -->
+        <!-- INC-019 步驟 5: 新增 Range Selector -->
         <OptionSelector
-          :options="questionOptions"
-          :default-index="1"
-          :custom-range="{ min: 1, max: 354 }"
+          :options="rangeOptions"
+          :default-index="0"
+          label="選擇題目範圍"
+          @update:value="handleRangeUpdate"
+        />
+
+        <!-- INC-021 步驟 2: 空範圍警告區塊 -->
+        <div v-if="isRangeEmpty" class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <div class="flex items-start gap-3">
+            <svg class="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+            <div class="text-xs md:text-sm text-yellow-800">
+              <p class="font-semibold mb-1">該範圍暫無題目</p>
+              <p>請選擇其他範圍以開始練習或考試</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="border-t border-gray-200"></div>
+
+        <!-- Question Count Selector -->
+        <!-- INC-019 步驟 7: 調整題數選項上限（根據範圍動態調整） -->
+        <!-- INC-020 步驟 3: 更新元件綁定 - 使用 filteredQuestionOptions 和 smartDefaultIndex -->
+        <!-- 移除 :key 綁定，避免切換範圍時重置選擇 -->
+        <OptionSelector
+          :options="filteredQuestionOptions"
+          :default-index="smartDefaultIndex"
+          :custom-range="{ min: 1, max: rangeQuestionCount }"
           unit="題"
           label="選擇題數"
           @update:value="handleQuestionCountUpdate"
@@ -143,13 +287,26 @@ const goBack = () => {
         <div class="border-t border-gray-200"></div>
 
         <!-- Settings Summary -->
+        <!-- INC-019 步驟 6: 更新設定摘要區塊 -->
         <div class="bg-primary-50 rounded-lg p-4 md:p-6">
           <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-3">設定摘要</h3>
           <div class="space-y-2 text-sm md:text-base text-gray-700">
             <div class="flex items-center justify-between">
+              <span>題目範圍：</span>
+              <span class="font-semibold text-primary-600">
+                {{ rangeOptions.find(o => o.value === selectedRange)?.label || '全部題目' }}
+              </span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span>範圍題數：</span>
+              <span class="font-semibold text-secondary-600">
+                {{ rangeQuestionCount }} 題
+              </span>
+            </div>
+            <div class="flex items-center justify-between">
               <span>題目數量：</span>
               <span class="font-semibold text-primary-600">
-                {{ questionCount !== null ? `${questionCount} 題` : '未設定' }}
+                {{ questionCount !== null ? `${questionCount} 題` : '全部題目' }}
               </span>
             </div>
             <div class="flex items-center justify-between">
@@ -226,7 +383,7 @@ const goBack = () => {
     <!-- Footer -->
     <footer class="max-w-3xl mx-auto mt-8 text-center text-xs md:text-sm text-gray-500">
       <p>Formula-Contract Methodology | Generated with Claude Code</p>
-      <p class="mt-1">INC-018: Exam Settings Interface</p>
+      <p class="mt-1">基於 INC-016~021 實現 | 模擬考試完整功能</p>
     </footer>
   </div>
 </template>

@@ -29,3 +29,8 @@ dist-ssr
 # Formula-Contract work files
 .claude/
 FORMULA.md
+FORMULA-*.md
+
+# Knowledge-base: Exclude large lecture materials
+knowledge-base/ipas/1 handout/
+knowledge-base/ipas/2 mermaid/

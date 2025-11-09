@@ -405,6 +405,12 @@ onMounted(async () => {
     console.log(`⏱️ Time limit: ${timeLimitMinutes.value} minutes`)
   }
 
+  // INC-021: Extract range parameter from route query
+  const range = route.query.range
+  if (range) {
+    console.log(`🎯 Range filter: ${range}`)
+  }
+
   // INC-019: Shuffle configuration - [shouldShuffleQuestions, shouldShuffleOptions]
   const shuffleConfig = {
     'topic-practice': [false, true],   // 主題學習+練習：題目不隨機，選項隨機
@@ -423,10 +429,25 @@ onMounted(async () => {
     } else {
       console.warn('⚠️ Wrong questions mode activated but no question IDs provided')
     }
-  } else if (topicId) {
-    // INC-011: Topic filter mode
-    store.filterByTopic(topicId)
-    console.log(`🔍 Topic filter applied: ${topicId}, filtered questions: ${store.filteredQuestions.length}`)
+  } else {
+    // INC-021: Apply range filter before topic filter
+    if (range === 'all') {
+      // 選擇「全部主題」時，不套用任何範圍過濾（但仍會套用後續的 topic filter）
+      // 如果之前有設定範圍過濾，這裡不會重置，因為可能是主題學習模式
+      console.log(`🔍 Range filter: All questions selected`)
+    } else if (range === 'official') {
+      store.filterByTopic('OFFICIAL')
+      console.log(`🔍 Range filter applied: Official questions, filtered: ${store.filteredQuestions.length}`)
+    } else if (range === 'L21' || range === 'L23') {
+      store.filterBySubject(range)
+      console.log(`🔍 Range filter applied: Subject ${range}, filtered: ${store.filteredQuestions.length}`)
+    }
+
+    // INC-011: Topic filter mode (after range filter)
+    if (topicId) {
+      store.filterByTopic(topicId)
+      console.log(`🔍 Topic filter applied: ${topicId}, filtered questions: ${store.filteredQuestions.length}`)
+    }
   }
 
   // INC-019: Apply shuffle configuration based on mode
@@ -448,7 +469,12 @@ onMounted(async () => {
   // Shuffle questions if needed
   if (shouldShuffleQuestions) {
     const source = store.hasActiveFilters ? store.filteredQuestions : store.questions
-    const shuffled = [...source].sort(() => Math.random() - 0.5)
+    // 使用 Fisher-Yates 洗牌算法，確保真正的隨機性
+    const shuffled = [...source]
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+    }
     store.setShuffledQuestions(shuffled)
     console.log(`🔀 Questions shuffled for ${configKey} mode: ${shuffled.length} questions`)
   } else {

@@ -43,7 +43,8 @@ export const useQuestionBankStore = defineStore('questionBank', {
     // 當前過濾條件
     currentFilters: {
       topic: null,      // Formula 主題代碼 (e.g., "L21201")
-      difficulty: null, // 難度 ("simple" | "medium" | "hard")
+      difficulty: null, // 難度 ("simple" | "medium" | "hard") - 單一難度過濾
+      difficulties: [], // INC-021: 多難度過濾 (string[])
       subject: null     // 科目 ("L21" | "L23")
     },
 
@@ -306,12 +307,22 @@ export const useQuestionBankStore = defineStore('questionBank', {
     },
 
     /**
-     * 按難度過濾
+     * 按難度過濾（單一難度）
      * Formula: set currentFilters.difficulty -> update filteredQuestions
      * @param {string} difficulty - 難度等級
      */
     filterByDifficulty(difficulty) {
       this.currentFilters.difficulty = difficulty
+      this.applyFilters()
+    },
+
+    /**
+     * INC-021: 按多個難度過濾
+     * Formula: set currentFilters.difficulties -> update filteredQuestions
+     * @param {string[]} difficulties - 難度等級陣列
+     */
+    filterByDifficulties(difficulties) {
+      this.currentFilters.difficulties = difficulties
       this.applyFilters()
     },
 
@@ -334,9 +345,12 @@ export const useQuestionBankStore = defineStore('questionBank', {
     applyFilters() {
       let result = this.questions
 
-      // 按科目過濾
+      // 按科目過濾（排除官方題目）
       if (this.currentFilters.subject) {
-        result = result.filter(q => q.subject === this.currentFilters.subject)
+        result = result.filter(q =>
+          q.subject === this.currentFilters.subject &&
+          !q.question_id.startsWith('OFF_')
+        )
       }
 
       // 按 Formula 主題過濾
@@ -368,7 +382,10 @@ export const useQuestionBankStore = defineStore('questionBank', {
       }
 
       // 按難度過濾
-      if (this.currentFilters.difficulty) {
+      // INC-021: 優先使用 difficulties 陣列，向後相容 difficulty 單值
+      if (this.currentFilters.difficulties && this.currentFilters.difficulties.length > 0) {
+        result = result.filter(q => this.currentFilters.difficulties.includes(q.difficulty))
+      } else if (this.currentFilters.difficulty) {
         result = result.filter(q => q.difficulty === this.currentFilters.difficulty)
       }
 
@@ -385,6 +402,7 @@ export const useQuestionBankStore = defineStore('questionBank', {
       this.currentFilters = {
         topic: null,
         difficulty: null,
+        difficulties: [], // INC-021: 清除多難度過濾
         subject: null
       }
       this.filteredQuestions = []
@@ -425,7 +443,12 @@ export const useQuestionBankStore = defineStore('questionBank', {
      */
     getRandomQuestions(count = 10) {
       const source = this.hasActiveFilters ? this.filteredQuestions : this.questions
-      const shuffled = [...source].sort(() => Math.random() - 0.5)
+      // 使用 Fisher-Yates 洗牌算法，確保真正的隨機性
+      const shuffled = [...source]
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1))
+        ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+      }
       return shuffled.slice(0, count)
     },
 

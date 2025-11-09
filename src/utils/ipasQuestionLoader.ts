@@ -97,7 +97,7 @@ export function normalizeQuestionFormat(rawQuestion: any): QuestionType {
 export async function loadMockExam(subjectId: SubjectId): Promise<QuestionType[]> {
   try {
     const fileName = subjectId === 'L21' ? 'L21-mock-exam.json' : 'L23-mock-exam.json'
-    const response = await fetch(`/questions/${fileName}`)
+    const response = await fetch(`/knowledge-base/ipas/4 questions/${fileName}`)
 
     if (!response.ok) {
       throw new Error(`Failed to load ${fileName}: ${response.statusText}`)
@@ -127,7 +127,7 @@ export async function loadMockExam(subjectId: SubjectId): Promise<QuestionType[]
  */
 export async function loadOfficialQuestions(): Promise<QuestionType[]> {
   try {
-    const response = await fetch('/questions/official-questions.json')
+    const response = await fetch('/knowledge-base/ipas/4 questions/official-questions.json')
 
     if (!response.ok) {
       throw new Error(`Failed to load official-questions.json: ${response.statusText}`)
