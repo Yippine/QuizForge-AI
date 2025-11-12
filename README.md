@@ -6,4 +6,4 @@ Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://
 
 npm run dev
 
-cloudflared tunnel --url http://localhost:3001
+cloudflared tunnel --url http://localhost:3002
