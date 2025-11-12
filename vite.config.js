@@ -57,7 +57,7 @@ export default defineConfig({
     host: true,
     port: 3002,
     open: true,
-    allowedHosts: [".trycloudflare.com", "long-term-care.leopilot.com"],
+    allowedHosts: [".trycloudflare.com", "ipas.leopilot.com"],
     hmr: {
       protocol: "ws",
       clientPort: 3002,
