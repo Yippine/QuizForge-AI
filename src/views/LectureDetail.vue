@@ -527,7 +527,7 @@ watch(
         <button
           v-show="showLeftButton"
           @click="handleButtonClick('previous')"
-          class="md:hidden fixed left-0 top-1/2 -translate-y-1/2 w-14 h-24 bg-gray-800/70 flex items-center justify-center z-20 rounded-r-lg transition-all duration-300 animate-slide-in-left"
+          class="md:hidden mobile-edge-button fixed left-0 top-1/2 -translate-y-1/2 h-24 bg-gray-800/70 flex items-center justify-center z-20 rounded-r-lg transition-all duration-300 animate-slide-in-left"
           :aria-label="'上一個講義'"
         >
           <ChevronLeftIcon class="w-8 h-8 text-white" />
@@ -537,7 +537,7 @@ watch(
         <button
           v-show="showRightButton"
           @click="handleButtonClick('next')"
-          class="md:hidden fixed right-0 top-1/2 -translate-y-1/2 w-14 h-24 bg-gray-800/70 flex items-center justify-center z-20 rounded-l-lg transition-all duration-300 animate-slide-in-right"
+          class="md:hidden mobile-edge-button fixed right-0 top-1/2 -translate-y-1/2 h-24 bg-gray-800/70 flex items-center justify-center z-20 rounded-l-lg transition-all duration-300 animate-slide-in-right"
           :aria-label="'下一個講義'"
         >
           <ChevronRightIcon class="w-8 h-8 text-white" />
@@ -807,6 +807,11 @@ watch(
 </template>
 
 <style scoped>
+/* INC-024: Mobile Edge Button Width */
+.mobile-edge-button {
+  width: 40px; /* 2/3 of original 80px (80 × 2/3 = 53.33px) */
+}
+
 /* INC-025: Desktop Edge Navigation Hover Effect */
 /* 預設隱藏所有邊緣按鈕 */
 .edge-nav-button {
