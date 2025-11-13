@@ -1,17 +1,18 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/outline';
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/vue/24/outline";
 import MarkdownIt from "markdown-it";
 import { katex } from "@mdit/plugin-katex";
 import "katex/dist/katex.min.css";
 
 /**
  * LectureDetail Component
- * Formula: LectureDetail = MarkdownRenderer + Navigation + KeyboardShortcuts + ResponsiveLayout + MobileTouchNav
+ * Formula: LectureDetail = MarkdownRenderer + Navigation + KeyboardShortcuts + ResponsiveLayout + MobileTouchNav + TableScrollOptimization
  * INC-022: Security vulnerability resolution with @mdit/plugin-katex
  * INC-023: Enhanced navigation with prev/next buttons and keyboard shortcuts
  * INC-024: Mobile touch navigation with smart edge detection
+ * INC-025: Table horizontal scroll optimization and edge navigation button interaction improvements
  *
  * Security Note (INC-022): npm Security Vulnerability Resolution
  *
@@ -42,6 +43,9 @@ const touchStartTime = ref(0);
 const touchStartX = ref(0);
 const touchStartY = ref(0);
 const isTouchMove = ref(false);
+
+// INC-025: Desktop Edge Navigation State
+const hideDesktopEdgeButtons = ref(false);
 
 // INC-023 FIX: 使用 computed 而非 ref，確保路由變化時自動更新
 const subjectId = computed(() => route.params.subjectId);
@@ -91,9 +95,10 @@ const totalLectures = computed(() => {
 const canGoPrevious = computed(() => currentLectureIndex.value > 0);
 
 // 是否可以前往下一個講義
-const canGoNext = computed(() =>
-  currentLectureIndex.value >= 0 &&
-  currentLectureIndex.value < totalLectures.value - 1
+const canGoNext = computed(
+  () =>
+    currentLectureIndex.value >= 0 &&
+    currentLectureIndex.value < totalLectures.value - 1
 );
 
 // 獲取上一個講義的 ID
@@ -118,6 +123,7 @@ const nextLectureId = computed(() => {
 // 前往上一個講義
 const navigateToPrevious = () => {
   if (canGoPrevious.value && previousLectureId.value) {
+    hideDesktopEdgeButtons.value = true; // INC-025: 點擊後立即隱藏按鈕
     router.push(`/lectures/${subjectId.value}/${previousLectureId.value}`);
   }
 };
@@ -125,6 +131,7 @@ const navigateToPrevious = () => {
 // 前往下一個講義
 const navigateToNext = () => {
   if (canGoNext.value && nextLectureId.value) {
+    hideDesktopEdgeButtons.value = true; // INC-025: 點擊後立即隱藏按鈕
     router.push(`/lectures/${subjectId.value}/${nextLectureId.value}`);
   }
 };
@@ -136,18 +143,18 @@ const navigateToNext = () => {
 const handleKeyPress = (e) => {
   // 防止在輸入框、文字區域中觸發
   if (
-    e.target.tagName === 'INPUT' ||
-    e.target.tagName === 'TEXTAREA' ||
+    e.target.tagName === "INPUT" ||
+    e.target.tagName === "TEXTAREA" ||
     e.target.isContentEditable
   ) {
     return;
   }
 
   // 處理左右箭頭鍵
-  if (e.key === 'ArrowLeft') {
+  if (e.key === "ArrowLeft") {
     e.preventDefault(); // 防止與瀏覽器預設行為衝突
     navigateToPrevious();
-  } else if (e.key === 'ArrowRight') {
+  } else if (e.key === "ArrowRight") {
     e.preventDefault();
     navigateToNext();
   }
@@ -155,7 +162,9 @@ const handleKeyPress = (e) => {
 
 /**
  * INC-024: Mobile Touch Navigation Event Layer
+ * INC-025: Enhanced to show all available buttons on any edge tap
  * Formula: EventLayer = TouchHandlers(start + move + end) + TimerManagement + ButtonHiding
+ * Formula (INC-025): ShowAllAvailableButtons = (FirstPage -> showRight) | (LastPage -> showLeft) | (MiddlePage -> showLeft & showRight)
  */
 
 // 觸控開始：記錄時間和位置
@@ -175,7 +184,7 @@ const handleTouchMove = (e) => {
   }
 };
 
-// 觸控結束：評估是否為輕觸並顯示按鈕
+// 觸控結束：評估是否為輕觸並顯示所有可用按鈕 (INC-025)
 const handleTouchEnd = (e) => {
   const touchDuration = Date.now() - touchStartTime.value;
   const touchX = touchStartX.value;
@@ -189,12 +198,19 @@ const handleTouchEnd = (e) => {
   }
 
   // 輕觸判斷: < 200ms 且無移動
+  // INC-025: 點擊任一邊緣時,顯示所有可用的按鈕
   if (touchDuration < 200 && !isTouchMove.value) {
-    if (touchX < leftEdgeThreshold && canGoPrevious.value) {
-      showLeftButton.value = true;
-      startHideTimer();
-    } else if (touchX > rightEdgeThreshold && canGoNext.value) {
-      showRightButton.value = true;
+    const isLeftEdge = touchX < leftEdgeThreshold;
+    const isRightEdge = touchX > rightEdgeThreshold;
+
+    if (isLeftEdge || isRightEdge) {
+      // 顯示所有可用的按鈕
+      if (canGoPrevious.value) {
+        showLeftButton.value = true;
+      }
+      if (canGoNext.value) {
+        showRightButton.value = true;
+      }
       startHideTimer();
     }
   }
@@ -240,7 +256,7 @@ const hideButtons = () => {
 
 // 按鈕點擊：導航並隱藏
 const handleButtonClick = (direction) => {
-  if (direction === 'previous') {
+  if (direction === "previous") {
     navigateToPrevious();
   } else {
     navigateToNext();
@@ -261,7 +277,7 @@ const initMarkdownRenderer = () => {
   md.use(katex, {
     logger: (error) => {
       console.error("[KaTeX Rendering Error]:", error);
-    }
+    },
   });
 };
 
@@ -316,6 +332,35 @@ const parseMarkdown = () => {
     return;
   }
   renderedHTML.value = md.render(markdownContent.value);
+
+  // INC-025: 在下一個 tick 執行表格包裝，確保 DOM 已更新
+  setTimeout(() => {
+    wrapTables();
+  }, 0);
+};
+
+/**
+ * INC-025: Table Scroll Optimization
+ * Formula: wrapTables = QueryAllTables -> WrapEachTable(div.table-wrapper + overflow-x-auto)
+ * 動態為所有表格添加橫向滾動容器
+ */
+const wrapTables = () => {
+  const tables = document.querySelectorAll(".markdown-content table");
+
+  tables.forEach((table) => {
+    // 檢查表格是否已經被包裝過
+    if (table.parentElement?.classList.contains("table-wrapper")) {
+      return;
+    }
+
+    // 創建包裝容器
+    const wrapper = document.createElement("div");
+    wrapper.className = "table-wrapper";
+
+    // 將表格插入包裝容器
+    table.parentNode?.insertBefore(wrapper, table);
+    wrapper.appendChild(table);
+  });
 };
 
 const navigateBack = () => {
@@ -335,41 +380,43 @@ onMounted(async () => {
   await loadLectureContent();
 
   // INC-023: 註冊鍵盤快捷鍵監聽器
-  window.addEventListener('keydown', handleKeyPress);
+  window.addEventListener("keydown", handleKeyPress);
 
   // INC-024: Storage Layer - 首次提示機制 & 觸控事件監聽器 (僅手機版)
   // Formula: StorageLayer = LocalStorage.check() -> ShowHint | SkipHint & EventRegistration(mobile<768px)
   if (window.innerWidth < 768) {
     // 檢查是否已顯示過首次提示
-    const hintShown = localStorage.getItem('lecture_nav_hint_shown');
+    const hintShown = localStorage.getItem("lecture_nav_hint_shown");
     if (!hintShown) {
       showFirstTimeHint.value = true;
       setTimeout(() => {
         showFirstTimeHint.value = false;
-        localStorage.setItem('lecture_nav_hint_shown', 'true');
+        localStorage.setItem("lecture_nav_hint_shown", "true");
       }, 3000);
     }
 
     // 註冊觸控事件監聽器 (僅手機版)
-    document.addEventListener('touchstart', handleTouchStart, { passive: true });
-    document.addEventListener('touchmove', handleTouchMove, { passive: true });
-    document.addEventListener('touchend', handleTouchEnd, { passive: true });
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    document.addEventListener('click', handleMiddleAreaClick);
+    document.addEventListener("touchstart", handleTouchStart, {
+      passive: true,
+    });
+    document.addEventListener("touchmove", handleTouchMove, { passive: true });
+    document.addEventListener("touchend", handleTouchEnd, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    document.addEventListener("click", handleMiddleAreaClick);
   }
 });
 
 onUnmounted(() => {
   // INC-023: 清理鍵盤快捷鍵監聽器
-  window.removeEventListener('keydown', handleKeyPress);
+  window.removeEventListener("keydown", handleKeyPress);
 
   // INC-024: 清理觸控事件監聽器和計時器
   if (window.innerWidth < 768) {
-    document.removeEventListener('touchstart', handleTouchStart);
-    document.removeEventListener('touchmove', handleTouchMove);
-    document.removeEventListener('touchend', handleTouchEnd);
-    window.removeEventListener('scroll', handleScroll);
-    document.removeEventListener('click', handleMiddleAreaClick);
+    document.removeEventListener("touchstart", handleTouchStart);
+    document.removeEventListener("touchmove", handleTouchMove);
+    document.removeEventListener("touchend", handleTouchEnd);
+    window.removeEventListener("scroll", handleScroll);
+    document.removeEventListener("click", handleMiddleAreaClick);
   }
   if (buttonHideTimer.value) {
     clearTimeout(buttonHideTimer.value);
@@ -385,6 +432,7 @@ watch(
   () => route.params.lectureId,
   async (newLectureId, oldLectureId) => {
     if (newLectureId && newLectureId !== oldLectureId) {
+      hideDesktopEdgeButtons.value = false; // INC-025: 路由變化後重置按鈕狀態
       await loadLectureContent();
     }
   }
@@ -479,7 +527,7 @@ watch(
         <button
           v-show="showLeftButton"
           @click="handleButtonClick('previous')"
-          class="md:hidden fixed left-0 top-1/2 -translate-y-1/2 w-20 h-24 bg-gray-800/70 flex items-center justify-center z-20 rounded-r-lg transition-all duration-300 animate-slide-in-left"
+          class="md:hidden mobile-edge-button fixed left-0 top-1/2 -translate-y-1/2 h-24 bg-gray-800/70 flex items-center justify-center z-20 rounded-r-lg transition-all duration-300 animate-slide-in-left"
           :aria-label="'上一個講義'"
         >
           <ChevronLeftIcon class="w-8 h-8 text-white" />
@@ -489,34 +537,51 @@ watch(
         <button
           v-show="showRightButton"
           @click="handleButtonClick('next')"
-          class="md:hidden fixed right-0 top-1/2 -translate-y-1/2 w-20 h-24 bg-gray-800/70 flex items-center justify-center z-20 rounded-l-lg transition-all duration-300 animate-slide-in-right"
+          class="md:hidden mobile-edge-button fixed right-0 top-1/2 -translate-y-1/2 h-24 bg-gray-800/70 flex items-center justify-center z-20 rounded-l-lg transition-all duration-300 animate-slide-in-right"
           :aria-label="'下一個講義'"
         >
           <ChevronRightIcon class="w-8 h-8 text-white" />
         </button>
 
-        <!-- Edge Navigation Buttons (Desktop Only, ≥768px) -->
-        <!-- Left Edge Button: Previous Lecture -->
-        <button
-          v-if="canGoPrevious"
-          @click="navigateToPrevious"
-          class="hidden md:flex fixed left-0 top-1/2 -translate-y-1/2 h-24 w-12 bg-gray-800/30 hover:bg-gray-800/80 items-center justify-center transition-all duration-300 z-10 rounded-r-lg"
-          :aria-label="'上一個講義'"
-          :title="'上一個講義 (←)'"
+        <!-- INC-025: Edge Navigation System (Desktop Only, ≥768px) - Hover to Show All Buttons -->
+        <div
+          class="hidden md:block edge-nav-container"
+          :class="{ 'force-hide': hideDesktopEdgeButtons }"
         >
-          <ChevronLeftIcon class="w-8 h-8 text-white" />
-        </button>
+          <!-- Left Edge Trigger Area (Transparent) -->
+          <div
+            v-if="canGoPrevious || canGoNext"
+            class="fixed left-0 top-0 h-full w-20 z-10 edge-trigger"
+          ></div>
 
-        <!-- Right Edge Button: Next Lecture -->
-        <button
-          v-if="canGoNext"
-          @click="navigateToNext"
-          class="hidden md:flex fixed right-0 top-1/2 -translate-y-1/2 h-24 w-12 bg-gray-800/30 hover:bg-gray-800/80 items-center justify-center transition-all duration-300 z-10 rounded-l-lg"
-          :aria-label="'下一個講義'"
-          :title="'下一個講義 (→)'"
-        >
-          <ChevronRightIcon class="w-8 h-8 text-white" />
-        </button>
+          <!-- Right Edge Trigger Area (Transparent) -->
+          <div
+            v-if="canGoPrevious || canGoNext"
+            class="fixed right-0 top-0 h-full w-20 z-10 edge-trigger"
+          ></div>
+
+          <!-- Left Button: Previous Lecture -->
+          <button
+            v-if="canGoPrevious"
+            @click="navigateToPrevious"
+            class="edge-nav-button fixed left-0 top-1/2 -translate-y-1/2 h-24 w-12 bg-gray-800/70 flex items-center justify-center transition-opacity duration-300 rounded-r-lg z-10"
+            :aria-label="'上一個講義'"
+            :title="'上一個講義 (←)'"
+          >
+            <ChevronLeftIcon class="w-8 h-8 text-white" />
+          </button>
+
+          <!-- Right Button: Next Lecture -->
+          <button
+            v-if="canGoNext"
+            @click="navigateToNext"
+            class="edge-nav-button fixed right-0 top-1/2 -translate-y-1/2 h-24 w-12 bg-gray-800/70 flex items-center justify-center transition-opacity duration-300 rounded-l-lg z-10"
+            :aria-label="'下一個講義'"
+            :title="'下一個講義 (→)'"
+          >
+            <ChevronRightIcon class="w-8 h-8 text-white" />
+          </button>
+        </div>
 
         <h1
           class="text-4xl font-bold text-gray-900 mb-8 pb-4 border-b border-gray-200"
@@ -542,7 +607,7 @@ watch(
                 'w-11 h-11 rounded-full flex items-center justify-center transition-all duration-200 active:scale-95',
                 canGoPrevious
                   ? 'bg-gray-200 hover:bg-gray-300 active:bg-gray-400 text-gray-800'
-                  : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                  : 'bg-gray-100 text-gray-400 cursor-not-allowed',
               ]"
               :aria-label="canGoPrevious ? '上一個講義' : '已是第一個講義'"
               :title="canGoPrevious ? '上一個講義 (←)' : '已是第一個講義'"
@@ -620,7 +685,7 @@ watch(
                 'w-11 h-11 rounded-full flex items-center justify-center transition-all duration-200 active:scale-95',
                 canGoNext
                   ? 'bg-gray-200 hover:bg-gray-300 active:bg-gray-400 text-gray-800'
-                  : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                  : 'bg-gray-100 text-gray-400 cursor-not-allowed',
               ]"
               :aria-label="canGoNext ? '下一個講義' : '已是最後一個講義'"
               :title="canGoNext ? '下一個講義 (→)' : '已是最後一個講義'"
@@ -702,7 +767,7 @@ watch(
                   'flex-1 h-12 rounded-full flex items-center justify-center transition-all duration-200 active:scale-95',
                   canGoPrevious
                     ? 'bg-gray-200 hover:bg-gray-300 active:bg-gray-400 text-gray-800'
-                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : 'bg-gray-100 text-gray-400 cursor-not-allowed',
                 ]"
                 :aria-label="canGoPrevious ? '上一個講義' : '已是第一個講義'"
                 :title="canGoPrevious ? '上一個講義 (←)' : '已是第一個講義'"
@@ -718,7 +783,7 @@ watch(
                   'flex-1 h-12 rounded-full flex items-center justify-center transition-all duration-200 active:scale-95',
                   canGoNext
                     ? 'bg-gray-200 hover:bg-gray-300 active:bg-gray-400 text-gray-800'
-                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : 'bg-gray-100 text-gray-400 cursor-not-allowed',
                 ]"
                 :aria-label="canGoNext ? '下一個講義' : '已是最後一個講義'"
                 :title="canGoNext ? '下一個講義 (→)' : '已是最後一個講義'"
@@ -742,6 +807,33 @@ watch(
 </template>
 
 <style scoped>
+/* INC-024: Mobile Edge Button Width */
+.mobile-edge-button {
+  width: 40px; /* 2/3 of original 80px (80 × 2/3 = 53.33px) */
+}
+
+/* INC-025: Desktop Edge Navigation Hover Effect */
+/* 預設隱藏所有邊緣按鈕 */
+.edge-nav-button {
+  opacity: 0;
+}
+
+/* Hover 任一邊緣觸發區域時,顯示所有按鈕 */
+.edge-nav-container:has(.edge-trigger:hover) .edge-nav-button {
+  opacity: 1;
+}
+
+/* Hover 到按鈕本身時,保持所有按鈕顯示 (防止閃爍) */
+.edge-nav-container:has(.edge-nav-button:hover) .edge-nav-button {
+  opacity: 1;
+}
+
+/* 點擊後強制隱藏,無 transition (防止抖動) */
+.edge-nav-container.force-hide .edge-nav-button {
+  opacity: 0 !important;
+  transition: none !important;
+}
+
 /* INC-024: Mobile Touch Navigation Animations */
 @keyframes slide-in-left {
   from {
@@ -870,11 +962,21 @@ watch(
   font-family: "Monaco", "Menlo", "Courier New", monospace;
 }
 
+/* INC-025: Table Wrapper for Horizontal Scrolling */
+.markdown-content :deep(.table-wrapper) {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+  -webkit-overflow-scrolling: touch; /* iOS smooth scrolling */
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
 .markdown-content :deep(table) {
   border-collapse: collapse;
   width: 100%;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  margin-bottom: 0; /* 移除 margin，由 wrapper 控制 */
+  box-shadow: none; /* 移除 shadow，由 wrapper 控制 */
 }
 
 .markdown-content :deep(thead) {
