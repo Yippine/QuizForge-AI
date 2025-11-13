@@ -8,10 +8,11 @@ import "katex/dist/katex.min.css";
 
 /**
  * LectureDetail Component
- * Formula: LectureDetail = MarkdownRenderer + Navigation + KeyboardShortcuts + ResponsiveLayout + MobileTouchNav
+ * Formula: LectureDetail = MarkdownRenderer + Navigation + KeyboardShortcuts + ResponsiveLayout + MobileTouchNav + TableScrollOptimization
  * INC-022: Security vulnerability resolution with @mdit/plugin-katex
  * INC-023: Enhanced navigation with prev/next buttons and keyboard shortcuts
  * INC-024: Mobile touch navigation with smart edge detection
+ * INC-025: Table horizontal scroll optimization and edge navigation button interaction improvements
  *
  * Security Note (INC-022): npm Security Vulnerability Resolution
  *
@@ -155,7 +156,9 @@ const handleKeyPress = (e) => {
 
 /**
  * INC-024: Mobile Touch Navigation Event Layer
+ * INC-025: Enhanced to show all available buttons on any edge tap
  * Formula: EventLayer = TouchHandlers(start + move + end) + TimerManagement + ButtonHiding
+ * Formula (INC-025): ShowAllAvailableButtons = (FirstPage -> showRight) | (LastPage -> showLeft) | (MiddlePage -> showLeft & showRight)
  */
 
 // 觸控開始：記錄時間和位置
@@ -175,7 +178,7 @@ const handleTouchMove = (e) => {
   }
 };
 
-// 觸控結束：評估是否為輕觸並顯示按鈕
+// 觸控結束：評估是否為輕觸並顯示所有可用按鈕 (INC-025)
 const handleTouchEnd = (e) => {
   const touchDuration = Date.now() - touchStartTime.value;
   const touchX = touchStartX.value;
@@ -189,12 +192,19 @@ const handleTouchEnd = (e) => {
   }
 
   // 輕觸判斷: < 200ms 且無移動
+  // INC-025: 點擊任一邊緣時,顯示所有可用的按鈕
   if (touchDuration < 200 && !isTouchMove.value) {
-    if (touchX < leftEdgeThreshold && canGoPrevious.value) {
-      showLeftButton.value = true;
-      startHideTimer();
-    } else if (touchX > rightEdgeThreshold && canGoNext.value) {
-      showRightButton.value = true;
+    const isLeftEdge = touchX < leftEdgeThreshold;
+    const isRightEdge = touchX > rightEdgeThreshold;
+
+    if (isLeftEdge || isRightEdge) {
+      // 顯示所有可用的按鈕
+      if (canGoPrevious.value) {
+        showLeftButton.value = true;
+      }
+      if (canGoNext.value) {
+        showRightButton.value = true;
+      }
       startHideTimer();
     }
   }
@@ -316,6 +326,35 @@ const parseMarkdown = () => {
     return;
   }
   renderedHTML.value = md.render(markdownContent.value);
+
+  // INC-025: 在下一個 tick 執行表格包裝，確保 DOM 已更新
+  setTimeout(() => {
+    wrapTables();
+  }, 0);
+};
+
+/**
+ * INC-025: Table Scroll Optimization
+ * Formula: wrapTables = QueryAllTables -> WrapEachTable(div.table-wrapper + overflow-x-auto)
+ * 動態為所有表格添加橫向滾動容器
+ */
+const wrapTables = () => {
+  const tables = document.querySelectorAll('.markdown-content table');
+
+  tables.forEach((table) => {
+    // 檢查表格是否已經被包裝過
+    if (table.parentElement?.classList.contains('table-wrapper')) {
+      return;
+    }
+
+    // 創建包裝容器
+    const wrapper = document.createElement('div');
+    wrapper.className = 'table-wrapper';
+
+    // 將表格插入包裝容器
+    table.parentNode?.insertBefore(wrapper, table);
+    wrapper.appendChild(table);
+  });
 };
 
 const navigateBack = () => {
@@ -495,12 +534,12 @@ watch(
           <ChevronRightIcon class="w-8 h-8 text-white" />
         </button>
 
-        <!-- Edge Navigation Buttons (Desktop Only, ≥768px) -->
+        <!-- INC-025: Edge Navigation Buttons (Desktop Only, ≥768px) - Hover to Show -->
         <!-- Left Edge Button: Previous Lecture -->
         <button
           v-if="canGoPrevious"
           @click="navigateToPrevious"
-          class="hidden md:flex fixed left-0 top-1/2 -translate-y-1/2 h-24 w-12 bg-gray-800/30 hover:bg-gray-800/80 items-center justify-center transition-all duration-300 z-10 rounded-r-lg"
+          class="hidden md:flex fixed left-0 top-1/2 -translate-y-1/2 h-24 w-12 bg-gray-800/70 items-center justify-center transition-opacity duration-300 z-10 rounded-r-lg opacity-0 hover:opacity-100"
           :aria-label="'上一個講義'"
           :title="'上一個講義 (←)'"
         >
@@ -511,7 +550,7 @@ watch(
         <button
           v-if="canGoNext"
           @click="navigateToNext"
-          class="hidden md:flex fixed right-0 top-1/2 -translate-y-1/2 h-24 w-12 bg-gray-800/30 hover:bg-gray-800/80 items-center justify-center transition-all duration-300 z-10 rounded-l-lg"
+          class="hidden md:flex fixed right-0 top-1/2 -translate-y-1/2 h-24 w-12 bg-gray-800/70 items-center justify-center transition-opacity duration-300 z-10 rounded-l-lg opacity-0 hover:opacity-100"
           :aria-label="'下一個講義'"
           :title="'下一個講義 (→)'"
         >
@@ -870,11 +909,21 @@ watch(
   font-family: "Monaco", "Menlo", "Courier New", monospace;
 }
 
+/* INC-025: Table Wrapper for Horizontal Scrolling */
+.markdown-content :deep(.table-wrapper) {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+  -webkit-overflow-scrolling: touch; /* iOS smooth scrolling */
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
 .markdown-content :deep(table) {
   border-collapse: collapse;
   width: 100%;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  margin-bottom: 0; /* 移除 margin，由 wrapper 控制 */
+  box-shadow: none; /* 移除 shadow，由 wrapper 控制 */
 }
 
 .markdown-content :deep(thead) {
