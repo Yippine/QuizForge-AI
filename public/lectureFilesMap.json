@@ -1,27 +1,36 @@
 {
   "L21": [
+    { "id": "L21000", "file": "/knowledge-base/ipas/2 mermaid/L21-人工智慧技術應用與規劃-全局架構.md" },
     { "id": "L21101", "file": "/knowledge-base/ipas/3 formula/L21-科目1/L21101-自然語言處理技術與應用.md" },
     { "id": "L21102", "file": "/knowledge-base/ipas/3 formula/L21-科目1/L21102-電腦視覺技術與應用.md" },
     { "id": "L21103", "file": "/knowledge-base/ipas/3 formula/L21-科目1/L21103-生成式AI技術與應用.md" },
     { "id": "L21104", "file": "/knowledge-base/ipas/3 formula/L21-科目1/L21104-多模態人工智慧應用.md" },
+    { "id": "L21110", "file": "/knowledge-base/ipas/2 mermaid/L211-AI相關技術應用.md" },
     { "id": "L21201", "file": "/knowledge-base/ipas/3 formula/L21-科目1/L21201-AI導入評估.md" },
     { "id": "L21202", "file": "/knowledge-base/ipas/3 formula/L21-科目1/L21202-AI導入規劃.md" },
     { "id": "L21203", "file": "/knowledge-base/ipas/3 formula/L21-科目1/L21203-AI風險管理.md" },
+    { "id": "L21210", "file": "/knowledge-base/ipas/2 mermaid/L212-AI導入評估規劃.md" },
     { "id": "L21301", "file": "/knowledge-base/ipas/3 formula/L21-科目1/L21301-數據準備與模型選擇.md" },
-    { "id": "L21302", "file": "/knowledge-base/ipas/3 formula/L21-科目1/L21302-AI技術系統集成與部署.md" }
+    { "id": "L21302", "file": "/knowledge-base/ipas/3 formula/L21-科目1/L21302-AI技術系統集成與部署.md" },
+    { "id": "L21310", "file": "/knowledge-base/ipas/2 mermaid/L213-AI技術應用與系統部署.md" }
   ],
   "L23": [
+    { "id": "L23000", "file": "/knowledge-base/ipas/2 mermaid/L23-機器學習技術與應用-全局架構.md" },
     { "id": "L23101", "file": "/knowledge-base/ipas/3 formula/L23-科目3/L23101-機率統計之機器學習基礎應用.md" },
     { "id": "L23102", "file": "/knowledge-base/ipas/3 formula/L23-科目3/L23102-線性代數之機器學習基礎應用.md" },
     { "id": "L23103", "file": "/knowledge-base/ipas/3 formula/L23-科目3/L23103-數值優化技術與方法.md" },
+    { "id": "L23110", "file": "/knowledge-base/ipas/2 mermaid/L231-機器學習基礎數學.md" },
     { "id": "L23201", "file": "/knowledge-base/ipas/3 formula/L23-科目3/L23201-機器學習原理與技術.md" },
     { "id": "L23202", "file": "/knowledge-base/ipas/3 formula/L23-科目3/L23202-常見機器學習演算法.md" },
     { "id": "L23203", "file": "/knowledge-base/ipas/3 formula/L23-科目3/L23203-深度學習原理與框架.md" },
+    { "id": "L23210", "file": "/knowledge-base/ipas/2 mermaid/L232-機器學習與深度學習.md" },
     { "id": "L23301", "file": "/knowledge-base/ipas/3 formula/L23-科目3/L23301-數據準備與特徵工程.md" },
     { "id": "L23302", "file": "/knowledge-base/ipas/3 formula/L23-科目3/L23302-模型選擇與架構設計.md" },
     { "id": "L23303", "file": "/knowledge-base/ipas/3 formula/L23-科目3/L23303-模型訓練評估驗證.md" },
     { "id": "L23304", "file": "/knowledge-base/ipas/3 formula/L23-科目3/L23304-模型調整與優化.md" },
+    { "id": "L23310", "file": "/knowledge-base/ipas/2 mermaid/L233-機器學習建模與參數調校.md" },
     { "id": "L23401", "file": "/knowledge-base/ipas/3 formula/L23-科目3/L23401-數據隱私安全合規.md" },
-    { "id": "L23402", "file": "/knowledge-base/ipas/3 formula/L23-科目3/L23402-演算法偏見與公平性.md" }
+    { "id": "L23402", "file": "/knowledge-base/ipas/3 formula/L23-科目3/L23402-演算法偏見與公平性.md" },
+    { "id": "L23410", "file": "/knowledge-base/ipas/2 mermaid/L234-機器學習治理.md" }
   ]
 }

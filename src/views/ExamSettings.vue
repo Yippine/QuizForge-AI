@@ -8,14 +8,17 @@
  * INC-020: 智慧題數選項調整（動態過濾 + 智慧預設 + 響應式重置）
  * INC-021: UI 優化與使用者體驗提升（空範圍警告 + Footer 更新）
  */
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useQuestionBankStore } from '../stores/questionBank'
 import { extractTopicID } from '../constants/ipas'
+import { useResourcesMap } from '../composables/useResourcesMap'
 import OptionSelector from '../components/OptionSelector.vue'
 
 const router = useRouter()
+const route = useRoute()
 const store = useQuestionBankStore()
+const { getCategoryById, getCertificationByPath, getLevelById } = useResourcesMap()
 
 /**
  * State
@@ -26,6 +29,21 @@ const questionCount = ref(20) // 預設 20 題
 const timeLimit = ref(null) // 預設不限時
 const isQuestionCountValid = ref(true)
 const isTimeLimitValid = ref(true)
+
+/**
+ * INC-032: Route params detection for scoped mode
+ * Formula: isSubjectScoped = computed(() => !!route.params.subjectId)
+ */
+const isSubjectScoped = computed(() => !!route.params.subjectId)
+const certificationId = computed(() => route.params.certificationId)
+const levelId = computed(() => route.params.levelId)
+const subjectId = computed(() => route.params.subjectId)
+
+// Get breadcrumb data for new structure
+const ipasCategory = computed(() => isSubjectScoped.value ? getCategoryById('ipas') : null)
+const certification = computed(() => isSubjectScoped.value ? getCertificationByPath('ipas', certificationId.value) : null)
+const level = computed(() => isSubjectScoped.value ? getLevelById('ipas', certificationId.value, levelId.value) : null)
+const subject = computed(() => isSubjectScoped.value ? level.value?.subjects.find(s => s.id === subjectId.value) : null)
 
 /**
  * Options
@@ -202,8 +220,45 @@ const startExam = () => {
 }
 
 const goBack = () => {
-  router.push('/')
+  // INC-032: Conditional navigation based on route structure
+  if (isSubjectScoped.value) {
+    // Go back to PracticeHub
+    router.push(`/resources/ipas/${certificationId.value}/${levelId.value}/${subjectId.value}/practice`)
+  } else {
+    // Go back to home
+    router.push('/')
+  }
 }
+
+const goToPracticeHub = () => {
+  router.push(`/resources/ipas/${certificationId.value}/${levelId.value}/${subjectId.value}/practice`)
+}
+
+const goToSubjectHub = () => {
+  router.push(`/resources/ipas/${certificationId.value}/${levelId.value}/${subjectId.value}`)
+}
+
+const goToLevel = () => {
+  router.push(`/resources/ipas/${certificationId.value}/${levelId.value}`)
+}
+
+const goToCertification = () => {
+  router.push(`/resources/ipas/${certificationId.value}`)
+}
+
+const goToIpas = () => {
+  router.push('/resources/ipas')
+}
+
+/**
+ * INC-032: Auto-select range when coming from PracticeHub
+ */
+onMounted(() => {
+  if (isSubjectScoped.value && subjectId.value) {
+    selectedRange.value = subjectId.value
+    handleRangeUpdate(subjectId.value)
+  }
+})
 </script>
 
 <template>
@@ -218,8 +273,33 @@ const goBack = () => {
         <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
-        返回主頁
+        {{ isSubjectScoped ? '返回題目區' : '返回主頁' }}
       </button>
+
+      <!-- INC-032: Breadcrumb for scoped mode -->
+      <div v-if="isSubjectScoped && ipasCategory && certification && level && subject" class="flex items-center justify-center gap-2 text-sm text-gray-600 mb-4 flex-wrap">
+        <span class="hover:text-primary-600 cursor-pointer" @click="goToIpas">{{ ipasCategory.name }}</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        <span class="hover:text-primary-600 cursor-pointer" @click="goToCertification">{{ certification.name }}</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        <span class="hover:text-primary-600 cursor-pointer" @click="goToLevel">{{ level.name }}</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        <span class="hover:text-primary-600 cursor-pointer" @click="goToSubjectHub">{{ subject.code }}</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        <span class="hover:text-primary-600 cursor-pointer" @click="goToPracticeHub">題目區</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        <span class="font-semibold text-gray-900">模擬考試</span>
+      </div>
 
       <!-- Title -->
       <div class="text-center mb-6">
@@ -234,12 +314,22 @@ const goBack = () => {
     <main class="max-w-3xl mx-auto">
       <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 space-y-8">
         <!-- INC-019 步驟 5: 新增 Range Selector -->
+        <!-- INC-032: Hide range selector when scoped to a subject -->
         <OptionSelector
+          v-if="!isSubjectScoped"
           :options="rangeOptions"
           :default-index="0"
           label="選擇題目範圍"
           @update:value="handleRangeUpdate"
         />
+
+        <!-- INC-032: Show subject info when scoped -->
+        <div v-else class="bg-primary-50 rounded-lg p-4 md:p-6">
+          <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-2">題目範圍</h3>
+          <div class="text-sm md:text-base text-gray-700">
+            <span class="font-semibold text-primary-600">{{ subject?.code }} - {{ subject?.name }}</span>
+          </div>
+        </div>
 
         <!-- INC-021 步驟 2: 空範圍警告區塊 -->
         <div v-if="isRangeEmpty" class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">

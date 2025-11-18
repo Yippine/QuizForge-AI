@@ -5,14 +5,17 @@
  * Responsibility: 主題選擇界面，支持主題和難度篩選
  * Updated: 使用 ALL_TOPICS 常量替代硬編碼主題列表
  */
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useQuestionBankStore } from '../stores/questionBank'
 import { extractTopicID, OFFICIAL_TOPIC, OFFICIAL_TOPICS } from '../constants/ipas'
+import { useResourcesMap } from '../composables/useResourcesMap'
 import TopicCard from '../components/TopicCard.vue'
 
 const router = useRouter()
+const route = useRoute()
 const store = useQuestionBankStore()
+const { getCategoryById, getCertificationByPath, getLevelById } = useResourcesMap()
 
 /**
  * State
@@ -21,6 +24,21 @@ const selectedSubject = ref(null) // 科目選擇狀態 (null | 'L21' | 'L23' | 
 const selectedTopic = ref(null)
 const selectedDifficulty = ref([]) // INC-021: 改為陣列支援複選 (string[])
 const searchQuery = ref('')
+
+/**
+ * INC-032: Route params detection for filtered mode
+ * Formula: isFilteredBySubject = computed(() => !!route.params.subjectId)
+ */
+const isFilteredBySubject = computed(() => !!route.params.subjectId)
+const certificationId = computed(() => route.params.certificationId)
+const levelId = computed(() => route.params.levelId)
+const subjectId = computed(() => route.params.subjectId)
+
+// Get breadcrumb data for new structure
+const ipasCategory = computed(() => isFilteredBySubject.value ? getCategoryById('ipas') : null)
+const certification = computed(() => isFilteredBySubject.value ? getCertificationByPath('ipas', certificationId.value) : null)
+const level = computed(() => isFilteredBySubject.value ? getLevelById('ipas', certificationId.value, levelId.value) : null)
+const subject = computed(() => isFilteredBySubject.value ? level.value?.subjects.find(s => s.id === subjectId.value) : null)
 
 /**
  * Topic List - 從 store.topicList 取得完整的 21 個主題
@@ -35,16 +53,22 @@ const topicList = computed(() => store.topicList)
 const filteredTopics = computed(() => {
   let topics = []
 
-  // 根據選擇的科目決定主題列表
-  if (selectedSubject.value === 'OFFICIAL') {
-    // 官方題目：使用 OFFICIAL_TOPICS (9 個主題)
-    topics = OFFICIAL_TOPICS
-  } else if (selectedSubject.value) {
-    // 一般科目：從 store.topicList 過濾
-    topics = topicList.value.filter(t => t.subjectId === selectedSubject.value)
+  // INC-032: If filtered by route params, use subjectId from route
+  if (isFilteredBySubject.value) {
+    // Filtered mode: only show topics for the current subject
+    topics = topicList.value.filter(t => t.subjectId === subjectId.value)
   } else {
-    // 未選擇科目：顯示所有主題（排除官方題目）
-    topics = topicList.value.filter(t => t.subjectId !== 'OFFICIAL')
+    // Normal mode: use selectedSubject state
+    if (selectedSubject.value === 'OFFICIAL') {
+      // 官方題目：使用 OFFICIAL_TOPICS (9 個主題)
+      topics = OFFICIAL_TOPICS
+    } else if (selectedSubject.value) {
+      // 一般科目：從 store.topicList 過濾
+      topics = topicList.value.filter(t => t.subjectId === selectedSubject.value)
+    } else {
+      // 未選擇科目：顯示所有主題（排除官方題目）
+      topics = topicList.value.filter(t => t.subjectId !== 'OFFICIAL')
+    }
   }
 
   // 按搜尋過濾
@@ -174,8 +198,44 @@ const startExam = () => {
 }
 
 const goBack = () => {
-  router.push('/')
+  // INC-032: Conditional navigation based on route structure
+  if (isFilteredBySubject.value) {
+    // Go back to PracticeHub
+    router.push(`/resources/ipas/${certificationId.value}/${levelId.value}/${subjectId.value}/practice`)
+  } else {
+    // Go back to home
+    router.push('/')
+  }
 }
+
+const goToPracticeHub = () => {
+  router.push(`/resources/ipas/${certificationId.value}/${levelId.value}/${subjectId.value}/practice`)
+}
+
+const goToSubjectHub = () => {
+  router.push(`/resources/ipas/${certificationId.value}/${levelId.value}/${subjectId.value}`)
+}
+
+const goToLevel = () => {
+  router.push(`/resources/ipas/${certificationId.value}/${levelId.value}`)
+}
+
+const goToCertification = () => {
+  router.push(`/resources/ipas/${certificationId.value}`)
+}
+
+const goToIpas = () => {
+  router.push('/resources/ipas')
+}
+
+/**
+ * INC-032: Auto-select subject when coming from PracticeHub
+ */
+onMounted(() => {
+  if (isFilteredBySubject.value && subjectId.value) {
+    selectedSubject.value = subjectId.value
+  }
+})
 </script>
 
 <template>
@@ -183,7 +243,7 @@ const goBack = () => {
     <div class="max-w-7xl mx-auto">
       <!-- Header -->
       <div class="flex items-center justify-between mb-8">
-        <div>
+        <div class="w-full">
           <button
             @click="goBack"
             class="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
@@ -191,15 +251,42 @@ const goBack = () => {
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
-            返回主頁
+            {{ isFilteredBySubject ? '返回題目區' : '返回主頁' }}
           </button>
+
+          <!-- INC-032: Breadcrumb for filtered mode -->
+          <div v-if="isFilteredBySubject && ipasCategory && certification && level && subject" class="flex items-center gap-2 text-sm text-gray-600 mb-4 flex-wrap">
+            <span class="hover:text-primary-600 cursor-pointer" @click="goToIpas">{{ ipasCategory.name }}</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+            <span class="hover:text-primary-600 cursor-pointer" @click="goToCertification">{{ certification.name }}</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+            <span class="hover:text-primary-600 cursor-pointer" @click="goToLevel">{{ level.name }}</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+            <span class="hover:text-primary-600 cursor-pointer" @click="goToSubjectHub">{{ subject.code }}</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+            <span class="hover:text-primary-600 cursor-pointer" @click="goToPracticeHub">題目區</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+            <span class="font-semibold text-gray-900">主題練習</span>
+          </div>
+
           <h1 class="text-4xl font-bold text-gray-900 mb-2">主題選擇</h1>
           <p class="text-gray-600">選擇一個主題開始練習</p>
         </div>
       </div>
 
       <!-- INC-011: 階段 1 - 科目選擇 + INC-013-HOTFIX: 官方題目卡片 -->
-      <div v-if="!selectedSubject" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+      <!-- INC-032: Hide subject selection when filtered by route params -->
+      <div v-if="!selectedSubject && !isFilteredBySubject" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
         <!-- INC-013-HOTFIX: 官方題目卡片 -->
         <div
           @click="selectSubject('OFFICIAL')"
@@ -241,9 +328,12 @@ const goBack = () => {
       </div>
 
       <!-- INC-011: 階段 2 - 主題選擇 (原有內容) -->
-      <div v-else>
+      <!-- INC-032: Show topic selection directly when filtered, or after subject selection -->
+      <div v-if="selectedSubject || isFilteredBySubject">
         <!-- 返回科目選擇按鈕 -->
+        <!-- INC-032: Only show back to subject selection when not filtered by route -->
         <button
+          v-if="!isFilteredBySubject"
           @click="selectedSubject = null"
           class="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6 transition-colors"
         >

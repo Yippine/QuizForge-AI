@@ -1,18 +1,20 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from "vue";
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/vue/24/outline";
 import MarkdownIt from "markdown-it";
 import { katex } from "@mdit/plugin-katex";
 import "katex/dist/katex.min.css";
+import mermaid from "mermaid";
 
 /**
  * LectureDetail Component
- * Formula: LectureDetail = MarkdownRenderer + Navigation + KeyboardShortcuts + ResponsiveLayout + MobileTouchNav + TableScrollOptimization
+ * Formula: LectureDetail = MarkdownRenderer + Navigation + KeyboardShortcuts + ResponsiveLayout + MobileTouchNav + TableScrollOptimization + MermaidRenderer
  * INC-022: Security vulnerability resolution with @mdit/plugin-katex
  * INC-023: Enhanced navigation with prev/next buttons and keyboard shortcuts
  * INC-024: Mobile touch navigation with smart edge detection
  * INC-025: Table horizontal scroll optimization and edge navigation button interaction improvements
+ * INC-026: Mermaid diagram integration for knowledge-base/ipas/2 mermaid files
  *
  * Security Note (INC-022): npm Security Vulnerability Resolution
  *
@@ -28,6 +30,12 @@ import "katex/dist/katex.min.css";
  * - @mdit/plugin-katex: Modern, actively maintained KaTeX plugin
  * - Last updated: 2 months ago (as of 2025-11)
  * - Part of the mdit-plugins ecosystem
+ *
+ * INC-026 Details:
+ * - Integrated mermaid.js (v11.4.1) for diagram rendering
+ * - Support for 9 Mermaid files (L21: 4 files, L23: 5 files)
+ * - Coexistence with KaTeX rendering
+ * - Responsive design for desktop and mobile
  */
 
 const router = useRouter();
@@ -279,6 +287,14 @@ const initMarkdownRenderer = () => {
       console.error("[KaTeX Rendering Error]:", error);
     },
   });
+
+  // INC-026: Initialize Mermaid
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: 'default',
+    securityLevel: 'loose',
+    fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
+  });
 };
 
 const loadFileMap = async () => {
@@ -326,17 +342,53 @@ const extractTitle = () => {
   lectureTitle.value = titleMatch ? titleMatch[1] : lectureId.value;
 };
 
-const parseMarkdown = () => {
+const parseMarkdown = async () => {
   if (!md) {
     console.error("[LectureDetail] Markdown renderer not initialized");
     return;
   }
   renderedHTML.value = md.render(markdownContent.value);
 
-  // INC-025: 在下一個 tick 執行表格包裝，確保 DOM 已更新
-  setTimeout(() => {
-    wrapTables();
-  }, 0);
+  // INC-025 & INC-026: 在下一個 tick 執行表格包裝和 Mermaid 渲染，確保 DOM 已更新
+  await nextTick();
+  wrapTables();
+  await renderMermaid();
+};
+
+/**
+ * INC-026: Render Mermaid Diagrams
+ * Formula: renderMermaid = QueryMermaidBlocks -> mermaid.run() -> ErrorHandling
+ */
+const renderMermaid = async () => {
+  try {
+    const mermaidElements = document.querySelectorAll('.markdown-content pre code.language-mermaid');
+
+    if (mermaidElements.length === 0) {
+      return; // No Mermaid diagrams to render
+    }
+
+    // Convert code blocks to mermaid divs
+    mermaidElements.forEach((element, index) => {
+      const mermaidCode = element.textContent;
+      const mermaidDiv = document.createElement('div');
+      mermaidDiv.className = 'mermaid';
+      mermaidDiv.textContent = mermaidCode;
+      mermaidDiv.setAttribute('data-mermaid-index', index);
+
+      // Replace pre > code with mermaid div
+      const preElement = element.closest('pre');
+      if (preElement && preElement.parentNode) {
+        preElement.parentNode.replaceChild(mermaidDiv, preElement);
+      }
+    });
+
+    // Run Mermaid rendering
+    await mermaid.run({
+      querySelector: '.markdown-content .mermaid',
+    });
+  } catch (error) {
+    console.error("[LectureDetail] Mermaid rendering error:", error);
+  }
 };
 
 /**
@@ -1052,5 +1104,36 @@ watch(
 
 .markdown-content :deep(em) {
   font-style: italic;
+}
+
+/* INC-026: Mermaid Diagram Styles */
+.markdown-content :deep(.mermaid) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.markdown-content :deep(.mermaid svg) {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Mobile responsive */
+@media (max-width: 767px) {
+  .markdown-content :deep(.mermaid) {
+    padding: 0.5rem;
+    margin: 1rem 0;
+  }
+
+  .markdown-content :deep(.mermaid svg) {
+    font-size: 12px;
+  }
 }
 </style>

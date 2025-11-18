@@ -99,6 +99,148 @@ const routes = [
       requiresAuth: false
     }
   },
+  // iPAS Learning Resources - Hierarchical Navigation (INC-029+030)
+  {
+    path: '/resources/ipas',
+    name: 'ipas-overview',
+    component: () => import('../views/IpasOverview.vue'),
+    meta: {
+      title: 'QuizForge AI - iPAS 能力鑑定',
+      breadcrumbs: [{ name: 'iPAS', path: '/resources/ipas' }]
+    }
+  },
+  {
+    path: '/resources/ipas/:certificationId',
+    name: 'certification-view',
+    component: () => import('../views/CertificationView.vue'),
+    meta: {
+      title: 'QuizForge AI - 認證詳情',
+      breadcrumbs: 'dynamic' // Will be computed in component
+    }
+  },
+  {
+    path: '/resources/ipas/:certificationId/:levelId',
+    name: 'level-view',
+    component: () => import('../views/LevelView.vue'),
+    meta: {
+      title: 'QuizForge AI - 等級詳情',
+      breadcrumbs: 'dynamic'
+    }
+  },
+  {
+    path: '/resources/ipas/:certificationId/:levelId/:subjectId',
+    name: 'subject-hub',
+    component: () => import('../views/SubjectHub.vue'),
+    meta: {
+      title: 'QuizForge AI - 科目總覽',
+      breadcrumbs: 'dynamic'
+    }
+  },
+  {
+    path: '/resources/ipas/:certificationId/:levelId/:subjectId/materials',
+    name: 'subject-materials',
+    component: () => import('../views/ResourceTypes.vue'),
+    meta: {
+      title: 'QuizForge AI - 學習資源',
+      breadcrumbs: 'dynamic'
+    }
+  },
+  {
+    path: '/resources/ipas/:certificationId/:levelId/:subjectId/materials/:resourceType',
+    name: 'subject-resource-list',
+    component: () => import('../views/ResourceList.vue'),
+    meta: {
+      title: 'QuizForge AI - 資源列表',
+      breadcrumbs: 'dynamic'
+    }
+  },
+  {
+    path: '/resources/ipas/:certificationId/:levelId/:subjectId/materials/:resourceType/:resourceId',
+    name: 'subject-resource-detail',
+    component: () => import('../views/ResourceDetail.vue'),
+    meta: {
+      title: 'QuizForge AI - 資源詳情',
+      breadcrumbs: 'dynamic'
+    }
+  },
+  {
+    path: '/resources/ipas/:certificationId/:levelId/:subjectId/practice',
+    name: 'practice-hub',
+    component: () => import('../views/PracticeHub.vue'),
+    meta: {
+      title: 'QuizForge AI - 題目區',
+      breadcrumbs: 'dynamic'
+    }
+  },
+  {
+    path: '/resources/ipas/:certificationId/:levelId/:subjectId/practice/topics',
+    name: 'practice-topics',
+    component: () => import('../views/TopicSelection.vue'),
+    meta: {
+      title: 'QuizForge AI - 主題練習',
+      breadcrumbs: 'dynamic'
+    }
+  },
+  {
+    path: '/resources/ipas/:certificationId/:levelId/:subjectId/practice/exam',
+    name: 'practice-exam',
+    component: () => import('../views/ExamSettings.vue'),
+    meta: {
+      title: 'QuizForge AI - 模擬考試',
+      breadcrumbs: 'dynamic'
+    }
+  },
+  // Redirect old URLs to new structure
+  {
+    path: '/resources/intermediate/:subjectId',
+    redirect: to => `/resources/ipas/ai-planning/intermediate/${to.params.subjectId}`
+  },
+  // Learning Resources Routes (Legacy - kept for backward compatibility)
+  {
+    path: '/resources',
+    name: 'resource-center',
+    component: () => import('../views/ResourceCenter.vue'),
+    meta: {
+      title: 'QuizForge AI - 學習資源中心',
+      requiresAuth: false
+    }
+  },
+  {
+    path: '/resources/:certificationId',
+    name: 'resource-subjects',
+    component: () => import('../views/ResourceSubjects.vue'),
+    meta: {
+      title: 'QuizForge AI - 科目選擇',
+      requiresAuth: false
+    }
+  },
+  {
+    path: '/resources/:certificationId/:subjectId',
+    name: 'resource-types',
+    component: () => import('../views/ResourceTypes.vue'),
+    meta: {
+      title: 'QuizForge AI - 資源類型',
+      requiresAuth: false
+    }
+  },
+  {
+    path: '/resources/:certificationId/:subjectId/:resourceType',
+    name: 'resource-list',
+    component: () => import('../views/ResourceList.vue'),
+    meta: {
+      title: 'QuizForge AI - 資源列表',
+      requiresAuth: false
+    }
+  },
+  {
+    path: '/resources/:certificationId/:subjectId/:resourceType/:resourceId',
+    name: 'resource-detail',
+    component: () => import('../views/ResourceDetail.vue'),
+    meta: {
+      title: 'QuizForge AI - 資源詳情',
+      requiresAuth: false
+    }
+  },
   {
     path: '/:pathMatch(.*)*',
     redirect: '/'

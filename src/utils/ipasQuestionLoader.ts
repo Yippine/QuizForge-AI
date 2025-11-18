@@ -96,8 +96,11 @@ export function normalizeQuestionFormat(rawQuestion: any): QuestionType {
  */
 export async function loadMockExam(subjectId: SubjectId): Promise<QuestionType[]> {
   try {
-    const fileName = subjectId === 'L21' ? 'L21-mock-exam.json' : 'L23-mock-exam.json'
-    const response = await fetch(`/knowledge-base/ipas/4 questions/${fileName}`)
+    const subjectPath = subjectId === 'L21'
+      ? 'L21-人工智慧技術應用規劃'
+      : 'L23-機器學習技術與應用'
+    const fileName = 'mock-exam.json'
+    const response = await fetch(`/knowledge-base/ipas/ai-planning/intermediate/${subjectPath}/questions/${fileName}`)
 
     if (!response.ok) {
       throw new Error(`Failed to load ${fileName}: ${response.statusText}`)
@@ -112,7 +115,7 @@ export async function loadMockExam(subjectId: SubjectId): Promise<QuestionType[]
     // 標準化每個題目
     const questions = data.questions.map(normalizeQuestionFormat)
 
-    console.log(`✅ Loaded ${questions.length} questions from ${fileName}`)
+    console.log(`✅ Loaded ${questions.length} questions from ${subjectId} ${fileName}`)
     return questions
 
   } catch (error) {
@@ -127,22 +130,33 @@ export async function loadMockExam(subjectId: SubjectId): Promise<QuestionType[]
  */
 export async function loadOfficialQuestions(): Promise<QuestionType[]> {
   try {
-    const response = await fetch('/knowledge-base/ipas/4 questions/official-questions.json')
+    // 載入 L21 和 L23 的官方題目
+    const [l21Response, l23Response] = await Promise.all([
+      fetch('/knowledge-base/ipas/ai-planning/intermediate/L21-人工智慧技術應用規劃/questions/official.json'),
+      fetch('/knowledge-base/ipas/ai-planning/intermediate/L23-機器學習技術與應用/questions/official.json')
+    ])
 
-    if (!response.ok) {
-      throw new Error(`Failed to load official-questions.json: ${response.statusText}`)
+    if (!l21Response.ok || !l23Response.ok) {
+      throw new Error('Failed to load official questions')
     }
 
-    const data = await response.json()
+    const [l21Data, l23Data] = await Promise.all([
+      l21Response.json(),
+      l23Response.json()
+    ])
 
-    if (!data.questions || !Array.isArray(data.questions)) {
-      throw new Error('Invalid data format in official-questions.json')
+    if (!l21Data.questions || !Array.isArray(l21Data.questions) ||
+        !l23Data.questions || !Array.isArray(l23Data.questions)) {
+      throw new Error('Invalid data format in official questions')
     }
 
-    // 標準化每個題目
-    const questions = data.questions.map(normalizeQuestionFormat)
+    // 合併並標準化題目
+    const questions = [
+      ...l21Data.questions.map(normalizeQuestionFormat),
+      ...l23Data.questions.map(normalizeQuestionFormat)
+    ]
 
-    console.log(`✅ Loaded ${questions.length} questions from official-questions.json`)
+    console.log(`✅ Loaded ${questions.length} official questions (L21: ${l21Data.questions.length}, L23: ${l23Data.questions.length})`)
     return questions
 
   } catch (error) {

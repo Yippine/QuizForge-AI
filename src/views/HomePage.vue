@@ -1,18 +1,24 @@
 <script setup>
 /**
  * HomePage Component
- * Formula: HomePage = HeroSection + ModeSelection + QuickStats + NavigationCards
- * Responsibility: 主頁入口，提供練習模式選擇和快速統計
+ * Formula: HomePage' = HomePage - HardcodedSubjectSelector + (ModalTrigger + RecentSubjectsTags) + (QuickFunctions x ModalFallback)
+ * INC-033-v2: HomePage Integration with Modal-Based Resource Selection
+ * Responsibility: 主頁入口，提供科目選擇和快速功能導航
  */
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useQuestionBankStore } from "../stores/questionBank";
+import { useCurrentSubjectStore } from "../stores/currentSubject";
 import { useAnswerTracking } from "../composables/useAnswerTracking";
+import { useResourcesMap } from "../composables/useResourcesMap";
 import WrongQuestionsPanel from "../components/WrongQuestionsPanel.vue";
+import ResourceSelectorModal from "../components/ResourceSelectorModal.vue";
 
 const router = useRouter();
 const store = useQuestionBankStore();
+const currentSubjectStore = useCurrentSubjectStore();
 const { getStatistics, wrongQuestionsCount } = useAnswerTracking();
+const { getCategoryById, getCertificationByPath, getLevelById, loadResourcesMap } = useResourcesMap();
 
 /**
  * State
@@ -24,26 +30,105 @@ const stats = ref({
   accuracy: 0,
 });
 const showWrongQuestionsPanel = ref(false);
+const showResourceSelector = ref(false);
 
 /**
  * Computed
  */
 const questionBankSize = computed(() => store.questions.length);
 
+// Subject selector computed properties
+const isSubjectSelected = computed(() => currentSubjectStore.isSubjectSelected);
+const subjectInfo = computed(() => currentSubjectStore.subjectInfo);
+
+// Path getters for quick functions
+const materialsPath = computed(() => currentSubjectStore.materialsPath);
+const practicePath = computed(() => currentSubjectStore.practicePath);
+
+// Recent subjects from store
+const recentSubjects = computed(() => currentSubjectStore.recentSubjectsList);
+
+// Display path for current selection
+const displayPath = computed(() => {
+  if (!isSubjectSelected.value) return null;
+
+  const fullPath = currentSubjectStore.fullPath;
+  const category = getCategoryById(fullPath.categoryId);
+  const certification = getCertificationByPath(fullPath.categoryId, fullPath.certificationId);
+  const level = getLevelById(fullPath.categoryId, fullPath.certificationId, fullPath.levelId);
+
+  if (!category || !certification || !level) return null;
+
+  return {
+    category: category.name,
+    certification: certification.name,
+    level: level.name,
+    subject: subjectInfo.value?.name || fullPath.subjectId
+  };
+});
+
 /**
  * Actions
  */
-const startTopicSelection = () => {
-  router.push("/topics");
+const openResourceSelector = () => {
+  showResourceSelector.value = true;
 };
 
-const startExamSettings = () => {
-  store.resetFilters();
-  router.push("/exam-settings");
+const handleModalSelect = (fullPath) => {
+  currentSubjectStore.setFullPath(fullPath);
+  currentSubjectStore.addToRecent(fullPath);
 };
 
-const startLectures = () => {
-  router.push("/lectures");
+const selectRecentSubject = (recent) => {
+  const fullPath = {
+    categoryId: recent.categoryId,
+    certificationId: recent.certificationId,
+    levelId: recent.levelId,
+    subjectId: recent.subjectId
+  };
+  currentSubjectStore.setFullPath(fullPath);
+};
+
+const getRecentSubjectName = (recent) => {
+  const level = getLevelById(recent.categoryId, recent.certificationId, recent.levelId);
+  if (!level) return recent.subjectId;
+
+  const subject = level.subjects.find(s => s.id === recent.subjectId);
+  return subject ? `${subject.code} ${subject.name}` : recent.subjectId;
+};
+
+const getRecentSubjectPath = (recent) => {
+  const category = getCategoryById(recent.categoryId);
+  const certification = getCertificationByPath(recent.categoryId, recent.certificationId);
+  const level = getLevelById(recent.categoryId, recent.certificationId, recent.levelId);
+
+  if (!category || !certification || !level) return '';
+
+  return `${category.name} > ${certification.name} > ${level.name}`;
+};
+
+const isRecentSelected = (recent) => {
+  const fullPath = currentSubjectStore.fullPath;
+  return recent.categoryId === fullPath.categoryId &&
+         recent.certificationId === fullPath.certificationId &&
+         recent.levelId === fullPath.levelId &&
+         recent.subjectId === fullPath.subjectId;
+};
+
+const navigateToMaterials = () => {
+  if (isSubjectSelected.value && materialsPath.value) {
+    router.push(materialsPath.value);
+  } else {
+    openResourceSelector();
+  }
+};
+
+const navigateToPractice = () => {
+  if (isSubjectSelected.value && practicePath.value) {
+    router.push(practicePath.value);
+  } else {
+    openResourceSelector();
+  }
 };
 
 const viewWrongQuestions = () => {
@@ -81,8 +166,14 @@ const viewStatistics = () => {
  */
 onMounted(async () => {
   try {
+    // Load resources map for display path resolution
+    await loadResourcesMap();
+
     // Load question bank
     await store.loadQuestions();
+
+    // Load full state from storage
+    currentSubjectStore.loadFullState();
 
     // Load statistics
     const userStats = getStatistics();
@@ -174,157 +265,184 @@ onMounted(async () => {
         </div>
       </div>
 
-      <!-- Mode Selection Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-14 md:mb-16">
-        <!-- Lecture Notes Mode -->
-        <div
-          @click="startLectures"
-          class="bg-white rounded-2xl shadow-xl p-8 cursor-pointer transform hover:scale-105 hover:shadow-2xl transition-all duration-normal border-2 border-transparent hover:border-accent-600 flex flex-col"
-        >
-          <div class="flex items-center gap-4 mb-4">
-            <div
-              class="w-16 h-16 bg-accent-100 rounded-xl flex items-center justify-center"
-            >
-              <svg
-                class="w-8 h-8 text-accent-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+      <!-- Subject Selector Section -->
+      <div class="mb-12">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">選擇科目</h2>
+
+        <!-- Selected Subject Display -->
+        <div v-if="isSubjectSelected && displayPath" class="mb-6">
+          <div class="bg-green-50 border border-green-200 rounded-xl p-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                  <span class="text-green-800 font-semibold block">
+                    已選擇：{{ subjectInfo?.name }} ({{ subjectInfo?.code }})
+                  </span>
+                  <span class="text-green-600 text-sm">
+                    {{ displayPath.category }} > {{ displayPath.certification }} > {{ displayPath.level }}
+                  </span>
+                </div>
+              </div>
+              <button
+                @click="openResourceSelector"
+                class="text-green-600 hover:text-green-800 transition-colors text-sm font-medium"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                />
-              </svg>
+                更換
+              </button>
             </div>
-            <div>
-              <h2 class="text-2xl font-bold text-gray-900">講義精華</h2>
-              <p class="text-sm text-gray-500">Lecture Notes</p>
-            </div>
-          </div>
-          <p class="text-gray-600 mb-4 flex-grow">
-            查看科目一和科目三的完整講義內容，系統化學習考試知識體系
-          </p>
-          <div class="flex items-center justify-between mt-auto">
-            <span class="text-sm text-accent-600 font-semibold"
-              >科目一 & 科目三</span
-            >
-            <svg
-              class="w-6 h-6 text-accent-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M13 7l5 5m0 0l-5 5m5-5H6"
-              />
-            </svg>
           </div>
         </div>
 
-        <!-- Topic Selection Mode -->
-        <div
-          @click="startTopicSelection"
-          class="bg-white rounded-2xl shadow-xl p-8 cursor-pointer transform hover:scale-105 hover:shadow-2xl transition-all duration-normal border-2 border-transparent hover:border-primary-600 flex flex-col"
-        >
-          <div class="flex items-center gap-4 mb-4">
-            <div
-              class="w-16 h-16 bg-primary-100 rounded-xl flex items-center justify-center"
-            >
-              <svg
-                class="w-8 h-8 text-primary-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                />
-              </svg>
-            </div>
-            <div>
-              <h2 class="text-2xl font-bold text-gray-900">主題學習</h2>
-              <p class="text-sm text-gray-500">Topic Learning</p>
-            </div>
-          </div>
-          <p class="text-gray-600 mb-4 flex-grow">
-            選擇特定主題進行針對性練習，涵蓋官方題目、科目一、科目三全部 30
-            個考試主題
-          </p>
-          <div class="flex items-center justify-between mt-auto">
-            <span class="text-sm text-primary-600 font-semibold"
-              >30 個主題可選</span
-            >
-            <svg
-              class="w-6 h-6 text-primary-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M13 7l5 5m0 0l-5 5m5-5H6"
-              />
+        <!-- Modal Trigger Button -->
+        <div v-if="!isSubjectSelected" class="text-center">
+          <button
+            @click="openResourceSelector"
+            class="inline-flex items-center gap-3 bg-primary-600 text-white px-8 py-4 rounded-xl hover:bg-primary-700 transition-colors shadow-lg hover:shadow-xl"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
-          </div>
+            <span class="text-lg font-semibold">選擇學習科目</span>
+          </button>
+          <p class="text-gray-500 mt-3">請先選擇科目以開始學習</p>
         </div>
 
-        <!-- Mock Exam Mode (INC-018: 原本的隨機練習改為模擬考試) -->
-        <div
-          @click="startExamSettings"
-          class="bg-white rounded-2xl shadow-xl p-8 cursor-pointer transform hover:scale-105 hover:shadow-2xl transition-all duration-normal border-2 border-transparent hover:border-secondary-600 flex flex-col"
-        >
-          <div class="flex items-center gap-4 mb-4">
-            <div
-              class="w-16 h-16 bg-secondary-100 rounded-xl flex items-center justify-center"
+        <!-- Recent Subjects Cards -->
+        <div v-if="recentSubjects.length > 0" class="mt-8">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">最近學習</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <button
+              v-for="recent in recentSubjects"
+              :key="`${recent.categoryId}-${recent.certificationId}-${recent.levelId}-${recent.subjectId}`"
+              @click="selectRecentSubject(recent)"
+              class="rounded-xl shadow-md p-4 text-left transition-all duration-200 border-2"
+              :class="isRecentSelected(recent)
+                ? 'bg-primary-50 border-primary-500 shadow-lg'
+                : 'bg-white border-transparent hover:shadow-lg hover:border-primary-300'"
             >
-              <svg
-                class="w-8 h-8 text-secondary-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
-                />
-              </svg>
-            </div>
-            <div>
-              <h2 class="text-2xl font-bold text-gray-900">模擬考試</h2>
-              <p class="text-sm text-gray-500">Mock Exam</p>
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                     :class="isRecentSelected(recent) ? 'bg-primary-200' : 'bg-primary-100'">
+                  <svg class="w-5 h-5" :class="isRecentSelected(recent) ? 'text-primary-700' : 'text-primary-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path v-if="isRecentSelected(recent)" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h4 class="font-semibold truncate" :class="isRecentSelected(recent) ? 'text-primary-900' : 'text-gray-900'">
+                    {{ getRecentSubjectName(recent) }}
+                  </h4>
+                  <p class="text-xs mt-1 truncate" :class="isRecentSelected(recent) ? 'text-primary-600' : 'text-gray-500'">
+                    {{ getRecentSubjectPath(recent) }}
+                  </p>
+                </div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Functions Section (SubjectHub Style) -->
+      <div class="mb-14 md:mb-16">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">快速功能</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- Materials Entry Card (講義區) -->
+          <div
+            @click="navigateToMaterials"
+            class="bg-white rounded-2xl shadow-xl p-10 cursor-pointer transform hover:scale-105 hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-blue-600"
+          >
+            <div class="text-center">
+              <div class="w-20 h-20 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+              </div>
+
+              <h2 class="text-3xl font-bold text-gray-900 mb-4">講義區</h2>
+              <p class="text-gray-600 mb-6">
+                <template v-if="isSubjectSelected">
+                  瀏覽學習指引、公式化講義、架構圖等學習資源
+                </template>
+                <template v-else>
+                  選擇科目後查看對應的講義資源
+                </template>
+              </p>
+
+              <div class="flex items-center justify-center mb-6">
+                <template v-if="isSubjectSelected">
+                  <div class="px-6 py-3 bg-blue-50 text-blue-700 rounded-lg">
+                    <span class="text-2xl font-bold">{{ subjectInfo?.materialCount }}</span>
+                    <span class="text-sm ml-2">份資源</span>
+                  </div>
+                </template>
+                <template v-else>
+                  <div class="px-6 py-3 bg-gray-100 text-gray-500 rounded-lg">
+                    <span class="text-sm">請先選擇科目</span>
+                  </div>
+                </template>
+              </div>
+
+              <div class="flex items-center justify-center gap-2 text-blue-600 font-semibold">
+                <span>進入講義區</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </div>
             </div>
           </div>
-          <p class="text-gray-600 mb-4 flex-grow">
-            設定題數和時間限制，隨機抽取題目模擬真實考試環境，檢驗學習成果
-          </p>
-          <div class="flex items-center justify-between mt-auto">
-            <span class="text-sm text-secondary-600 font-semibold">開始設定</span>
-            <svg
-              class="w-6 h-6 text-secondary-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M13 7l5 5m0 0l-5 5m5-5H6"
-              />
-            </svg>
+
+          <!-- Practice Entry Card (題目區) -->
+          <div
+            @click="navigateToPractice"
+            class="bg-white rounded-2xl shadow-xl p-10 cursor-pointer transform hover:scale-105 hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-orange-600"
+          >
+            <div class="text-center">
+              <div class="w-20 h-20 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <svg class="w-10 h-10 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                </svg>
+              </div>
+
+              <h2 class="text-3xl font-bold text-gray-900 mb-4">題目區</h2>
+              <p class="text-gray-600 mb-6">
+                <template v-if="isSubjectSelected">
+                  練習題目、模擬測驗，檢驗學習成效
+                </template>
+                <template v-else>
+                  選擇科目後進行主題練習或模擬考試
+                </template>
+              </p>
+
+              <div class="flex items-center justify-center mb-6">
+                <template v-if="isSubjectSelected">
+                  <div class="flex items-center gap-4">
+                    <div class="text-center">
+                      <div class="text-2xl font-bold text-orange-600">{{ subjectInfo?.topicCount }}</div>
+                      <div class="text-xs text-gray-500">主題</div>
+                    </div>
+                    <div class="text-center">
+                      <div class="text-2xl font-bold text-orange-600">{{ subjectInfo?.questionCount }}</div>
+                      <div class="text-xs text-gray-500">題目</div>
+                    </div>
+                  </div>
+                </template>
+                <template v-else>
+                  <div class="px-6 py-3 bg-gray-100 text-gray-500 rounded-lg">
+                    <span class="text-sm">請先選擇科目</span>
+                  </div>
+                </template>
+              </div>
+
+              <div class="flex items-center justify-center gap-2 text-orange-600 font-semibold">
+                <span>前往題目區</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -418,7 +536,7 @@ onMounted(async () => {
       <!-- Footer Info -->
       <div class="mt-12 text-center text-sm text-gray-500">
         <p>Formula-Contract Methodology | Generated with Claude Code</p>
-        <p class="mt-1">INC-006: UI/UX Comprehensive Redesign & Bug Fixes</p>
+        <p class="mt-1">INC-033-v2: HomePage Integration with Modal-Based Resource Selection</p>
       </div>
     </div>
 
@@ -438,6 +556,12 @@ onMounted(async () => {
         </div>
       </div>
     </Teleport>
+
+    <!-- Resource Selector Modal -->
+    <ResourceSelectorModal
+      v-model="showResourceSelector"
+      @select="handleModalSelect"
+    />
   </div>
 </template>
 
@@ -455,5 +579,10 @@ onMounted(async () => {
 /* Hover effects */
 .transform:hover {
   transform: translateY(-4px);
+}
+
+/* Subtle scale for subject cards */
+.hover\:scale-102:hover {
+  transform: scale(1.02);
 }
 </style>

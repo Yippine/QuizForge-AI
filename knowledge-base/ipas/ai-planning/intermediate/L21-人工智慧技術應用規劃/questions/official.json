@@ -1,0 +1,1116 @@
+{
+  "questions": [
+    {
+      "question_id": "OFF_L21_CH3_001",
+      "source": "講義練習題-科目1-第3章-第1題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第3章 AI相關技術應用",
+      "topic": "L21201_自然語言處理",
+      "difficulty": "simple",
+      "question": "下列何者為自然語言處理（NLP）中的詞嵌入技術，能將文字轉換為向量以利機器學習處理？",
+      "options": {
+        "A": "TF-IDF",
+        "B": "Word2Vec",
+        "C": "Stop Words",
+        "D": "Bag-of-Words"
+      },
+      "answer": "B",
+      "answer_text": "Word2Vec",
+      "explanation": "Word2Vec是一種詞嵌入方法，可將文字轉換為連續向量空間中具語意的表示，有利後續模型學習。",
+      "keywords": [
+        "Word2Vec",
+        "詞嵌入",
+        "NLP",
+        "向量表示"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH3_002",
+      "source": "講義練習題-科目1-第3章-第2題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第3章 AI相關技術應用",
+      "topic": "L21201_自然語言處理",
+      "difficulty": "simple",
+      "question": "在自然語言處理應用中，哪一項任務主要目的是從文字中識別出人名、地名、組織等資訊？",
+      "options": {
+        "A": "情感分析",
+        "B": "主題建模",
+        "C": "命名實體識別",
+        "D": "語音辨識"
+      },
+      "answer": "C",
+      "answer_text": "命名實體識別",
+      "explanation": "命名實體識別（Named Entity Recognition, NER）用於辨識文本中的具名實體，如人名、地點與組織等。",
+      "keywords": [
+        "命名實體識別",
+        "NER",
+        "NLP",
+        "資訊抽取"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH3_003",
+      "source": "講義練習題-科目1-第3章-第3題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第3章 AI相關技術應用",
+      "topic": "L21201_自然語言處理",
+      "difficulty": "medium",
+      "question": "語言模型BERT的主要特性為何？",
+      "options": {
+        "A": "使用遞迴神經網路",
+        "B": "無法處理上下文資訊",
+        "C": "為單向語言模型",
+        "D": "具雙向上下文理解能力"
+      },
+      "answer": "D",
+      "answer_text": "具雙向上下文理解能力",
+      "explanation": "BERT（Bidirectional Encoder Representations from Transformers）可同時考慮上下文中前後的語意，有利於更精準的語言理解。",
+      "keywords": [
+        "BERT",
+        "雙向編碼",
+        "Transformer",
+        "語言模型"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH3_004",
+      "source": "講義練習題-科目1-第3章-第4題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第3章 AI相關技術應用",
+      "topic": "L21202_電腦視覺",
+      "difficulty": "simple",
+      "question": "在電腦視覺中，影像分類（Image Classification）的主要任務是？",
+      "options": {
+        "A": "區分影像中不同實體的邊界",
+        "B": "產生新的影像內容",
+        "C": "為整張圖片指定一個標籤",
+        "D": "判斷影像是否含有文字"
+      },
+      "answer": "C",
+      "answer_text": "為整張圖片指定一個標籤",
+      "explanation": "影像分類是電腦視覺的基本任務之一，其目標是判斷整張影像的主要內容屬於哪一預定義類別，例如將圖片分類為「貓」、「狗」、「汽車」等。選項（A）描述的是語義分割（Semantic Segmentation），（B）屬於生成式任務如風格轉換，（D）則是目標偵測（Object Detection），因此僅有（C）為正確答案。",
+      "keywords": [
+        "影像分類",
+        "電腦視覺",
+        "Image Classification",
+        "圖像識別"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH3_005",
+      "source": "講義練習題-科目1-第3章-第5題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第3章 AI相關技術應用",
+      "topic": "L21202_電腦視覺",
+      "difficulty": "simple",
+      "question": "若需在一張影像中辨識出多個目標並標示其位置，最適合使用何種技術？",
+      "options": {
+        "A": "影像增強",
+        "B": "影像分類",
+        "C": "目標偵測",
+        "D": "圖像生成"
+      },
+      "answer": "C",
+      "answer_text": "目標偵測",
+      "explanation": "目標偵測（Object Detection）能辨識圖像中多個實體，並給出邊界框位置資訊。",
+      "keywords": [
+        "目標偵測",
+        "Object Detection",
+        "電腦視覺",
+        "邊界框"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH3_006",
+      "source": "講義練習題-科目1-第3章-第6題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第3章 AI相關技術應用",
+      "topic": "L21203_生成式AI",
+      "difficulty": "simple",
+      "question": "生成對抗網路（GAN）的訓練包含哪兩個核心組件？",
+      "options": {
+        "A": "分類器與分群器",
+        "B": "產生器與鑑別器",
+        "C": "強化器與回饋器",
+        "D": "解碼器與編碼器"
+      },
+      "answer": "B",
+      "answer_text": "產生器與鑑別器",
+      "explanation": "GAN由產生器（Generator）負責生成資料，鑑別器（Discriminator）判斷真偽，兩者相互對抗學習。",
+      "keywords": [
+        "GAN",
+        "生成對抗網路",
+        "產生器",
+        "鑑別器"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH3_007",
+      "source": "講義練習題-科目1-第3章-第7題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第3章 AI相關技術應用",
+      "topic": "L21203_生成式AI",
+      "difficulty": "simple",
+      "question": "在以下哪一個任務中，生成式AI技術最常被應用？",
+      "options": {
+        "A": "詐欺偵測",
+        "B": "語音辨識",
+        "C": "圖片風格轉換",
+        "D": "資料壓縮"
+      },
+      "answer": "C",
+      "answer_text": "圖片風格轉換",
+      "explanation": "圖片風格轉換（如將相片轉為畫風）是生成式AI常見應用之一，通常利用GAN完成。",
+      "keywords": [
+        "生成式AI",
+        "風格轉換",
+        "GAN",
+        "圖像生成"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH3_008",
+      "source": "講義練習題-科目1-第3章-第8題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第3章 AI相關技術應用",
+      "topic": "L21204_多模態學習",
+      "difficulty": "medium",
+      "question": "多模態人工智慧的核心目標為何？",
+      "options": {
+        "A": "提升硬體運算效能",
+        "B": "同時處理並整合來自不同感知類型的資料",
+        "C": "專注於純文字輸入的分析",
+        "D": "僅適用於影像分類任務"
+      },
+      "answer": "B",
+      "answer_text": "同時處理並整合來自不同感知類型的資料",
+      "explanation": "多模態AI整合文字、影像、聲音等不同資料來源，提升模型理解與生成能力。",
+      "keywords": [
+        "多模態AI",
+        "跨模態學習",
+        "資料融合",
+        "多模態整合"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH3_009",
+      "source": "講義練習題-科目1-第3章-第9題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第3章 AI相關技術應用",
+      "topic": "L21204_多模態學習",
+      "difficulty": "medium",
+      "question": "CLIP模型結合了哪兩種模態進行訓練？",
+      "options": {
+        "A": "聲音與影像",
+        "B": "影像與文字",
+        "C": "文字與數值",
+        "D": "圖形與表格"
+      },
+      "answer": "B",
+      "answer_text": "影像與文字",
+      "explanation": "CLIP由OpenAI所提出，透過大量圖文配對資料進行對比學習，使模型能理解跨模態語意關聯。",
+      "keywords": [
+        "CLIP",
+        "多模態學習",
+        "圖文配對",
+        "對比學習"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH3_010",
+      "source": "講義練習題-科目1-第3章-第10題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第3章 AI相關技術應用",
+      "topic": "L21204_多模態學習",
+      "difficulty": "medium",
+      "question": "在多模態AI應用中，以下哪一情境最能展現其優勢？",
+      "options": {
+        "A": "SQL資料查詢",
+        "B": "純圖片壓縮",
+        "C": "影片自動生成字幕",
+        "D": "單一感測器故障排除"
+      },
+      "answer": "C",
+      "answer_text": "影片自動生成字幕",
+      "explanation": "影片字幕生成涉及聲音（語音辨識）、文字（轉錄）、影像（上下文輔助）等多模態資料處理。",
+      "keywords": [
+        "多模態應用",
+        "影片字幕",
+        "語音辨識",
+        "跨模態處理"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH4_001",
+      "source": "講義練習題-科目1-第4章-第1題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第4章 AI導入評估規劃",
+      "topic": "L21101_AI技術基礎",
+      "difficulty": "simple",
+      "question": "在AI導入評估中，商業價值評估主要關注哪一項因素？",
+      "options": {
+        "A": "演算法複雜度",
+        "B": "程式碼行數",
+        "C": "預期效益與回報",
+        "D": "硬體設備數量"
+      },
+      "answer": "C",
+      "answer_text": "預期效益與回報",
+      "explanation": "商業價值評估主要衡量AI專案在解決問題或創造價值上的潛力，例如降低成本、增加收入或提升效率。",
+      "keywords": [
+        "商業價值",
+        "AI導入",
+        "效益評估",
+        "投資回報"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH4_002",
+      "source": "講義練習題-科目1-第4章-第2題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第4章 AI導入評估規劃",
+      "topic": "L21101_AI技術基礎",
+      "difficulty": "simple",
+      "question": "在AI專案技術評估過程中，應首先確認下列哪一項？",
+      "options": {
+        "A": "模型訓練速度",
+        "B": "技術成熟度與部署資源",
+        "C": "使用者介面設計",
+        "D": "社群媒體行銷策略"
+      },
+      "answer": "B",
+      "answer_text": "技術成熟度與部署資源",
+      "explanation": "技術評估是導入前的重要環節，需確認所選技術是否穩定且能在現有架構下順利實作。",
+      "keywords": [
+        "技術評估",
+        "技術成熟度",
+        "部署資源",
+        "可行性分析"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH4_003",
+      "source": "講義練習題-科目1-第4章-第3題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第4章 AI導入評估規劃",
+      "topic": "L21101_AI技術基礎",
+      "difficulty": "medium",
+      "question": "AI導入規劃的首要步驟為何？",
+      "options": {
+        "A": "選定演算法架構",
+        "B": "建置雲端基礎設施",
+        "C": "業務痛點與需求辨識",
+        "D": "制定行銷計畫"
+      },
+      "answer": "C",
+      "answer_text": "業務痛點與需求辨識",
+      "explanation": "AI導入需以業務需求為出發點，若無明確問題定義，後續模型開發將失焦或無法產生實際效益。",
+      "keywords": [
+        "需求分析",
+        "業務痛點",
+        "問題定義",
+        "AI規劃"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH4_004",
+      "source": "講義練習題-科目1-第4章-第4題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第4章 AI導入評估規劃",
+      "topic": "L21101_AI技術基礎",
+      "difficulty": "medium",
+      "question": "在進行AI專案的資源規劃時，下列何者為必要關注的人員角色？",
+      "options": {
+        "A": "社群經營專員",
+        "B": "活動企劃人員",
+        "C": "AI專案所需的跨部門協作角色",
+        "D": "廣告投放專員"
+      },
+      "answer": "C",
+      "answer_text": "AI專案所需的跨部門協作角色",
+      "explanation": "AI專案導入涉及資料、業務、IT等部門合作，需在規劃階段即明確分工與責任分配。",
+      "keywords": [
+        "資源規劃",
+        "跨部門協作",
+        "角色分工",
+        "團隊建置"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH4_005",
+      "source": "講義練習題-科目1-第4章-第5題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第4章 AI導入評估規劃",
+      "topic": "L21101_AI技術基礎",
+      "difficulty": "hard",
+      "question": "當企業計劃導入AI專案，在規劃階段最關鍵的管理活動是什麼？",
+      "options": {
+        "A": "制定詳細的程式碼撰寫規範",
+        "B": "決定伺服器的品牌與型號",
+        "C": "建立跨部門協作機制與角色分工",
+        "D": "選擇最新的深度學習框架"
+      },
+      "answer": "C",
+      "answer_text": "建立跨部門協作機制與角色分工",
+      "explanation": "AI導入需橫跨業務、資料、IT等多部門，若缺乏明確的溝通與分工安排，容易出現責任模糊或推進不順。建立協作機制可確保需求對齊、資料準備、模型開發與部署流程協同一致，是規劃階段關鍵工作。其他選項則過度聚焦於單點技術或管理決策，無法解決跨部門合作問題。",
+      "keywords": [
+        "協作機制",
+        "角色分工",
+        "跨部門管理",
+        "專案管理"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH4_006",
+      "source": "講義練習題-科目1-第4章-第6題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第4章 AI導入評估規劃",
+      "topic": "L21302_AI系統架構與部署",
+      "difficulty": "medium",
+      "question": "若企業對資料隱私有高度要求，適合採用下列哪種AI系統部署方式？",
+      "options": {
+        "A": "公有雲全託管服務",
+        "B": "地端私有部署",
+        "C": "第三方API呼叫",
+        "D": "公開資料集訓練"
+      },
+      "answer": "B",
+      "answer_text": "地端私有部署",
+      "explanation": "地端部署可提供更強的資料控制與隱私保障，常見於金融、政府、醫療等敏感領域。",
+      "keywords": [
+        "地端部署",
+        "資料隱私",
+        "私有雲",
+        "安全性"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH4_007",
+      "source": "講義練習題-科目1-第4章-第7題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第4章 AI導入評估規劃",
+      "topic": "L21103_AI安全",
+      "difficulty": "medium",
+      "question": "在AI風險管理中，下列何者屬於技術層面的主要風險？",
+      "options": {
+        "A": "市場需求不明確",
+        "B": "組織文化抗拒",
+        "C": "決策透明性不足",
+        "D": "法規遵循成本過高"
+      },
+      "answer": "C",
+      "answer_text": "決策透明性不足",
+      "explanation": "模型無法解釋其輸出會降低使用者與監管單位的信任，是常見的AI風險來源之一。",
+      "keywords": [
+        "AI風險",
+        "決策透明性",
+        "可解釋性",
+        "技術風險"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH4_008",
+      "source": "講義練習題-科目1-第4章-第8題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第4章 AI導入評估規劃",
+      "topic": "L21103_AI安全",
+      "difficulty": "medium",
+      "question": "若AI模型在訓練資料中存在偏見，可能導致什麼結果？",
+      "options": {
+        "A": "運算速度提升",
+        "B": "模型準確度必然降低",
+        "C": "特定族群預測結果不公平",
+        "D": "硬體成本增加"
+      },
+      "answer": "C",
+      "answer_text": "特定族群預測結果不公平",
+      "explanation": "資料或模型偏誤常導致對少數族群、女性或弱勢族群的不公平結果，是需積極管理的AI倫理風險。",
+      "keywords": [
+        "演算法偏見",
+        "公平性",
+        "資料偏差",
+        "AI倫理"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH4_009",
+      "source": "講義練習題-科目1-第4章-第9題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第4章 AI導入評估規劃",
+      "topic": "L21103_AI安全",
+      "difficulty": "simple",
+      "question": "在評估AI專案的法規遵循風險時，首要確認的事項為？",
+      "options": {
+        "A": "伺服器位置",
+        "B": "使用的程式語言",
+        "C": "檢視個資使用的合法性",
+        "D": "資料儲存格式"
+      },
+      "answer": "C",
+      "answer_text": "檢視個資使用的合法性",
+      "explanation": "若使用涉及個人資料，須確認是否符合資料保護法（如GDPR或個資法）規範。",
+      "keywords": [
+        "法規遵循",
+        "個資保護",
+        "GDPR",
+        "合規性"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH4_010",
+      "source": "講義練習題-科目1-第4章-第10題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第4章 AI導入評估規劃",
+      "topic": "L21303_MLOps與持續維運",
+      "difficulty": "hard",
+      "question": "當AI模型部署後，若發現輸入資料的統計分佈與訓練時不同，應採取什麼應對措施？",
+      "options": {
+        "A": "忽略並繼續使用",
+        "B": "增加伺服器數量",
+        "C": "建置概念漂移監控與觸發模型再訓練流程",
+        "D": "改用更簡單的模型"
+      },
+      "answer": "C",
+      "answer_text": "建置概念漂移監控與觸發模型再訓練流程",
+      "explanation": "概念漂移（Concept Drift）指資料分佈隨時間改變，可能使模型預測確率下降，因此在風險管理架構中，須建置監控機制偵測輸入與輸出異常，並結合模型再訓練策略進行調整。選項（A）（D）與風險無直接關聯，（B）雖具備冗餘設計概念，但不直接針對資料變異處理。",
+      "keywords": [
+        "概念漂移",
+        "模型監控",
+        "再訓練",
+        "資料分佈"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH5_001",
+      "source": "講義練習題-科目1-第5章-第1題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第5章 AI技術應用與系統部署",
+      "topic": "L21301_數據準備與模型選擇",
+      "difficulty": "simple",
+      "question": "在進行AI建模前，進行「資料標註」的主要目的是？",
+      "options": {
+        "A": "減少資料容量",
+        "B": "強化系統安全性",
+        "C": "讓模型能夠辨識輸入與目標之間的對應關係",
+        "D": "提升資料儲存速度"
+      },
+      "answer": "C",
+      "answer_text": "讓模型能夠辨識輸入與目標之間的對應關係",
+      "explanation": "資料標註是監督式學習的關鍵步驟，能讓模型理解每筆資料對應的標籤或結果。",
+      "keywords": [
+        "資料標註",
+        "監督式學習",
+        "AI建模",
+        "標籤"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH5_002",
+      "source": "講義練習題-科目1-第5章-第2題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第5章 AI技術應用與系統部署",
+      "topic": "L21301_數據準備與模型選擇",
+      "difficulty": "simple",
+      "question": "在特徵工程中，進行特徵標準化（如Z-score標準化）的主要目的是？",
+      "options": {
+        "A": "增加欄位數量",
+        "B": "提升資料壓縮效率",
+        "C": "將特徵縮放至相同尺度，利於模型學習",
+        "D": "將文字轉換為向量"
+      },
+      "answer": "C",
+      "answer_text": "將特徵縮放至相同尺度，利於模型學習",
+      "explanation": "許多演算法（如SVM、KNN）對特徵尺度敏感，標準化有助於提升模型表現與穩定性。",
+      "keywords": [
+        "特徵工程",
+        "標準化",
+        "Z-score",
+        "特徵縮放"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH5_003",
+      "source": "講義練習題-科目1-第5章-第3題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第5章 AI技術應用與系統部署",
+      "topic": "L21301_數據準備與模型選擇",
+      "difficulty": "simple",
+      "question": "若某企業的目標是預測顧客是否會流失，最適合選用下列哪一種模型任務？",
+      "options": {
+        "A": "分類任務",
+        "B": "迴歸任務",
+        "C": "生成任務",
+        "D": "分群任務"
+      },
+      "answer": "A",
+      "answer_text": "分類任務",
+      "explanation": "顧客流失通常為「會/不會」的二元分類問題，適合使用分類模型如Logistic Regression、決策樹等。",
+      "keywords": [
+        "分類任務",
+        "顧客流失",
+        "二元分類",
+        "預測模型"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH5_004",
+      "source": "講義練習題-科目1-第5章-第4題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第5章 AI技術應用與系統部署",
+      "topic": "L21301_數據準備與模型選擇",
+      "difficulty": "medium",
+      "question": "關於模型選擇，下列哪一項敘述較為正確？",
+      "options": {
+        "A": "模型越複雜越好",
+        "B": "模型應優先考慮開發成本與可部署性",
+        "C": "只要準確率高就不需考慮其他指標",
+        "D": "模型無須考慮資料量大小"
+      },
+      "answer": "B",
+      "answer_text": "模型應優先考慮開發成本與可部署性",
+      "explanation": "選擇模型需考量資料特性、開發時間、計算成本與後續維運難度，不應一味追求複雜度。",
+      "keywords": [
+        "模型選擇",
+        "開發成本",
+        "可部署性",
+        "模型評估"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH5_005",
+      "source": "講義練習題-科目1-第5章-第5題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第5章 AI技術應用與系統部署",
+      "topic": "L21301_數據準備與模型選擇",
+      "difficulty": "simple",
+      "question": "下列哪一種資料前處理技術主要用來處理缺失值？",
+      "options": {
+        "A": "資料增強",
+        "B": "標準化",
+        "C": "插補法",
+        "D": "降維"
+      },
+      "answer": "C",
+      "answer_text": "插補法",
+      "explanation": "插補法（Imputation）可用平均數、中位數、眾數或模型預測方式填補缺失欄位，常用於資料清理階段。",
+      "keywords": [
+        "插補法",
+        "缺失值",
+        "資料前處理",
+        "Imputation"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH5_006",
+      "source": "講義練習題-科目1-第5章-第6題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第5章 AI技術應用與系統部署",
+      "topic": "L21302_AI系統架構與部署",
+      "difficulty": "medium",
+      "question": "在設計AI應用系統架構時，使用容器技術（如Docker）的主要優點為？",
+      "options": {
+        "A": "加快資料標註速度",
+        "B": "提升API回應速度",
+        "C": "促進模型跨平台部署與環境一致性",
+        "D": "減少模型所需參數量"
+      },
+      "answer": "C",
+      "answer_text": "促進模型跨平台部署與環境一致性",
+      "explanation": "容器技術可封裝應用與其依賴環境，確保模型從開發到部署保持一致。",
+      "keywords": [
+        "Docker",
+        "容器技術",
+        "跨平台部署",
+        "環境一致性"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH5_007",
+      "source": "講義練習題-科目1-第5章-第7題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第5章 AI技術應用與系統部署",
+      "topic": "L21303_MLOps與持續維運",
+      "difficulty": "medium",
+      "question": "MLOps的主要目的為何？",
+      "options": {
+        "A": "壓縮模型參數",
+        "B": "簡化使用者介面設計",
+        "C": "實現AI模型的自動化開發、部署與持續維運流程",
+        "D": "將AI模型嵌入硬體晶片"
+      },
+      "answer": "C",
+      "answer_text": "實現AI模型的自動化開發、部署與持續維運流程",
+      "explanation": "MLOps結合DevOps與機器學習，可實現模型生命週期的持續整合、測試與監控。",
+      "keywords": [
+        "MLOps",
+        "自動化",
+        "持續維運",
+        "DevOps"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH5_008",
+      "source": "講義練習題-科目1-第5章-第8題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第5章 AI技術應用與系統部署",
+      "topic": "L21302_AI系統架構與部署",
+      "difficulty": "simple",
+      "question": "在邊緣運算架構中，AI模型的推論通常會發生在哪裡？",
+      "options": {
+        "A": "雲端GPU伺服器",
+        "B": "終端裝置本地端",
+        "C": "資料標註平台",
+        "D": "資料儲存庫"
+      },
+      "answer": "B",
+      "answer_text": "終端裝置本地端",
+      "explanation": "邊緣AI將模型部署至如手機、攝影機、感測器等裝置上，提升即時性並減少延遲。",
+      "keywords": [
+        "邊緣運算",
+        "Edge AI",
+        "終端裝置",
+        "本地推論"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH5_009",
+      "source": "講義練習題-科目1-第5章-第9題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第5章 AI技術應用與系統部署",
+      "topic": "L21303_MLOps與持續維運",
+      "difficulty": "medium",
+      "question": "持續監控部署後AI模型效能的主要目的為何？",
+      "options": {
+        "A": "減少資料備份空間",
+        "B": "提升UI使用效率",
+        "C": "偵測模型概念漂移與效能下降",
+        "D": "強化模型壓縮效果"
+      },
+      "answer": "C",
+      "answer_text": "偵測模型概念漂移與效能下降",
+      "explanation": "模型部署後若輸入資料特性改變，將可能導致預測不準，故需建立監控機制。",
+      "keywords": [
+        "模型監控",
+        "概念漂移",
+        "效能下降",
+        "持續維運"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_CH5_010",
+      "source": "講義練習題-科目1-第5章-第10題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "chapter": "第5章 AI技術應用與系統部署",
+      "topic": "L21302_AI系統架構與部署",
+      "difficulty": "medium",
+      "question": "在AI系統整合過程中，為確保模型可與業務流程無縫對接，通常需要哪種角色協作？",
+      "options": {
+        "A": "社群經營人員",
+        "B": "資料標註員",
+        "C": "產品經理與工程人員",
+        "D": "硬體維修技術員"
+      },
+      "answer": "C",
+      "answer_text": "產品經理與工程人員",
+      "explanation": "產品經理負責需求對齊與驗證場景，工程人員負責將模型封裝並整合至應用流程。",
+      "keywords": [
+        "系統整合",
+        "產品經理",
+        "工程人員",
+        "業務流程"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_SAMPLE_001",
+      "source": "官方樣題-科目1-第1題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "topic": "L21101_AI技術基礎",
+      "difficulty": "simple",
+      "question": "下列何者並未使用人工智慧（AI）或機器學習（ML）技術？",
+      "options": {
+        "A": "使用一組預定義規則來確定最佳移動做法的象棋遊戲",
+        "B": "使用深度神經網路來提高其準確性的語音識別系統",
+        "C": "使用感測器和預定義的自動駕駛汽車-定義導航規則",
+        "D": "使用自然語言處理算法來理解和反應用戶查詢的聊天機器人"
+      },
+      "answer": "A",
+      "answer_text": "使用一組預定義規則來確定最佳移動做法的象棋遊戲",
+      "explanation": "預定義規則系統是基於規則的專家系統，不涉及機器學習或AI技術。其他選項都使用了深度學習、NLP等AI技術。",
+      "keywords": [
+        "AI技術",
+        "機器學習",
+        "規則系統",
+        "專家系統"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_SAMPLE_002",
+      "source": "官方樣題-科目1-第2題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "topic": "L21201_自然語言處理",
+      "difficulty": "simple",
+      "question": "在文本資料處理過程中，通常會需要「將接續的文本轉換為詞彙單位」，以便後續的處理。請問上述所指的是文本資料處理中的哪一個方法？",
+      "options": {
+        "A": "詞形還原（Lemmatization）",
+        "B": "停用詞移除（Stopword Removal）",
+        "C": "斷詞（Tokenization）",
+        "D": "詞頻-逆向文件頻率（Term Frequency-Inverse Document Frequency, TF-IDF）"
+      },
+      "answer": "C",
+      "answer_text": "斷詞（Tokenization）",
+      "explanation": "Tokenization（斷詞）是將連續文本分割為詞彙單位（tokens）的過程，是NLP處理的第一步。",
+      "keywords": [
+        "Tokenization",
+        "斷詞",
+        "NLP",
+        "文本處理"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_SAMPLE_003",
+      "source": "官方樣題-科目1-第3題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "topic": "L21201_自然語言處理",
+      "difficulty": "simple",
+      "question": "下列何者為自然語言處理（NLP）在機器學習應用中的主要用途？",
+      "options": {
+        "A": "情緒分析",
+        "B": "圖像識別",
+        "C": "預測性維護",
+        "D": "供應鏈優化"
+      },
+      "answer": "A",
+      "answer_text": "情緒分析",
+      "explanation": "情緒分析是NLP的典型應用，用於分析文本中的情感傾向。其他選項屬於其他AI領域的應用。",
+      "keywords": [
+        "NLP",
+        "情緒分析",
+        "文本分析",
+        "自然語言處理"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_SAMPLE_004",
+      "source": "官方樣題-科目1-第4題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "topic": "L21102_深度學習架構",
+      "difficulty": "medium",
+      "question": "關於深度學習模型，下列敘述何者不正確？",
+      "options": {
+        "A": "卷積神經網路（Convolutional Neural Networks）適合影像辨識",
+        "B": "ReLU（Rectified Linear Unit）比tanh和Sigmoid好，因為ReLU可以減緩梯度爆炸與消失的現象",
+        "C": "遞迴神經網路（Recurrent Neural Networks）適合處理序列相關資料",
+        "D": "Elman神經網路（Elman Neural Networks）適合處理影像辨識"
+      },
+      "answer": "D",
+      "answer_text": "Elman神經網路（Elman Neural Networks）適合處理影像辨識",
+      "explanation": "Elman神經網路是一種遞迴神經網路，適合處理序列資料而非影像辨識。影像辨識應使用卷積神經網路（CNN）。",
+      "keywords": [
+        "深度學習",
+        "Elman網路",
+        "CNN",
+        "RNN",
+        "影像辨識"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_SAMPLE_005",
+      "source": "官方樣題-科目1-第5題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "topic": "L21303_MLOps與持續維運",
+      "difficulty": "simple",
+      "question": "下列何者為機器學習模型在業界部署的主要趨勢？",
+      "options": {
+        "A": "越來越多地採用自動化機器學習（AutoML）技術",
+        "B": "轉向使用更簡單的機器學習算法",
+        "C": "基於雲的機器學習平台的使用率下降",
+        "D": "依賴手動超參數調整進行模型優化"
+      },
+      "answer": "A",
+      "answer_text": "越來越多地採用自動化機器學習（AutoML）技術",
+      "explanation": "AutoML是當前機器學習部署的重要趨勢，能夠自動化模型選擇、特徵工程和超參數調整等流程。",
+      "keywords": [
+        "AutoML",
+        "自動化機器學習",
+        "模型部署",
+        "ML趨勢"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_SAMPLE_006",
+      "source": "官方樣題-科目1-第6題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "topic": "L21301_數據準備與模型選擇",
+      "difficulty": "medium",
+      "question": "下列何者「最適合」使用迴歸（Regression）模型進行預測？",
+      "options": {
+        "A": "根據顧客的購買行為，預測他最可能加入購物車的商品類別",
+        "B": "根據病患的症狀與病史，判斷其可能患有的疾病類別",
+        "C": "根據電影的特徵與用戶評分，推薦適合的電影類型",
+        "D": "根據歷年銷售數據，預測明年某產品的總銷售額"
+      },
+      "answer": "D",
+      "answer_text": "根據歷年銷售數據，預測明年某產品的總銷售額",
+      "explanation": "迴歸模型用於預測連續數值，預測銷售額是典型的迴歸任務。其他選項都是分類或推薦任務。",
+      "keywords": [
+        "迴歸模型",
+        "Regression",
+        "預測",
+        "連續數值"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_SAMPLE_007",
+      "source": "官方樣題-科目1-第7題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "topic": "L21202_電腦視覺",
+      "difficulty": "hard",
+      "question": "附圖中，展示了電腦視覺辨識的幾項技術。請問下列選項中，何者正確配對了圖中（a）、（b）、（c）、（d）所代表的技術名稱？",
+      "options": {
+        "A": "（a）實例分割（Instance Segmentation）（b）語義分割（Semantic Segmentation）（c）物件偵測（Object Detection）（d）圖像分類（Image Classification）",
+        "B": "（a）圖像分類（Image Classification）（b）語義分割（Semantic Segmentation）（c）物件偵測（Object Detection）（d）實例分割（Instance Segmentation）",
+        "C": "（a）圖像分類（Image Classification）（b）物件偵測（Object Detection）（c）語義分割（Semantic Segmentation）（d）實例分割（Instance Segmentation）",
+        "D": "（a）圖像分類（Image Classification）（b）物件偵測（Object Detection）（c）實例分割（Instance Segmentation）（d）語義分割（Semantic Segmentation）"
+      },
+      "answer": "B",
+      "answer_text": "（a）圖像分類（Image Classification）（b）語義分割（Semantic Segmentation）（c）物件偵測（Object Detection）（d）實例分割（Instance Segmentation）",
+      "explanation": "電腦視覺任務依複雜度遞增：圖像分類（整體標籤）→ 語義分割（像素級分類但不區分個體）→ 物件偵測（框選+分類）→ 實例分割（像素級分割並區分個體）。",
+      "keywords": [
+        "電腦視覺",
+        "圖像分類",
+        "語義分割",
+        "物件偵測",
+        "實例分割"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_SAMPLE_008",
+      "source": "官方樣題-科目1-第8題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "topic": "L21203_生成式AI",
+      "difficulty": "medium",
+      "question": "企業在生成式AI導入中，可選擇下列哪一種模型壓縮（Model Compression）技術以減少記憶體使用？",
+      "options": {
+        "A": "參數剪枝",
+        "B": "增加訓練數據量",
+        "C": "增加模型層數",
+        "D": "使用更高維數據"
+      },
+      "answer": "A",
+      "answer_text": "參數剪枝",
+      "explanation": "參數剪枝（Pruning）是模型壓縮技術，通過移除不重要的參數來減少模型大小和記憶體使用。其他選項會增加而非減少資源需求。",
+      "keywords": [
+        "模型壓縮",
+        "參數剪枝",
+        "Pruning",
+        "生成式AI"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_SAMPLE_009",
+      "source": "官方樣題-科目1-第9題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "topic": "L21103_AI安全",
+      "difficulty": "medium",
+      "question": "供應鏈攻擊（Supply Chain Attacks）如何影響企業內部AI系統安全？",
+      "options": {
+        "A": "供應鏈攻擊的常見狀況，包括員工因釣魚郵件而被盜取帳號密碼",
+        "B": "AI系統依賴的第三方開源模型或數據可能被植入惡意內容",
+        "C": "AI系統只會受到DDoS攻擊影響，不會有供應鏈風險",
+        "D": "供應鏈攻擊僅影響硬體層級、不影響AI模型"
+      },
+      "answer": "B",
+      "answer_text": "AI系統依賴的第三方開源模型或數據可能被植入惡意內容",
+      "explanation": "供應鏈攻擊針對AI系統時，攻擊者可能在開源模型、預訓練權重或訓練數據中植入後門或惡意代碼，危害系統安全。",
+      "keywords": [
+        "供應鏈攻擊",
+        "AI安全",
+        "開源模型",
+        "數據投毒"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_SAMPLE_010",
+      "source": "官方樣題-科目1-第10題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "topic": "L21201_自然語言處理",
+      "difficulty": "simple",
+      "question": "下列何者為自然語言處理（NLP）中的詞嵌入技術，能將文字轉換為向量以利機器學習處理？",
+      "options": {
+        "A": "TF-IDF",
+        "B": "Word2Vec",
+        "C": "Stop Words",
+        "D": "Bag-of-Words"
+      },
+      "answer": "B",
+      "answer_text": "Word2Vec",
+      "explanation": "Word2Vec是詞嵌入技術，能將詞彙轉換為稠密向量表示，捕捉詞彙間的語義關係。TF-IDF和Bag-of-Words是傳統的稀疏表示方法。",
+      "keywords": [
+        "Word2Vec",
+        "詞嵌入",
+        "詞向量",
+        "NLP"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_SAMPLE_011",
+      "source": "官方樣題-科目1-第11題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "topic": "L21204_多模態學習",
+      "difficulty": "medium",
+      "question": "在多模態學習中，早期融合（Early Fusion）方法的主要特徵為何？",
+      "options": {
+        "A": "將不同模態資料的輸出結果進行決策合併",
+        "B": "在模型輸入階段或特徵提取階段整合不同模態資料",
+        "C": "僅處理單一來源的資料輸入",
+        "D": "利用注意力機制在深層隱藏層進行語意比對與融合"
+      },
+      "answer": "B",
+      "answer_text": "在模型輸入階段或特徵提取階段整合不同模態資料",
+      "explanation": "早期融合在資料進入模型的早期階段就將不同模態的資料整合在一起，相對於晚期融合（在決策層整合）和混合融合（在中間層整合）。",
+      "keywords": [
+        "多模態學習",
+        "早期融合",
+        "Early Fusion",
+        "特徵融合"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_SAMPLE_012",
+      "source": "官方樣題-科目1-第12題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "topic": "L21204_多模態學習",
+      "difficulty": "hard",
+      "question": "下列哪項技術最有助於強化醫療多模態AI系統在處理影像與文本數據時的整合能力？",
+      "options": {
+        "A": "利用預先定義的規則產生診斷結果",
+        "B": "僅使用CNN架構同時處理影像與文字資訊",
+        "C": "利用單一模態資料建立通用醫療模型",
+        "D": "採用Transformer架構整合醫療影像與臨床文本資訊"
+      },
+      "answer": "D",
+      "answer_text": "採用Transformer架構整合醫療影像與臨床文本資訊",
+      "explanation": "Transformer架構具有強大的跨模態學習能力，透過注意力機制能有效整合影像和文本等不同模態的資訊，適合醫療多模態應用。",
+      "keywords": [
+        "Transformer",
+        "多模態學習",
+        "醫療AI",
+        "跨模態整合"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_SAMPLE_013",
+      "source": "官方樣題-科目1-第13題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "topic": "L21301_數據準備與模型選擇",
+      "difficulty": "medium",
+      "question": "某線上音樂平台希望根據用戶的聽歌與查詢行為，將用戶劃分為不同的類型。若事前沒有定義用戶類型，下列哪一種模型最適合用於此任務？",
+      "options": {
+        "A": "邏輯迴歸（Logistic Regression）",
+        "B": "決策樹（Decision Tree）",
+        "C": "基於密度之含噪空間聚類法（DBSCAN）",
+        "D": "線性迴歸（Linear Regression）"
+      },
+      "answer": "C",
+      "answer_text": "基於密度之含噪空間聚類法（DBSCAN）",
+      "explanation": "DBSCAN是非監督式聚類算法，適合在沒有預定義類別的情況下發現數據中的自然群組，且能處理噪音和異常值。",
+      "keywords": [
+        "DBSCAN",
+        "聚類",
+        "非監督式學習",
+        "用戶分群"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_SAMPLE_014",
+      "source": "官方樣題-科目1-第14題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "topic": "L21301_數據準備與模型選擇",
+      "difficulty": "hard",
+      "question": "在訓練模型時，若數據中出現特徵尺度差異極大（例如：年齡為0-100、收入為0-1,000,000），容易導致模型偏向特定特徵。為提升模型效能與穩定性，以下哪一種預處理方式最能有效解決此問題？",
+      "options": {
+        "A": "移除尺度較小的欄位以避免對模型影響過低",
+        "B": "對所有特徵進行Z-score標準化（Standardization）",
+        "C": "將特徵縮放至0-1區間進行最小-最大正規化（Min-Max Normalization）",
+        "D": "對所有數值欄位加上常數使其不為零"
+      },
+      "answer": "B",
+      "answer_text": "對所有特徵進行Z-score標準化（Standardization）",
+      "explanation": "Z-score標準化將特徵轉換為均值為0、標準差為1的分布，能有效處理不同尺度的特徵，適合大多數機器學習算法。Min-Max也可行但對異常值較敏感。",
+      "keywords": [
+        "Z-score",
+        "標準化",
+        "特徵縮放",
+        "數據預處理"
+      ]
+    },
+    {
+      "question_id": "OFF_L21_SAMPLE_015",
+      "source": "官方樣題-科目1-第15題",
+      "subject": "L21",
+      "subject_name": "人工智慧技術應用規劃",
+      "topic": "L21302_AI系統架構與部署",
+      "difficulty": "hard",
+      "question": "某企業即將部署AI模型至現有營運系統，進入系統整合測試階段。測試工程師需確認所有模組在實際環境中能正確協同運作。下列哪項驗證最應優先執行？",
+      "options": {
+        "A": "確認模型在開發機上訓練集表現是否達標",
+        "B": "驗證模型服務與資料平台、前後端介面協同是否正常，資料格式與流程一致性是否維持",
+        "C": "檢查開發團隊提交程式碼時是否有依照Git commit message規範",
+        "D": "審閱模型報告與API文件的格式是否符合交付標準"
+      },
+      "answer": "B",
+      "answer_text": "驗證模型服務與資料平台、前後端介面協同是否正常，資料格式與流程一致性是否維持",
+      "explanation": "系統整合測試的核心是驗證各模組間的協同運作，確保模型服務能正確與其他系統組件對接，資料流暢通且格式一致，這是部署前最關鍵的驗證。",
+      "keywords": [
+        "系統整合測試",
+        "模型部署",
+        "介面協同",
+        "資料流"
+      ]
+    }
+  ]
+}

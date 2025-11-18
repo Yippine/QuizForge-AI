@@ -21,18 +21,16 @@ function selectiveKnowledgeBaseCopy() {
       // Create knowledge-base/ipas structure
       fs.mkdirSync(path.join(kbDest, "ipas"), { recursive: true });
 
-      // Copy only formula (3) and questions (4) directories
-      const dirsToCopy = ["3 formula", "4 questions"];
-      dirsToCopy.forEach((dir) => {
-        const src = path.join(kbSource, "ipas", dir);
-        const dest = path.join(kbDest, "ipas", dir);
-        if (fs.existsSync(src)) {
-          fs.cpSync(src, dest, { recursive: true });
-        }
-      });
+      // Copy ai-planning directory with questions and learning resources
+      const aiPlanningSource = path.join(kbSource, "ipas", "ai-planning");
+      const aiPlanningDest = path.join(kbDest, "ipas", "ai-planning");
+
+      if (fs.existsSync(aiPlanningSource)) {
+        fs.cpSync(aiPlanningSource, aiPlanningDest, { recursive: true });
+      }
 
       console.log(
-        "✅ Selectively copied knowledge-base (excluded handout and mermaid)"
+        "✅ Copied knowledge-base/ipas/ai-planning to dist"
       );
     },
   };

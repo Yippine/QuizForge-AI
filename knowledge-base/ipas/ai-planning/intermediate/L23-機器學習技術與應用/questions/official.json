@@ -1,0 +1,1368 @@
+{
+  "questions": [
+    {
+      "question_id": "OFF_L23_CH3_001",
+      "source": "講義練習題-科目3-第3章-第1題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第3章 機器學習基礎數學",
+      "topic": "L23101_機器學習基礎",
+      "difficulty": "medium",
+      "question": "下列何者用於描述連續型隨機變數的機率分佈？",
+      "options": {
+        "A": "機率質量函數（PMF）",
+        "B": "累積分佈函數（CDF）",
+        "C": "機率密度函數（PDF）",
+        "D": "期望值函數（EF）"
+      },
+      "answer": "C",
+      "answer_text": "機率密度函數（PDF）",
+      "explanation": "機率密度函數（PDF）用於描述連續型隨機變數於某個取值範圍內的機率分佈。與離散型隨機變數不同，連續變數在單一點的機率為零，PDF通常透過積分計算區間內的機率，而PMF則用於離散型變數。累積分佈函數（CDF）則是累計機率的工具，而非直接描述機率密度。",
+      "keywords": [
+        "機率密度函數",
+        "PDF",
+        "連續型隨機變數",
+        "機率分佈"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH3_002",
+      "source": "講義練習題-科目3-第3章-第2題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第3章 機器學習基礎數學",
+      "topic": "L23101_機器學習基礎",
+      "difficulty": "simple",
+      "question": "伯努利分佈（Bernoulli Distribution）主要描述的隨機變數取值為？",
+      "options": {
+        "A": "任意正整數",
+        "B": "0或1",
+        "C": "0到無限大",
+        "D": "任意實數"
+      },
+      "answer": "B",
+      "answer_text": "0或1",
+      "explanation": "伯努利分佈是典型的二元分佈，僅有兩種可能結果，通常以0和1表示，例如成功與失敗、點擊與未點擊。此分佈是多數二元分類模型（如邏輯迴歸）的理論基礎。",
+      "keywords": [
+        "伯努利分佈",
+        "Bernoulli Distribution",
+        "二元分佈",
+        "機率"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH3_003",
+      "source": "講義練習題-科目3-第3章-第3題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第3章 機器學習基礎數學",
+      "topic": "L23201_模型訓練與優化",
+      "difficulty": "medium",
+      "question": "主成分分析（PCA）的核心運算為何？",
+      "options": {
+        "A": "奇異值分解（SVD）",
+        "B": "梯度下降（Gradient Descent）",
+        "C": "特徵值分解（Eigenvalue Decomposition）",
+        "D": "傅立葉轉換（Fourier Transform）"
+      },
+      "answer": "C",
+      "answer_text": "特徵值分解（Eigenvalue Decomposition）",
+      "explanation": "PCA透過對協方差矩陣進行特徵值分解，找出最大變異方向，並以此降低維度並保留最重要的資訊。這能讓資料投影到較少的維度上，同時盡可能維持原始資料的變異。",
+      "keywords": [
+        "PCA",
+        "特徵值分解",
+        "降維",
+        "主成分分析"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH3_004",
+      "source": "講義練習題-科目3-第3章-第4題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第3章 機器學習基礎數學",
+      "topic": "L23201_模型訓練與優化",
+      "difficulty": "simple",
+      "question": "下列哪一種技術常用於降低資料維度，並保留最大變異資訊？",
+      "options": {
+        "A": "K-means聚類",
+        "B": "邏輯迴歸",
+        "C": "主成分分析（PCA）",
+        "D": "決策樹"
+      },
+      "answer": "C",
+      "answer_text": "主成分分析（PCA）",
+      "explanation": "PCA是常用的維度簡化工具，透過線性變換找出資料中變異最大的方向，將原始高維度資料投影到較少維度上，達到資料壓縮與特徵提取的效果。",
+      "keywords": [
+        "PCA",
+        "降維",
+        "變異",
+        "特徵提取"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH3_005",
+      "source": "講義練習題-科目3-第3章-第5題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第3章 機器學習基礎數學",
+      "topic": "L23201_模型訓練與優化",
+      "difficulty": "medium",
+      "question": "梯度（Gradient）在機器學習中通常用來表示什麼？",
+      "options": {
+        "A": "模型的預測結果",
+        "B": "資料的標準差",
+        "C": "損失函數對參數的偏微分",
+        "D": "樣本的數量"
+      },
+      "answer": "C",
+      "answer_text": "損失函數對參數的偏微分",
+      "explanation": "梯度是損失函數相對於模型參數的導數，能指引參數應往哪個方向調整以減少損失。梯度越大，表示調整幅度應越大，以快速降低誤差。",
+      "keywords": [
+        "梯度",
+        "Gradient",
+        "損失函數",
+        "偏微分"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH3_006",
+      "source": "講義練習題-科目3-第3章-第6題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第3章 機器學習基礎數學",
+      "topic": "L23101_機器學習基礎",
+      "difficulty": "medium",
+      "question": "在假設檢定中，顯著水準（Significance Level, α）代表什麼？",
+      "options": {
+        "A": "樣本平均數",
+        "B": "資料變異數",
+        "C": "拒絕虛無假設時所容許的型一錯誤機率",
+        "D": "接受對立假設的機率"
+      },
+      "answer": "C",
+      "answer_text": "拒絕虛無假設時所容許的型一錯誤機率",
+      "explanation": "顯著水準（α）是研究者事先設定的風險上限，代表當虛無假設為真時，錯誤拒絕該假設的容忍機率。常見設定為0.05，意即容許5%的型一錯誤。",
+      "keywords": [
+        "顯著水準",
+        "假設檢定",
+        "型一錯誤",
+        "α值"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH3_007",
+      "source": "講義練習題-科目3-第3章-第7題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第3章 機器學習基礎數學",
+      "topic": "L23101_機器學習基礎",
+      "difficulty": "simple",
+      "question": "當資料包含極端值（Outliers）時，下列哪一種集中趨勢測量較不受影響？",
+      "options": {
+        "A": "平均數",
+        "B": "眾數",
+        "C": "標準差",
+        "D": "中位數"
+      },
+      "answer": "D",
+      "answer_text": "中位數",
+      "explanation": "平均數會受極端值拉動而偏離中心位置。中位數則是將資料排序後取中間值，不會受到少數極端值的嚴重影響，因此在偏態分佈或極端值存在時，常用中位數描述資料集中趨勢。",
+      "keywords": [
+        "中位數",
+        "極端值",
+        "集中趨勢",
+        "統計量"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH3_008",
+      "source": "講義練習題-科目3-第3章-第8題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第3章 機器學習基礎數學",
+      "topic": "L23201_模型訓練與優化",
+      "difficulty": "medium",
+      "question": "在優化器演算法中，哪一個能根據過去梯度調整每個參數的學習率？",
+      "options": {
+        "A": "SGD",
+        "B": "Adagrad",
+        "C": "Momentum",
+        "D": "Mini-batch GD"
+      },
+      "answer": "B",
+      "answer_text": "Adagrad",
+      "explanation": "Adagrad根據各參數歷史梯度平方和，調整每個參數的學習率。對變動較少的參數保留較高學習率，而對變動大的參數降低學習率，特別適合處理稀疏特徵資料。",
+      "keywords": [
+        "Adagrad",
+        "優化器",
+        "自適應學習率",
+        "梯度"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH3_009",
+      "source": "講義練習題-科目3-第3章-第9題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第3章 機器學習基礎數學",
+      "topic": "L23201_模型訓練與優化",
+      "difficulty": "medium",
+      "question": "在深度學習訓練中，若發生梯度爆炸（Gradient Explosion），應採用何種技術緩解？",
+      "options": {
+        "A": "增加學習率",
+        "B": "梯度裁剪（Gradient Clipping）",
+        "C": "移除正則化",
+        "D": "增加訓練資料量"
+      },
+      "answer": "B",
+      "answer_text": "梯度裁剪（Gradient Clipping）",
+      "explanation": "梯度爆炸會導致權重變動過大甚至溢出，影響模型穩定性。梯度裁剪能限制梯度的最大值，防止數值爆炸，特別適用於深度神經網路或RNN訓練。",
+      "keywords": [
+        "梯度爆炸",
+        "梯度裁剪",
+        "Gradient Clipping",
+        "訓練穩定"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH3_010",
+      "source": "講義練習題-科目3-第3章-第10題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第3章 機器學習基礎數學",
+      "topic": "L23101_機器學習基礎",
+      "difficulty": "medium",
+      "question": "邏輯迴歸（Logistic Regression）假設目標變數服從哪一種機率分佈？",
+      "options": {
+        "A": "常態分佈",
+        "B": "泊松分佈",
+        "C": "伯努利分佈",
+        "D": "指數分佈"
+      },
+      "answer": "C",
+      "answer_text": "伯努利分佈",
+      "explanation": "邏輯迴歸假設目標變數為二元型態（如0或1），服從伯努利分佈，並透過sigmoid函數將預測值映射至機率區間[0, 1]，以完成二元分類。",
+      "keywords": [
+        "邏輯迴歸",
+        "伯努利分佈",
+        "二元分類",
+        "sigmoid"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH4_001",
+      "source": "講義練習題-科目3-第4章-第1題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第4章 機器學習與深度學習",
+      "topic": "L23101_機器學習基礎",
+      "difficulty": "medium",
+      "question": "下列哪一種學習方法主要用於從未標記資料中發現潛在結構或模式？",
+      "options": {
+        "A": "監督式學習（Supervised Learning）",
+        "B": "強化學習（Reinforcement Learning）",
+        "C": "非監督式學習（Unsupervised Learning）",
+        "D": "遷移學習（Transfer Learning）"
+      },
+      "answer": "C",
+      "answer_text": "非監督式學習（Unsupervised Learning）",
+      "explanation": "非監督式學習（Unsupervised Learning）不依賴標註資料，主要目的是從資料中發現潛在結構、模式或分佈，例如分群（Clustering）、降維（Dimensionality Reduction）等技術，是探索性資料分析的重要工具。",
+      "keywords": [
+        "非監督式學習",
+        "Unsupervised Learning",
+        "聚類",
+        "降維"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH4_002",
+      "source": "講義練習題-科目3-第4章-第2題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第4章 機器學習與深度學習",
+      "topic": "L23101_機器學習基礎",
+      "difficulty": "simple",
+      "question": "在監督式學習中，若目標是預測一個連續數值，這屬於哪一種任務？",
+      "options": {
+        "A": "分類（Classification）",
+        "B": "迴歸（Regression）",
+        "C": "聚類（Clustering）",
+        "D": "降維（Dimensionality Reduction）"
+      },
+      "answer": "B",
+      "answer_text": "迴歸（Regression）",
+      "explanation": "迴歸（Regression）是預測連續數值的任務，如房價預測、氣溫預測等，與分類不同，分類是用來預測離散類別結果。",
+      "keywords": [
+        "迴歸",
+        "Regression",
+        "連續數值",
+        "監督式學習"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH4_003",
+      "source": "講義練習題-科目3-第4章-第3題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第4章 機器學習與深度學習",
+      "topic": "L23102_卷積神經網路",
+      "difficulty": "medium",
+      "question": "下列哪一種深度學習架構主要擅長處理影像、語音等具有局部關聯特性的資料？",
+      "options": {
+        "A": "遞迴神經網路（Recurrent Neural Network, RNN）",
+        "B": "全連接神經網路（Fully Connected Neural Network）",
+        "C": "卷積神經網路（Convolutional Neural Network, CNN）",
+        "D": "自組織映射（Self-Organizing Map, SOM）"
+      },
+      "answer": "C",
+      "answer_text": "卷積神經網路（Convolutional Neural Network, CNN）",
+      "explanation": "卷積神經網路（CNN）透過卷積層偵測局部特徵，尤其擅長處理影像、語音等有空間或時間結構的資料，是深度學習中重要的基礎架構之一。",
+      "keywords": [
+        "CNN",
+        "卷積神經網路",
+        "影像處理",
+        "深度學習"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH4_004",
+      "source": "講義練習題-科目3-第4章-第4題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第4章 機器學習與深度學習",
+      "topic": "L23101_機器學習基礎",
+      "difficulty": "medium",
+      "question": "支援向量機（SVM）用於預測連續數值時，其技術稱為？",
+      "options": {
+        "A": "Support Vector Classification",
+        "B": "Support Vector Clustering",
+        "C": "Support Vector Decomposition",
+        "D": "Support Vector Regression"
+      },
+      "answer": "D",
+      "answer_text": "Support Vector Regression",
+      "explanation": "當支援向量機（SVM）應用於連續數值的預測問題時，稱為支援向量迴歸（Support Vector Regression, SVR）。SVR與傳統SVM不同，目標是尋找一條最佳超平面，使大多數資料點落在預設的誤差範圍內。",
+      "keywords": [
+        "SVR",
+        "Support Vector Regression",
+        "迴歸",
+        "SVM"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH4_005",
+      "source": "講義練習題-科目3-第4章-第5題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第4章 機器學習與深度學習",
+      "topic": "L23201_模型訓練與優化",
+      "difficulty": "medium",
+      "question": "當模型在訓練集上表現良好，但在測試集上表現不佳，這種現象稱為？",
+      "options": {
+        "A": "欠擬合（Underfitting）",
+        "B": "過擬合（Overfitting）",
+        "C": "正則化（Regularization）",
+        "D": "泛化（Generalization）"
+      },
+      "answer": "B",
+      "answer_text": "過擬合（Overfitting）",
+      "explanation": "過擬合（Overfitting）是指模型在訓練資料上表現極好，卻無法在未知新資料上維持預測效能，通常是因為模型過於複雜，學習到不具代表性的噪聲。",
+      "keywords": [
+        "過擬合",
+        "Overfitting",
+        "泛化",
+        "模型評估"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH4_006",
+      "source": "講義練習題-科目3-第4章-第6題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第4章 機器學習與深度學習",
+      "topic": "L23103_神經網路架構",
+      "difficulty": "simple",
+      "question": "神經網路中，哪一種函數主要用來引入非線性，使模型能學習複雜模式？",
+      "options": {
+        "A": "損失函數（Loss Function）",
+        "B": "激活函數（Activation Function）",
+        "C": "目標函數（Objective Function）",
+        "D": "成本函數（Cost Function）"
+      },
+      "answer": "B",
+      "answer_text": "激活函數（Activation Function）",
+      "explanation": "激活函數（Activation Function）如ReLU、Sigmoid等，為神經網路帶來非線性能力，若沒有激活函數，多層網路仍只是線性變換，無法表現複雜的關係。",
+      "keywords": [
+        "激活函數",
+        "Activation Function",
+        "非線性",
+        "神經網路"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH4_007",
+      "source": "講義練習題-科目3-第4章-第7題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第4章 機器學習與深度學習",
+      "topic": "L23201_模型訓練與優化",
+      "difficulty": "medium",
+      "question": "為防止過擬合，可在損失函數中加入懲罰項限制模型複雜度，這種技術稱為？",
+      "options": {
+        "A": "批次正規化（Batch Normalization）",
+        "B": "資料增強（Data Augmentation）",
+        "C": "正則化（Regularization）",
+        "D": "早停法（Early Stopping）"
+      },
+      "answer": "C",
+      "answer_text": "正則化（Regularization）",
+      "explanation": "正則化（Regularization）透過在損失函數中加入L1或L2懲罰項，限制模型權重的大小，減少模型過度擬合訓練資料，提升泛化能力。",
+      "keywords": [
+        "正則化",
+        "Regularization",
+        "過擬合",
+        "L1",
+        "L2"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH4_008",
+      "source": "講義練習題-科目3-第4章-第8題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第4章 機器學習與深度學習",
+      "topic": "L23201_模型訓練與優化",
+      "difficulty": "simple",
+      "question": "在訓練模型時，下列哪一項用於衡量模型預測與真實標籤之間的差距？",
+      "options": {
+        "A": "學習率（Learning Rate）",
+        "B": "批次大小（Batch Size）",
+        "C": "損失函數（Loss Function）",
+        "D": "迭代次數（Epochs）"
+      },
+      "answer": "C",
+      "answer_text": "損失函數（Loss Function）",
+      "explanation": "損失函數（Loss Function）用來衡量模型預測值與實際值的差距，是指引優化器調整參數方向的重要依據。常見如均方誤差（MSE）、交叉熵損失（Cross-Entropy Loss）等。",
+      "keywords": [
+        "損失函數",
+        "Loss Function",
+        "預測誤差",
+        "模型優化"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH4_009",
+      "source": "講義練習題-科目3-第4章-第9題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第4章 機器學習與深度學習",
+      "topic": "L23103_神經網路架構",
+      "difficulty": "medium",
+      "question": "Transformer模型的核心創新機制為何？",
+      "options": {
+        "A": "卷積層（Convolution Layer）",
+        "B": "注意力機制（Attention）",
+        "C": "池化層（Pooling Layer）",
+        "D": "循環單元（Recurrent Unit）"
+      },
+      "answer": "B",
+      "answer_text": "注意力機制（Attention）",
+      "explanation": "Transformer模型核心在於注意力機制（Attention），透過計算序列中各元素間的關聯權重，捕捉長距離依賴，徹底取代傳統RNN的循環架構，大幅提升計算效率與表現。",
+      "keywords": [
+        "Transformer",
+        "注意力機制",
+        "Attention",
+        "深度學習"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH4_010",
+      "source": "講義練習題-科目3-第4章-第10題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第4章 機器學習與深度學習",
+      "topic": "L23101_機器學習基礎",
+      "difficulty": "medium",
+      "question": "決策樹在分裂節點時，常用哪一個指標來衡量分類純度？",
+      "options": {
+        "A": "均方誤差（MSE）",
+        "B": "F1分數（F1 Score）",
+        "C": "基尼不純度（Gini Impurity）",
+        "D": "召回率（Recall）"
+      },
+      "answer": "C",
+      "answer_text": "基尼不純度（Gini Impurity）",
+      "explanation": "基尼不純度（Gini Impurity）衡量節點內樣本的不純度，數值越低表示節點內樣本越集中於單一類別，是決策樹演算法常用的分裂判斷依據，尤其在分類任務中扮演重要角色。",
+      "keywords": [
+        "基尼不純度",
+        "Gini Impurity",
+        "決策樹",
+        "分類純度"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH5_001",
+      "source": "講義練習題-科目3-第5章-第1題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第5章 機器學習建模與參數調校",
+      "topic": "L23201_模型訓練與優化",
+      "difficulty": "medium",
+      "question": "在處理缺失值時，哪一種方法利用其他特徵變數來預測缺失位置的值？",
+      "options": {
+        "A": "刪除法（Deletion）",
+        "B": "均值填補（Mean Imputation）",
+        "C": "預測模型填補（Predictive Imputation）",
+        "D": "前向填補（Forward Fill）"
+      },
+      "answer": "C",
+      "answer_text": "預測模型填補（Predictive Imputation）",
+      "explanation": "預測模型填補是利用其他特徵變數訓練模型，如迴歸或分類器，預測缺失值的位置或值，特別適用於特徵之間關聯性高的情況。相對於簡單的刪除或均值填補，模型補值能更好地捕捉數據內在關聯性，降低資訊流失。",
+      "keywords": [
+        "預測模型填補",
+        "缺失值處理",
+        "Imputation",
+        "資料前處理"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH5_002",
+      "source": "講義練習題-科目3-第5章-第2題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第5章 機器學習建模與參數調校",
+      "topic": "L23201_模型訓練與優化",
+      "difficulty": "simple",
+      "question": "下列哪一種方法常用於偵測數值型資料中的異常值（Outliers）？",
+      "options": {
+        "A": "Z-score標準化",
+        "B": "四分位距法（IQR）",
+        "C": "One-hot Encoding",
+        "D": "詞嵌入（Word Embedding）"
+      },
+      "answer": "B",
+      "answer_text": "四分位距法（IQR）",
+      "explanation": "四分位距法是常見的統計方法，透過計算資料的第一與第三四分位數（Q1與Q3），並判定距離超過IQR（四分位距）1.5倍以上的數據點為異常。這種方法直觀且適用於大多數數值型資料的初步檢查。",
+      "keywords": [
+        "四分位距",
+        "IQR",
+        "異常值檢測",
+        "Outliers"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH5_003",
+      "source": "講義練習題-科目3-第5章-第3題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第5章 機器學習建模與參數調校",
+      "topic": "L23201_模型訓練與優化",
+      "difficulty": "medium",
+      "question": "下列哪一種特徵選擇方法會在模型訓練過程中同步進行特徵挑選？",
+      "options": {
+        "A": "Filter方法",
+        "B": "Wrapper方法",
+        "C": "Embedded方法",
+        "D": "Ensemble方法"
+      },
+      "answer": "C",
+      "answer_text": "Embedded方法",
+      "explanation": "Embedded方法會在模型訓練過程中同步進行特徵挑選。例如決策樹模型會產生特徵重要性（Feature Importance），或像Lasso、Ridge透過正則化直接控制特徵權重，實現同時建模與特徵選擇的目標。",
+      "keywords": [
+        "Embedded方法",
+        "特徵選擇",
+        "Feature Selection",
+        "模型訓練"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH5_004",
+      "source": "講義練習題-科目3-第5章-第4題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第5章 機器學習建模與參數調校",
+      "topic": "L23201_模型訓練與優化",
+      "difficulty": "simple",
+      "question": "當數值型資料呈現右偏分佈時，適合使用哪一種轉換方式來改善？",
+      "options": {
+        "A": "平方轉換（Square Transform）",
+        "B": "對數轉換（Log Transform）",
+        "C": "標準化（Standardization）",
+        "D": "One-hot Encoding"
+      },
+      "answer": "B",
+      "answer_text": "對數轉換（Log Transform）",
+      "explanation": "對數轉換可有效降低右偏分佈的極端值影響，使資料分佈更接近常態。常用於收入、銷售額等具極端高值的變數。平方根轉換則較適用於中度偏態資料。",
+      "keywords": [
+        "對數轉換",
+        "Log Transform",
+        "右偏分佈",
+        "資料轉換"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH5_005",
+      "source": "講義練習題-科目3-第5章-第5題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第5章 機器學習建模與參數調校",
+      "topic": "L23201_模型訓練與優化",
+      "difficulty": "medium",
+      "question": "模型在訓練集上表現極佳，但在測試集上效能不佳，這種現象稱為什麼？",
+      "options": {
+        "A": "欠擬合",
+        "B": "偏差過高",
+        "C": "過擬合",
+        "D": "梯度消失"
+      },
+      "answer": "C",
+      "answer_text": "過擬合",
+      "explanation": "過擬合發生在模型學習了太多訓練集的細節與雜訊，導致在未見過的測試資料上表現不佳。常見解決方案包括使用正則化、降低模型複雜度或早停策略（Early Stopping）。",
+      "keywords": [
+        "過擬合",
+        "Overfitting",
+        "泛化",
+        "模型評估"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH5_006",
+      "source": "講義練習題-科目3-第5章-第6題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第5章 機器學習建模與參數調校",
+      "topic": "L23202_模型評估",
+      "difficulty": "medium",
+      "question": "下列哪一種交叉驗證方法將資料分成K份，每次輪流使用其中一份作為驗證集？",
+      "options": {
+        "A": "Hold-out驗證",
+        "B": "時間序列分割",
+        "C": "LOOCV",
+        "D": "K-fold交叉驗證"
+      },
+      "answer": "C",
+      "answer_text": "LOOCV",
+      "explanation": "LOOCV（Leave-One-Out Cross-Validation）是K-fold的極端形式，當K等於樣本數n時，每次只留一筆做驗證。此方法能最大化資料利用，但計算成本極高，不適用於大樣本情境。",
+      "keywords": [
+        "LOOCV",
+        "交叉驗證",
+        "K-fold",
+        "模型評估"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH5_007",
+      "source": "講義練習題-科目3-第5章-第7題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第5章 機器學習建模與參數調校",
+      "topic": "L23201_模型訓練與優化",
+      "difficulty": "medium",
+      "question": "在深度學習中，哪一種技術會隨機將部分神經元設為零，以減少過擬合？",
+      "options": {
+        "A": "Batch Normalization",
+        "B": "Dropout",
+        "C": "L2正則化",
+        "D": "資料增強"
+      },
+      "answer": "B",
+      "answer_text": "Dropout",
+      "explanation": "Dropout透過隨機將神經元暫時設為零，迫使模型在每次訓練都以不同的「子網路」進行學習，有效降低模型對特定神經元的過度依賴，減少過擬合風險。",
+      "keywords": [
+        "Dropout",
+        "過擬合",
+        "正則化",
+        "深度學習"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH5_008",
+      "source": "講義練習題-科目3-第5章-第8題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第5章 機器學習建模與參數調校",
+      "topic": "L23201_模型訓練與優化",
+      "difficulty": "hard",
+      "question": "知識蒸餾（Knowledge Distillation）的主要用途為何？",
+      "options": {
+        "A": "提升模型訓練速度",
+        "B": "增加訓練資料量",
+        "C": "將大型模型的知識轉移至小型模型",
+        "D": "移除模型中的噪聲"
+      },
+      "answer": "C",
+      "answer_text": "將大型模型的知識轉移至小型模型",
+      "explanation": "Knowledge Distillation是利用大型、高性能的教師模型，將其知識以軟標籤（soft labels）的形式傳遞給小型學生模型，讓學生模型在參數較少的情況下，仍維持接近的預測能力。",
+      "keywords": [
+        "知識蒸餾",
+        "Knowledge Distillation",
+        "模型壓縮",
+        "教師模型"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH5_009",
+      "source": "講義練習題-科目3-第5章-第9題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第5章 機器學習建模與參數調校",
+      "topic": "L23201_模型訓練與優化",
+      "difficulty": "medium",
+      "question": "在優化器中，哪一個方法特別適合處理稀疏資料，能為每個參數調整不同的學習率？",
+      "options": {
+        "A": "SGD",
+        "B": "Adagrad",
+        "C": "Adam",
+        "D": "RMSprop"
+      },
+      "answer": "B",
+      "answer_text": "Adagrad",
+      "explanation": "Adagrad能針對每個參數調整不同的學習率，累積梯度平方和後，自動減小常被更新參數的學習步伐。適合處理特徵稀疏的場景，如文字分析，但學習率會不斷衰減至極小值，需留意訓練是否停滯。",
+      "keywords": [
+        "Adagrad",
+        "優化器",
+        "稀疏資料",
+        "自適應學習率"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH5_010",
+      "source": "講義練習題-科目3-第5章-第10題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第5章 機器學習建模與參數調校",
+      "topic": "L23201_模型訓練與優化",
+      "difficulty": "medium",
+      "question": "One-hot Encoding在何種情況下可能造成特徵維度爆炸？",
+      "options": {
+        "A": "數值欄位過多",
+        "B": "資料量過少",
+        "C": "類別變數具有高基數（High Cardinality）",
+        "D": "資料分佈不均"
+      },
+      "answer": "C",
+      "answer_text": "類別變數具有高基數（High Cardinality）",
+      "explanation": "One-hot Encoding會為每個不同類別產生獨立欄位，若類別數過多，會導致特徵維度爆炸，增加記憶體使用與模型訓練的負擔，尤其在資料量大時更明顯。",
+      "keywords": [
+        "One-hot Encoding",
+        "高基數",
+        "維度爆炸",
+        "特徵工程"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH6_001",
+      "source": "講義練習題-科目3-第6章-第1題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第6章 機器學習治理",
+      "topic": "L23401_隱私保護技術",
+      "difficulty": "medium",
+      "question": "在個人資料保護法規的框架下，下列哪一組資訊單獨使用時，最明確地被歸類為「直接識別個人身份資訊（Directly Identifiable Information, PII）」？",
+      "options": {
+        "A": "出生日期、郵遞區號、職業",
+        "B": "網站Cookie ID、設備IP位址、地理定位資訊",
+        "C": "姓名、電子郵件地址、身分證字號",
+        "D": "網路行為模式、匿名化統計數據、加密後的密碼雜湊值"
+      },
+      "answer": "C",
+      "answer_text": "姓名、電子郵件地址、身分證字號",
+      "explanation": "「直接識別個人身份資訊（PII）」是指無需透過其他資訊輔助，單獨即可明確辨識出特定個人的資料。姓名、電子郵件地址和身分證字號是典型的直接識別資訊，這些資訊單獨就能指向一個特定且唯一的人。",
+      "keywords": [
+        "PII",
+        "個人資料保護",
+        "直接識別資訊",
+        "隱私保護"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH6_002",
+      "source": "講義練習題-科目3-第6章-第2題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第6章 機器學習治理",
+      "topic": "L23401_隱私保護技術",
+      "difficulty": "hard",
+      "question": "若資料經過匿名化處理後，仍可透過外部資料比對而重新識別個人，應採取什麼措施？",
+      "options": {
+        "A": "增加資料量",
+        "B": "強化匿名化技術",
+        "C": "刪除所有資料",
+        "D": "提高模型複雜度"
+      },
+      "answer": "B",
+      "answer_text": "強化匿名化技術",
+      "explanation": "即便進行匿名化，外部資料比對仍可能造成再識別風險，因此須強化匿名化措施或限制資料使用情境，才能降低風險。",
+      "keywords": [
+        "匿名化",
+        "再識別風險",
+        "隱私保護",
+        "資料安全"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH6_003",
+      "source": "講義練習題-科目3-第6章-第3題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第6章 機器學習治理",
+      "topic": "L23402_演算法偏見與公平性",
+      "difficulty": "medium",
+      "question": "在AI偏見治理中，對不同群體調整模型預測閾值，屬於哪一種偏見修正方法？",
+      "options": {
+        "A": "資料泛化",
+        "B": "結果門檻調整",
+        "C": "模型剪枝",
+        "D": "資料增強"
+      },
+      "answer": "B",
+      "answer_text": "結果門檻調整",
+      "explanation": "結果門檻調整（Threshold Adjustment）屬於模型後處理方式，透過改變不同群體的決策門檻，以平衡模型在不同群體間的預測公平性。",
+      "keywords": [
+        "門檻調整",
+        "偏見修正",
+        "公平性",
+        "後處理"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH6_004",
+      "source": "講義練習題-科目3-第6章-第4題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第6章 機器學習治理",
+      "topic": "L23402_演算法偏見與公平性",
+      "difficulty": "medium",
+      "question": "若企業想確保AI模型在不同群體間「真正該被選擇者」皆有同等機會被正確預測，應採用哪一個公平性指標？",
+      "options": {
+        "A": "Equal Opportunity",
+        "B": "Demographic Parity",
+        "C": "K-Anonymity",
+        "D": "T-Closeness"
+      },
+      "answer": "A",
+      "answer_text": "Equal Opportunity",
+      "explanation": "Equal Opportunity著重在實際應獲得正向結果的個案，在不同群體間應具有相同的被正確預測機率，尤其適用於醫療、社會福利等情境。",
+      "keywords": [
+        "Equal Opportunity",
+        "公平性指標",
+        "機會平等",
+        "AI公平性"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH6_005",
+      "source": "講義練習題-科目3-第6章-第5題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第6章 機器學習治理",
+      "topic": "L23402_演算法偏見與公平性",
+      "difficulty": "medium",
+      "question": "若企業欲在AI專案中降低敏感特徵（如性別）的影響，可以採取哪種模型內部處理方式？",
+      "options": {
+        "A": "對抗式去偏模型（Adversarial Fairness）",
+        "B": "模型蒸餾",
+        "C": "雜湊處理",
+        "D": "結果門檻調整"
+      },
+      "answer": "A",
+      "answer_text": "對抗式去偏模型（Adversarial Fairness）",
+      "explanation": "對抗式去偏透過訓練一個對抗網路，迫使主模型無法預測敏感屬性，從而降低模型對敏感特徵的依賴，是常見的公平性處理技術。",
+      "keywords": [
+        "對抗式去偏",
+        "Adversarial Fairness",
+        "敏感特徵",
+        "去偏"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH6_006",
+      "source": "講義練習題-科目3-第6章-第6題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第6章 機器學習治理",
+      "topic": "L23402_演算法偏見與公平性",
+      "difficulty": "medium",
+      "question": "若資料集中存在群體樣本數不均，造成模型偏向多數群體，適合採用哪種技術？",
+      "options": {
+        "A": "權重初始化",
+        "B": "權重衰減",
+        "C": "類別重加權（Class Weighting）",
+        "D": "全量訓練"
+      },
+      "answer": "C",
+      "answer_text": "類別重加權（Class Weighting）",
+      "explanation": "類別重加權能在模型訓練時賦予少數類別更高權重，提升模型對少數群體的辨識能力，是處理不平衡資料常見的方法。",
+      "keywords": [
+        "類別重加權",
+        "Class Weighting",
+        "不平衡資料",
+        "樣本平衡"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH6_007",
+      "source": "講義練習題-科目3-第6章-第7題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第6章 機器學習治理",
+      "topic": "L23401_隱私保護技術",
+      "difficulty": "hard",
+      "question": "T-接近性（T-Closeness）技術主要是為了降低什麼風險？",
+      "options": {
+        "A": "機率分佈差異造成的識別風險",
+        "B": "資料重複風險",
+        "C": "訓練時間過長",
+        "D": "演算法震盪問題"
+      },
+      "answer": "A",
+      "answer_text": "機率分佈差異造成的識別風險",
+      "explanation": "T-Closeness要求群組內敏感屬性的分佈，需與全體資料集分佈相近，以防止透過分佈偏差推測個人特徵，是進階的隱私保護技術。",
+      "keywords": [
+        "T-Closeness",
+        "隱私保護",
+        "分佈差異",
+        "識別風險"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH6_008",
+      "source": "講義練習題-科目3-第6章-第8題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第6章 機器學習治理",
+      "topic": "L23402_演算法偏見與公平性",
+      "difficulty": "medium",
+      "question": "在AI公平性治理中，企業應建立什麼跨部門組織，確保公平性納入日常決策流程？",
+      "options": {
+        "A": "模型剪枝委員會",
+        "B": "AI蒸餾中心",
+        "C": "公平性審查委員會",
+        "D": "隨機抽樣團隊"
+      },
+      "answer": "C",
+      "answer_text": "公平性審查委員會",
+      "explanation": "公平性審查委員會匯集法務、技術、產品與倫理等部門，負責評估AI系統的偏見風險，是企業治理AI公平性的重要機制。",
+      "keywords": [
+        "公平性審查委員會",
+        "AI治理",
+        "跨部門協作",
+        "偏見治理"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH6_009",
+      "source": "講義練習題-科目3-第6章-第9題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第6章 機器學習治理",
+      "topic": "L23402_演算法偏見與公平性",
+      "difficulty": "medium",
+      "question": "若企業欲降低AI模型因少數群體樣本過少而造成的過擬合風險，可以採用哪種資料增強方法？",
+      "options": {
+        "A": "SMOTE",
+        "B": "Softmax",
+        "C": "Momentum",
+        "D": "Dropout"
+      },
+      "answer": "A",
+      "answer_text": "SMOTE",
+      "explanation": "SMOTE（Synthetic Minority Over-sampling Technique）透過合成新樣本，擴增少數類別資料，有助於平衡類別分佈，降低過擬合及模型偏誤風險。",
+      "keywords": [
+        "SMOTE",
+        "資料增強",
+        "過採樣",
+        "不平衡資料"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_CH6_010",
+      "source": "講義練習題-科目3-第6章-第10題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "chapter": "第6章 機器學習治理",
+      "topic": "L23401_隱私保護技術",
+      "difficulty": "simple",
+      "question": "下列哪一項不是常見的隱私保護基礎技術？",
+      "options": {
+        "A": "遮蔽（Masking）",
+        "B": "泛化（Generalization）",
+        "C": "知識蒸餾（Knowledge Distillation）",
+        "D": "分桶（Bucketing）"
+      },
+      "answer": "C",
+      "answer_text": "知識蒸餾（Knowledge Distillation）",
+      "explanation": "知識蒸餾是用於模型壓縮與加速的技術，並非基礎隱私保護技術。隱私保護常用技術包括遮蔽、泛化及分桶，用來降低個資識別風險。",
+      "keywords": [
+        "知識蒸餾",
+        "隱私保護",
+        "遮蔽",
+        "泛化",
+        "分桶"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_SAMPLE_001",
+      "source": "官方樣題-科目3-第1題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "topic": "L23301_分散式計算",
+      "difficulty": "medium",
+      "question": "在MapReduce計算框架中，關於Map和Reduce所負責處理資料的問題，下列敘述何者正確？",
+      "options": {
+        "A": "Map：一組資料映射成另一組資料；Reduce：統合與歸納資料",
+        "B": "Map：地圖式的搜索資料；Reduce：統合與歸納資料",
+        "C": "Map：一組資料映射成另一組資料；Reduce：過濾不符合的資料",
+        "D": "Map：一組資料映射成另一組資料；Reduce：生成更多的資料"
+      },
+      "answer": "A",
+      "answer_text": "Map：一組資料映射成另一組資料；Reduce：統合與歸納資料",
+      "explanation": "MapReduce框架中，Map階段將輸入資料映射（轉換）為中間鍵值對，Reduce階段則對相同鍵的值進行聚合統計。",
+      "keywords": [
+        "MapReduce",
+        "分散式計算",
+        "Map",
+        "Reduce"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_SAMPLE_002",
+      "source": "官方樣題-科目3-第2題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "topic": "L23102_卷積神經網路",
+      "difficulty": "medium",
+      "question": "下列何種卷積神經網路（Convolution Neural Networks, CNN）是將卷積層加寬而非加深？",
+      "options": {
+        "A": "R-CNN",
+        "B": "Inception",
+        "C": "ResNet",
+        "D": "VGG19"
+      },
+      "answer": "B",
+      "answer_text": "Inception",
+      "explanation": "Inception網路使用多個不同尺寸的卷積核並行處理（加寬），而非像VGG、ResNet那樣堆疊更多層（加深）。",
+      "keywords": [
+        "Inception",
+        "CNN",
+        "卷積神經網路",
+        "網路架構"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_SAMPLE_003",
+      "source": "官方樣題-科目3-第3題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "topic": "L23201_模型訓練與優化",
+      "difficulty": "medium",
+      "question": "當模型的訓練誤差（Training Error）低、但測試誤差（Test Error）很大時，這通常是在訓練過程中產生下列哪一種情況？",
+      "options": {
+        "A": "模型的泛化能力強",
+        "B": "模型出現過度擬合（Overfitting）",
+        "C": "模型出現欠擬合（Underfitting）",
+        "D": "訓練資料和測試資料之間沒有相關性"
+      },
+      "answer": "B",
+      "answer_text": "模型出現過度擬合（Overfitting）",
+      "explanation": "訓練誤差低但測試誤差高是過擬合的典型特徵，表示模型過度學習訓練數據的特性而失去泛化能力。",
+      "keywords": [
+        "過擬合",
+        "Overfitting",
+        "訓練誤差",
+        "測試誤差",
+        "泛化"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_SAMPLE_004",
+      "source": "官方樣題-科目3-第4題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "topic": "L23202_模型評估",
+      "difficulty": "simple",
+      "question": "下列哪一種指標通常用於評估迴歸模型的效能？",
+      "options": {
+        "A": "R²",
+        "B": "F1-分數",
+        "C": "曲線下面積（AUC）",
+        "D": "Precision"
+      },
+      "answer": "A",
+      "answer_text": "R²",
+      "explanation": "R²（決定係數）用於衡量迴歸模型對數據變異的解釋能力。F1-分數、AUC和Precision都是分類模型的評估指標。",
+      "keywords": [
+        "R²",
+        "迴歸模型",
+        "模型評估",
+        "決定係數"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_SAMPLE_005",
+      "source": "官方樣題-科目3-第5題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "topic": "L23101_機器學習基礎",
+      "difficulty": "medium",
+      "question": "近年來，深度學習研究與應用蓬勃發展，但數據本身可能存在什麼潛在問題？",
+      "options": {
+        "A": "數據標註品質鮮少被討論，但它卻直接影響模型性能",
+        "B": "數據品質是完美可信賴的",
+        "C": "大部分情況下，數據不存在類別不平衡問題",
+        "D": "數據不需要領域知識的輔助"
+      },
+      "answer": "A",
+      "answer_text": "數據標註品質鮮少被討論，但它卻直接影響模型性能",
+      "explanation": "數據標註品質是深度學習中的關鍵問題，低品質的標註會直接影響模型訓練效果，但在實務中常被忽視。",
+      "keywords": [
+        "數據標註",
+        "數據品質",
+        "深度學習",
+        "標註品質"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_SAMPLE_006",
+      "source": "官方樣題-科目3-第6題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "topic": "L23103_神經網路架構",
+      "difficulty": "simple",
+      "question": "在分類任務中，深度學習模型通常搭配哪一種輸出函數？",
+      "options": {
+        "A": "Tanh",
+        "B": "ReLU",
+        "C": "Sigmoid或Softmax",
+        "D": "Dropout"
+      },
+      "answer": "C",
+      "answer_text": "Sigmoid或Softmax",
+      "explanation": "Sigmoid用於二元分類輸出（0-1概率），Softmax用於多類別分類輸出（各類別概率和為1）。Tanh和ReLU是激活函數，Dropout是正則化技術。",
+      "keywords": [
+        "Sigmoid",
+        "Softmax",
+        "分類任務",
+        "輸出函數"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_SAMPLE_007",
+      "source": "官方樣題-科目3-第7題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "topic": "L23101_機器學習基礎",
+      "difficulty": "simple",
+      "question": "下列哪一種學習任務不適合使用監督式學習方法處理？",
+      "options": {
+        "A": "客戶信用風險分類",
+        "B": "預測未來銷售額",
+        "C": "找出資料中的潛在群集",
+        "D": "判斷影像是否為貓或狗"
+      },
+      "answer": "C",
+      "answer_text": "找出資料中的潛在群集",
+      "explanation": "找出潛在群集是非監督式學習任務（聚類），不需要標籤。其他選項都需要已標註的訓練數據，屬於監督式學習。",
+      "keywords": [
+        "監督式學習",
+        "非監督式學習",
+        "聚類",
+        "分類"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_SAMPLE_008",
+      "source": "官方樣題-科目3-第8題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "topic": "L23103_神經網路架構",
+      "difficulty": "medium",
+      "question": "在神經網路中，前向傳播（Forward Propagation）主要依賴下列哪一種數學操作？",
+      "options": {
+        "A": "機率積分",
+        "B": "矩陣乘法與向量內積",
+        "C": "對數變換",
+        "D": "條件機率推論"
+      },
+      "answer": "B",
+      "answer_text": "矩陣乘法與向量內積",
+      "explanation": "前向傳播過程中，輸入通過各層時主要進行矩陣乘法（權重與輸入的線性組合）和向量內積運算，再經過激活函數。",
+      "keywords": [
+        "前向傳播",
+        "Forward Propagation",
+        "矩陣乘法",
+        "神經網路"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_SAMPLE_009",
+      "source": "官方樣題-科目3-第9題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "topic": "L23201_模型訓練與優化",
+      "difficulty": "medium",
+      "question": "特徵縮放（Feature Scaling）中，下列何者為標準化（Standardization）的主要作用？",
+      "options": {
+        "A": "將數據範圍限制在0到1且標準差-1",
+        "B": "使數據平均值為0且標準差為1",
+        "C": "移除數據中的異常值",
+        "D": "增加特徵間的相關性"
+      },
+      "answer": "B",
+      "answer_text": "使數據平均值為0且標準差為1",
+      "explanation": "標準化（Z-score normalization）將數據轉換為均值0、標準差1的分布，公式為 z = (x - μ) / σ。",
+      "keywords": [
+        "標準化",
+        "Standardization",
+        "Z-score",
+        "特徵縮放"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_SAMPLE_010",
+      "source": "官方樣題-科目3-第10題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "topic": "L23202_模型評估",
+      "difficulty": "medium",
+      "question": "關於準確率（Accuracy）的計算方式，下列何者正確？",
+      "options": {
+        "A": "TP/(TP+FP)",
+        "B": "(TP+TN)/(TP+FP+TN+FN)",
+        "C": "TN/(TN+FP)",
+        "D": "TP/(TP+FN)"
+      },
+      "answer": "B",
+      "answer_text": "(TP+TN)/(TP+FP+TN+FN)",
+      "explanation": "準確率是正確預測（TP+TN）佔全部樣本的比例。選項A是Precision，選項D是Recall/Sensitivity。",
+      "keywords": [
+        "準確率",
+        "Accuracy",
+        "混淆矩陣",
+        "評估指標"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_SAMPLE_011",
+      "source": "官方樣題-科目3-第11題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "topic": "L23201_模型訓練與優化",
+      "difficulty": "medium",
+      "question": "關於損失函數（Loss Function）的主要功能，下列何者正確？",
+      "options": {
+        "A": "記錄模型預測歷史",
+        "B": "計算模型結構複雜度",
+        "C": "控制模型的學習率",
+        "D": "衡量模型預測與真實值之間的誤差"
+      },
+      "answer": "D",
+      "answer_text": "衡量模型預測與真實值之間的誤差",
+      "explanation": "損失函數用於量化模型預測結果與真實標籤之間的差距，是模型優化的目標函數。",
+      "keywords": [
+        "損失函數",
+        "Loss Function",
+        "誤差",
+        "模型優化"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_SAMPLE_012",
+      "source": "官方樣題-科目3-第12題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "topic": "L23401_隱私保護技術",
+      "difficulty": "medium",
+      "question": "關於歐盟《一般資料保護規則（GDPR）》，所謂的被遺忘權（Right to be Forgotten）主要賦予資料主體哪一項權利？",
+      "options": {
+        "A": "要求平台永久備份其個資以防遺失",
+        "B": "在符合條件下請求刪除其個人資料",
+        "C": "將個人資料轉換為匿名格式保存",
+        "D": "限制企業將資料輸出至境外伺服器"
+      },
+      "answer": "B",
+      "answer_text": "在符合條件下請求刪除其個人資料",
+      "explanation": "被遺忘權允許個人在特定條件下要求組織刪除其個人資料，是GDPR賦予資料主體的重要權利。",
+      "keywords": [
+        "GDPR",
+        "被遺忘權",
+        "個人資料保護",
+        "隱私權"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_SAMPLE_013",
+      "source": "官方樣題-科目3-第13題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "topic": "L23201_模型訓練與優化",
+      "difficulty": "medium",
+      "question": "在進行模型訓練前，若針對資料中不同群體（例如分類標籤）之間樣本數量不平衡的情況進行比例調整，此方法通常屬於下列哪一種技術？",
+      "options": {
+        "A": "資料重抽樣",
+        "B": "特徵選擇",
+        "C": "模型正則化",
+        "D": "超參數調整"
+      },
+      "answer": "A",
+      "answer_text": "資料重抽樣",
+      "explanation": "資料重抽樣（過採樣或欠採樣）用於調整不平衡數據集中各類別的樣本比例，是處理類別不平衡的常用技術。",
+      "keywords": [
+        "資料重抽樣",
+        "類別不平衡",
+        "過採樣",
+        "欠採樣"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_SAMPLE_014",
+      "source": "官方樣題-科目3-第14題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "topic": "L23201_模型訓練與優化",
+      "difficulty": "medium",
+      "question": "在優化器中，哪一個方法會自動調整每個參數的學習率，特別適用於稀疏資料？",
+      "options": {
+        "A": "Momentum",
+        "B": "Adagrad",
+        "C": "Adam",
+        "D": "SGD"
+      },
+      "answer": "B",
+      "answer_text": "Adagrad",
+      "explanation": "Adagrad會為每個參數維護不同的學習率，對於稀疏特徵會給予較大的更新，特別適合處理稀疏資料。",
+      "keywords": [
+        "Adagrad",
+        "優化器",
+        "學習率",
+        "稀疏資料"
+      ]
+    },
+    {
+      "question_id": "OFF_L23_SAMPLE_015",
+      "source": "官方樣題-科目3-第15題",
+      "subject": "L23",
+      "subject_name": "機器學習技術與應用",
+      "topic": "L23101_機器學習基礎",
+      "difficulty": "hard",
+      "question": "某零售公司希望利用顧客的年齡與每月消費金額，預測顧客是否為高價值顧客。提供相關資料data.csv，包含欄位Age、Spending、HighValue。請將下列程式碼片段依正確順序排序，以完成模型的建立與預測。\n\na. from sklearn.model_selection import train_test_split\n   X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\n\nb. from sklearn.linear_model import LogisticRegression\n   model = LogisticRegression()\n   model.fit(X_train, y_train)\n\nc. import pandas as pd\n   data = pd.read_csv(\"data.csv\")\n   X = data[['Age', 'Spending']]\n   y = data['HighValue']\n\nd. y_pred = model.predict(X_test)\n   print(\"Predictions:\", y_pred[:5])",
+      "options": {
+        "A": "c → a → b → d",
+        "B": "a → c → b → d",
+        "C": "c → b → a → d",
+        "D": "b → a → c → d"
+      },
+      "answer": "A",
+      "answer_text": "c → a → b → d",
+      "explanation": "正確流程：(c)載入資料並準備特徵與標籤 → (a)分割訓練集與測試集 → (b)建立並訓練模型 → (d)使用模型進行預測。",
+      "keywords": [
+        "機器學習流程",
+        "資料分割",
+        "模型訓練",
+        "預測",
+        "scikit-learn"
+      ]
+    }
+  ]
+}
