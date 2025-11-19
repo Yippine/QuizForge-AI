@@ -84,7 +84,7 @@ export function useKeyboardShortcuts(options = {}) {
    * 註冊快捷鍵處理器
    * Formula: registerHandler(key, handler) -> HandlerRegistration
    */
-  const registerHandler = (key, handler, options = {}) => {
+  const registerHandler = (key, handler, _options = {}) => {
     const normalizedKey = key.toLowerCase()
 
     if (!checkConflicts(normalizedKey, handler)) {

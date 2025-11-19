@@ -8,7 +8,7 @@
 import { computed } from 'vue'
 import { useAnswerTracking } from '../composables/useAnswerTracking'
 
-const props = defineProps({
+defineProps({
   // 面板模式 ('view' | 'compact')
   mode: {
     type: String,
@@ -29,7 +29,7 @@ const {
 
 // Get wrong questions
 const wrongQuestions = computed(() => getWrongQuestions())
-const allWrongQuestions = computed(() => getAllWrongQuestions())
+const _allWrongQuestions = computed(() => getAllWrongQuestions())
 
 // Computed properties
 const hasWrongQuestions = computed(() => wrongQuestions.value.length > 0)
@@ -126,17 +126,31 @@ const formatDate = (timestamp) => {
     <div class="bg-gradient-to-r from-red-500 to-orange-500 text-white p-6">
       <div class="flex justify-between items-center">
         <div>
-          <h2 class="text-2xl font-bold mb-1">錯題本</h2>
-          <p class="text-red-100 text-sm">針對性練習，強化弱項知識點</p>
+          <h2 class="text-2xl font-bold mb-1">
+            錯題本
+          </h2>
+          <p class="text-red-100 text-sm">
+            針對性練習，強化弱項知識點
+          </p>
         </div>
         <button
           v-if="mode === 'view'"
-          @click="closePanel"
           class="text-white hover:bg-white/20 rounded-full p-2 transition-colors"
           aria-label="關閉面板"
+          @click="closePanel"
         >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </button>
       </div>
@@ -146,20 +160,36 @@ const formatDate = (timestamp) => {
     <div class="p-6 border-b border-gray-200 bg-gray-50">
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div class="text-center p-4 bg-white rounded-lg shadow-sm">
-          <div class="text-3xl font-bold text-blue-600">{{ extendedStats.total }}</div>
-          <div class="text-sm text-gray-600 mt-1">總答題數</div>
+          <div class="text-3xl font-bold text-blue-600">
+            {{ extendedStats.total }}
+          </div>
+          <div class="text-sm text-gray-600 mt-1">
+            總答題數
+          </div>
         </div>
         <div class="text-center p-4 bg-white rounded-lg shadow-sm">
-          <div class="text-3xl font-bold text-green-600">{{ extendedStats.correct }}</div>
-          <div class="text-sm text-gray-600 mt-1">答對題數</div>
+          <div class="text-3xl font-bold text-green-600">
+            {{ extendedStats.correct }}
+          </div>
+          <div class="text-sm text-gray-600 mt-1">
+            答對題數
+          </div>
         </div>
         <div class="text-center p-4 bg-white rounded-lg shadow-sm">
-          <div class="text-3xl font-bold text-red-600">{{ extendedStats.wrongQuestionsCount }}</div>
-          <div class="text-sm text-gray-600 mt-1">待改進題數</div>
+          <div class="text-3xl font-bold text-red-600">
+            {{ extendedStats.wrongQuestionsCount }}
+          </div>
+          <div class="text-sm text-gray-600 mt-1">
+            待改進題數
+          </div>
         </div>
         <div class="text-center p-4 bg-white rounded-lg shadow-sm">
-          <div class="text-3xl font-bold text-purple-600">{{ extendedStats.accuracy }}%</div>
-          <div class="text-sm text-gray-600 mt-1">正確率</div>
+          <div class="text-3xl font-bold text-purple-600">
+            {{ extendedStats.accuracy }}%
+          </div>
+          <div class="text-sm text-gray-600 mt-1">
+            正確率
+          </div>
         </div>
       </div>
     </div>
@@ -167,11 +197,22 @@ const formatDate = (timestamp) => {
     <!-- Wrong Questions List -->
     <div class="p-6">
       <!-- Empty State -->
-      <div v-if="!hasWrongQuestions" class="text-center py-12">
-        <div class="text-6xl mb-4">🎉</div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">太棒了！</h3>
-        <p class="text-gray-600">目前沒有錯題記錄</p>
-        <p class="text-sm text-gray-500 mt-2">繼續保持，加油！</p>
+      <div
+        v-if="!hasWrongQuestions"
+        class="text-center py-12"
+      >
+        <div class="text-6xl mb-4">
+          🎉
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">
+          太棒了！
+        </h3>
+        <p class="text-gray-600">
+          目前沒有錯題記錄
+        </p>
+        <p class="text-sm text-gray-500 mt-2">
+          繼續保持，加油！
+        </p>
       </div>
 
       <!-- Questions List -->
@@ -223,18 +264,31 @@ const formatDate = (timestamp) => {
 
               <!-- Actions -->
               <button
-                @click="handleRemoveQuestion(question.questionId)"
                 class="text-gray-400 hover:text-red-600 transition-colors"
                 title="從錯題本移除"
+                @click="handleRemoveQuestion(question.questionId)"
               >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
 
             <!-- Attempts History (collapsed by default) -->
-            <details v-if="question.attempts.length > 1" class="mt-3">
+            <details
+              v-if="question.attempts.length > 1"
+              class="mt-3"
+            >
               <summary class="cursor-pointer text-xs text-gray-500 hover:text-gray-700">
                 查看答題歷史 ({{ question.attempts.length }} 次)
               </summary>
@@ -248,7 +302,10 @@ const formatDate = (timestamp) => {
                     {{ attempt.isCorrect ? '✓' : '✗' }}
                   </span>
                   <span class="ml-2">{{ formatDate(attempt.timestamp) }}</span>
-                  <span v-if="!attempt.isCorrect && attempt.userAnswer" class="ml-2 text-gray-500">
+                  <span
+                    v-if="!attempt.isCorrect && attempt.userAnswer"
+                    class="ml-2 text-gray-500"
+                  >
                     (答案: {{ attempt.userAnswer }})
                   </span>
                 </div>
@@ -274,8 +331,18 @@ const formatDate = (timestamp) => {
           @click="startWrongPractice"
         >
           <span class="flex items-center justify-center gap-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+              />
             </svg>
             開始錯題重練
           </span>

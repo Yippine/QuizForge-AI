@@ -3,7 +3,7 @@
  * QuizForge AI - Statistics Panel Component
  * Formula: StatisticsPanel = OverallStats + TopicPerformance + DifficultyAnalysis + ProgressTracking
  */
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuestionBankStore } from '../stores/questionBank'
 import { useAnswerTracking } from '../composables/useAnswerTracking'
@@ -35,15 +35,15 @@ ChartJS.register(
 )
 
 const router = useRouter()
-const store = useQuestionBankStore()
-const { getAnswerHistory, getStatistics } = useAnswerTracking()
+const _store = useQuestionBankStore()
+const { getAnswerHistory } = useAnswerTracking()
 
 /**
  * 狀態管理
  */
 const loading = ref(true)
 const answerHistory = ref([])
-const timeRange = ref('all') // 'all', 'today', 'week', 'month'
+const _timeRange = ref('all') // 'all', 'today', 'week', 'month'
 
 /**
  * 計算屬性
@@ -358,30 +358,44 @@ const startPractice = () => {
     <div class="max-w-7xl mx-auto mb-8">
       <!-- Back Button -->
       <button
-        @click="router.push('/')"
         class="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors text-sm md:text-base"
+        @click="router.push('/')"
       >
-        <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        <svg
+          class="w-4 h-4 md:w-5 md:h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"
+          />
         </svg>
         返回主頁
       </button>
 
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="text-3xl font-bold text-gray-900">學習統計</h1>
-          <p class="text-gray-600 mt-1">深入了解你的學習進度和表現</p>
+          <h1 class="text-3xl font-bold text-gray-900">
+            學習統計
+          </h1>
+          <p class="text-gray-600 mt-1">
+            深入了解你的學習進度和表現
+          </p>
         </div>
         <div class="flex gap-3">
           <button
-            @click="refreshData"
             class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+            @click="refreshData"
           >
             刷新數據
           </button>
           <button
-            @click="exportStats"
             class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
+            @click="exportStats"
           >
             導出統計
           </button>
@@ -390,34 +404,62 @@ const startPractice = () => {
     </div>
 
     <!-- Loading State -->
-    <div v-if="loading" class="text-center py-16">
+    <div
+      v-if="loading"
+      class="text-center py-16"
+    >
       <div class="inline-block animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mb-4"></div>
-      <p class="text-gray-600 text-lg">載入統計數據中...</p>
+      <p class="text-gray-600 text-lg">
+        載入統計數據中...
+      </p>
     </div>
 
     <!-- Statistics Content -->
-    <div v-else-if="answerHistory.length > 0" class="max-w-7xl mx-auto">
+    <div
+      v-else-if="answerHistory.length > 0"
+      class="max-w-7xl mx-auto"
+    >
       <!-- Overall Stats -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
         <div class="bg-white rounded-lg shadow-lg p-6 text-center">
-          <div class="text-4xl font-bold text-blue-600">{{ overallStats.total }}</div>
-          <div class="text-sm text-gray-600 mt-2">總答題數</div>
+          <div class="text-4xl font-bold text-blue-600">
+            {{ overallStats.total }}
+          </div>
+          <div class="text-sm text-gray-600 mt-2">
+            總答題數
+          </div>
         </div>
         <div class="bg-white rounded-lg shadow-lg p-6 text-center">
-          <div class="text-4xl font-bold text-green-600">{{ overallStats.correct }}</div>
-          <div class="text-sm text-gray-600 mt-2">答對題數</div>
+          <div class="text-4xl font-bold text-green-600">
+            {{ overallStats.correct }}
+          </div>
+          <div class="text-sm text-gray-600 mt-2">
+            答對題數
+          </div>
         </div>
         <div class="bg-white rounded-lg shadow-lg p-6 text-center">
-          <div class="text-4xl font-bold text-red-600">{{ overallStats.incorrect }}</div>
-          <div class="text-sm text-gray-600 mt-2">答錯題數</div>
+          <div class="text-4xl font-bold text-red-600">
+            {{ overallStats.incorrect }}
+          </div>
+          <div class="text-sm text-gray-600 mt-2">
+            答錯題數
+          </div>
         </div>
         <div class="bg-white rounded-lg shadow-lg p-6 text-center">
-          <div class="text-4xl font-bold text-purple-600">{{ overallStats.accuracy }}%</div>
-          <div class="text-sm text-gray-600 mt-2">正確率</div>
+          <div class="text-4xl font-bold text-purple-600">
+            {{ overallStats.accuracy }}%
+          </div>
+          <div class="text-sm text-gray-600 mt-2">
+            正確率
+          </div>
         </div>
         <div class="bg-white rounded-lg shadow-lg p-6 text-center">
-          <div class="text-4xl font-bold text-orange-600">{{ overallStats.streak }}</div>
-          <div class="text-sm text-gray-600 mt-2">連勝記錄</div>
+          <div class="text-4xl font-bold text-orange-600">
+            {{ overallStats.streak }}
+          </div>
+          <div class="text-sm text-gray-600 mt-2">
+            連勝記錄
+          </div>
         </div>
       </div>
 
@@ -433,7 +475,9 @@ const startPractice = () => {
           </div>
           <!-- Topic Details -->
           <div class="mt-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">主題詳情</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+              主題詳情
+            </h3>
             <div class="space-y-3">
               <div
                 v-for="topic in topicStats"
@@ -441,13 +485,18 @@ const startPractice = () => {
                 class="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
               >
                 <div class="flex-1">
-                  <div class="font-medium text-gray-900">{{ topic.topic }}</div>
+                  <div class="font-medium text-gray-900">
+                    {{ topic.topic }}
+                  </div>
                   <div class="text-sm text-gray-600">
                     {{ topic.total }} 題 · {{ topic.correct }} 對 {{ topic.incorrect }} 錯
                   </div>
                 </div>
                 <div class="text-right">
-                  <div class="text-lg font-semibold" :class="topic.accuracy >= 70 ? 'text-green-600' : topic.accuracy >= 50 ? 'text-yellow-600' : 'text-red-600'">
+                  <div
+                    class="text-lg font-semibold"
+                    :class="topic.accuracy >= 70 ? 'text-green-600' : topic.accuracy >= 50 ? 'text-yellow-600' : 'text-red-600'"
+                  >
                     {{ topic.accuracy }}%
                   </div>
                 </div>
@@ -466,14 +515,18 @@ const startPractice = () => {
           </div>
           <!-- Difficulty Details -->
           <div class="mt-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">難度分析</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+              難度分析
+            </h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div
                 v-for="diff in difficultyStats"
                 :key="diff.difficulty"
                 class="p-3 border rounded-lg"
               >
-                <div class="font-medium text-gray-900">{{ diff.difficulty }}</div>
+                <div class="font-medium text-gray-900">
+                  {{ diff.difficulty }}
+                </div>
                 <div class="text-sm text-gray-600">
                   {{ diff.total }} 題 · 正確率 {{ diff.accuracy }}%
                 </div>
@@ -502,17 +555,25 @@ const startPractice = () => {
 
       <!-- Performance Insights -->
       <div class="bg-white rounded-lg shadow-lg p-6">
-        <h2 class="text-xl font-bold text-gray-900 mb-4">學習洞察</h2>
+        <h2 class="text-xl font-bold text-gray-900 mb-4">
+          學習洞察
+        </h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div class="p-4 bg-blue-50 rounded-lg">
-            <div class="text-lg font-semibold text-blue-900 mb-2">平均答題時間</div>
+            <div class="text-lg font-semibold text-blue-900 mb-2">
+              平均答題時間
+            </div>
             <div class="text-2xl font-bold text-blue-600">
               {{ formatTime(overallStats.avgTime) }}
             </div>
-            <div class="text-sm text-blue-700 mt-1">每題平均耗時</div>
+            <div class="text-sm text-blue-700 mt-1">
+              每題平均耗時
+            </div>
           </div>
           <div class="p-4 bg-green-50 rounded-lg">
-            <div class="text-lg font-semibold text-green-900 mb-2">最佳表現主題</div>
+            <div class="text-lg font-semibold text-green-900 mb-2">
+              最佳表現主題
+            </div>
             <div class="text-xl font-bold text-green-600">
               {{ topicStats.length > 0 ? topicStats.sort((a, b) => b.accuracy - a.accuracy)[0].topic : 'N/A' }}
             </div>
@@ -521,26 +582,47 @@ const startPractice = () => {
             </div>
           </div>
           <div class="p-4 bg-purple-50 rounded-lg">
-            <div class="text-lg font-semibold text-purple-900 mb-2">學習活躍度</div>
+            <div class="text-lg font-semibold text-purple-900 mb-2">
+              學習活躍度
+            </div>
             <div class="text-2xl font-bold text-purple-600">
               {{ trendData.labels.length }} 天
             </div>
-            <div class="text-sm text-purple-700 mt-1">學習天數</div>
+            <div class="text-sm text-purple-700 mt-1">
+              學習天數
+            </div>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Empty State -->
-    <div v-else class="text-center py-16 bg-white rounded-lg shadow max-w-4xl mx-auto">
-      <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+    <div
+      v-else
+      class="text-center py-16 bg-white rounded-lg shadow max-w-4xl mx-auto"
+    >
+      <svg
+        class="w-16 h-16 mx-auto text-gray-400 mb-4"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+        />
       </svg>
-      <p class="text-gray-600 text-lg mb-4">尚無統計數據</p>
-      <p class="text-gray-500 mb-6">開始答題後即可查看詳細的學習統計</p>
+      <p class="text-gray-600 text-lg mb-4">
+        尚無統計數據
+      </p>
+      <p class="text-gray-500 mb-6">
+        開始答題後即可查看詳細的學習統計
+      </p>
       <button
-        @click="startPractice"
         class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors"
+        @click="startPractice"
       >
         開始練習
       </button>

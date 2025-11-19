@@ -317,48 +317,88 @@ const getStepColor = (step) => {
               <!-- Back Button -->
               <button
                 v-if="currentStep > 1"
-                @click="goBack"
                 class="p-2 rounded-lg hover:bg-white hover:bg-opacity-50 transition-colors"
+                @click="goBack"
               >
-                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                <svg
+                  class="w-5 h-5 text-gray-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 19l-7-7 7-7"
+                  />
                 </svg>
               </button>
 
               <div>
-                <h2 class="text-xl font-bold text-gray-900">{{ stepTitle }}</h2>
-                <p class="text-sm text-gray-500">步驟 {{ currentStep }} / 4</p>
+                <h2 class="text-xl font-bold text-gray-900">
+                  {{ stepTitle }}
+                </h2>
+                <p class="text-sm text-gray-500">
+                  步驟 {{ currentStep }} / 4
+                </p>
               </div>
             </div>
 
             <!-- Close Button -->
             <button
-              @click="closeModal"
               class="p-2 rounded-lg hover:bg-white hover:bg-opacity-50 transition-colors"
+              @click="closeModal"
             >
-              <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              <svg
+                class="w-6 h-6 text-gray-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
 
           <!-- Breadcrumbs -->
-          <div v-if="breadcrumbs.length > 0" class="px-4 md:px-6 py-3 bg-gray-50 border-b border-gray-200">
+          <div
+            v-if="breadcrumbs.length > 0"
+            class="px-4 md:px-6 py-3 bg-gray-50 border-b border-gray-200"
+          >
             <div class="flex items-center gap-2 text-sm overflow-x-auto">
               <button
-                @click="goToStep(1)"
                 class="text-gray-500 hover:text-primary-600 transition-colors whitespace-nowrap"
+                @click="goToStep(1)"
               >
                 首頁
               </button>
-              <template v-for="(crumb, index) in breadcrumbs" :key="crumb.step">
-                <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              <template
+                v-for="(crumb, index) in breadcrumbs"
+                :key="crumb.step"
+              >
+                <svg
+                  class="w-4 h-4 text-gray-400 flex-shrink-0"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
                 <button
-                  @click="goToStep(crumb.step + 1)"
                   class="transition-colors whitespace-nowrap"
                   :class="index === breadcrumbs.length - 1 ? 'text-gray-900 font-semibold' : 'text-gray-500 hover:text-primary-600'"
+                  @click="goToStep(crumb.step + 1)"
                 >
                   {{ crumb.name }}
                 </button>
@@ -369,39 +409,81 @@ const getStepColor = (step) => {
           <!-- Content -->
           <div class="flex-1 overflow-y-auto p-4 md:p-6">
             <!-- Loading State -->
-            <div v-if="loading" class="flex items-center justify-center py-12">
+            <div
+              v-if="loading"
+              class="flex items-center justify-center py-12"
+            >
               <div class="text-center">
                 <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-4 border-primary-600 mb-4"></div>
-                <p class="text-gray-600">載入中...</p>
+                <p class="text-gray-600">
+                  載入中...
+                </p>
               </div>
             </div>
 
             <!-- Error State -->
-            <div v-else-if="error" class="text-center py-12">
-              <svg class="w-12 h-12 text-red-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <div
+              v-else-if="error"
+              class="text-center py-12"
+            >
+              <svg
+                class="w-12 h-12 text-red-500 mx-auto mb-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
-              <h3 class="text-lg font-bold text-gray-900 mb-2">載入失敗</h3>
-              <p class="text-gray-600">{{ error }}</p>
+              <h3 class="text-lg font-bold text-gray-900 mb-2">
+                載入失敗
+              </h3>
+              <p class="text-gray-600">
+                {{ error }}
+              </p>
             </div>
 
             <!-- Empty State -->
-            <div v-else-if="currentItems.length === 0" class="text-center py-12">
-              <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+            <div
+              v-else-if="currentItems.length === 0"
+              class="text-center py-12"
+            >
+              <svg
+                class="w-12 h-12 text-gray-400 mx-auto mb-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+                />
               </svg>
-              <h3 class="text-lg font-bold text-gray-900 mb-2">沒有可用項目</h3>
-              <p class="text-gray-600">此分類下暫無內容</p>
+              <h3 class="text-lg font-bold text-gray-900 mb-2">
+                沒有可用項目
+              </h3>
+              <p class="text-gray-600">
+                此分類下暫無內容
+              </p>
             </div>
 
             <!-- Items Grid -->
-            <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div
+              v-else
+              class="grid grid-cols-1 md:grid-cols-2 gap-4"
+            >
               <div
                 v-for="item in currentItems"
                 :key="item.id"
-                @click="handleSelect(item)"
                 class="bg-white rounded-xl shadow-md p-4 md:p-6 cursor-pointer transform hover:scale-102 hover:shadow-lg transition-all duration-200 border-2 border-gray-200"
                 :class="getStepColor(currentStep).border"
+                @click="handleSelect(item)"
               >
                 <div class="flex items-start gap-4">
                   <!-- Icon -->
@@ -416,7 +498,12 @@ const getStepColor = (step) => {
                       stroke="currentColor"
                       viewBox="0 0 24 24"
                     >
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="getItemIcon(currentStep)" />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        :d="getItemIcon(currentStep)"
+                      />
                     </svg>
                   </div>
 
@@ -429,14 +516,22 @@ const getStepColor = (step) => {
                       >
                         {{ item.code }}
                       </span>
-                      <h3 class="text-lg font-bold text-gray-900 truncate">{{ item.name }}</h3>
+                      <h3 class="text-lg font-bold text-gray-900 truncate">
+                        {{ item.name }}
+                      </h3>
                     </div>
-                    <p v-if="item.description" class="text-sm text-gray-600 line-clamp-2">
+                    <p
+                      v-if="item.description"
+                      class="text-sm text-gray-600 line-clamp-2"
+                    >
                       {{ item.description }}
                     </p>
 
                     <!-- Stats for levels and subjects -->
-                    <div v-if="item.levels || item.subjects || item.resources" class="flex items-center gap-3 mt-3">
+                    <div
+                      v-if="item.levels || item.subjects || item.resources"
+                      class="flex items-center gap-3 mt-3"
+                    >
                       <div
                         v-if="item.levels"
                         class="px-2 py-1 bg-gray-100 rounded text-xs text-gray-600"
@@ -472,7 +567,12 @@ const getStepColor = (step) => {
                     stroke="currentColor"
                     viewBox="0 0 24 24"
                   >
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5l7 7-7 7"
+                    />
                   </svg>
                 </div>
               </div>
@@ -486,8 +586,8 @@ const getStepColor = (step) => {
                 選擇完成後將自動儲存您的學習進度
               </p>
               <button
-                @click="closeModal"
                 class="px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors"
+                @click="closeModal"
               >
                 取消
               </button>

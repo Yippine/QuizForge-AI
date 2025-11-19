@@ -163,6 +163,25 @@ const routes = [
       breadcrumbs: 'dynamic'
     }
   },
+  // Glossary Routes (INC-035)
+  {
+    path: '/resources/ipas/:certificationId/:levelId/:subjectId/materials/glossary',
+    name: 'glossary-list',
+    component: () => import('../views/GlossaryListView.vue'),
+    meta: {
+      title: 'QuizForge AI - 專業術語表',
+      breadcrumbs: 'dynamic'
+    }
+  },
+  {
+    path: '/resources/ipas/:certificationId/:levelId/:subjectId/materials/glossary/:termId',
+    name: 'glossary-detail',
+    component: () => import('../views/GlossaryDetail.vue'),
+    meta: {
+      title: 'QuizForge AI - 術語詳情',
+      breadcrumbs: 'dynamic'
+    }
+  },
   {
     path: '/resources/ipas/:certificationId/:levelId/:subjectId/practice',
     name: 'practice-hub',
@@ -190,56 +209,15 @@ const routes = [
       breadcrumbs: 'dynamic'
     }
   },
-  // Redirect old URLs to new structure
+  // Legacy URL Redirects (INC-036)
+  // Redirect old paths to new hierarchical structure for backward compatibility
+  {
+    path: '/resources',
+    redirect: '/resources/ipas'
+  },
   {
     path: '/resources/intermediate/:subjectId',
     redirect: to => `/resources/ipas/ai-planning/intermediate/${to.params.subjectId}`
-  },
-  // Learning Resources Routes (Legacy - kept for backward compatibility)
-  {
-    path: '/resources',
-    name: 'resource-center',
-    component: () => import('../views/ResourceCenter.vue'),
-    meta: {
-      title: 'QuizForge AI - 學習資源中心',
-      requiresAuth: false
-    }
-  },
-  {
-    path: '/resources/:certificationId',
-    name: 'resource-subjects',
-    component: () => import('../views/ResourceSubjects.vue'),
-    meta: {
-      title: 'QuizForge AI - 科目選擇',
-      requiresAuth: false
-    }
-  },
-  {
-    path: '/resources/:certificationId/:subjectId',
-    name: 'resource-types',
-    component: () => import('../views/ResourceTypes.vue'),
-    meta: {
-      title: 'QuizForge AI - 資源類型',
-      requiresAuth: false
-    }
-  },
-  {
-    path: '/resources/:certificationId/:subjectId/:resourceType',
-    name: 'resource-list',
-    component: () => import('../views/ResourceList.vue'),
-    meta: {
-      title: 'QuizForge AI - 資源列表',
-      requiresAuth: false
-    }
-  },
-  {
-    path: '/resources/:certificationId/:subjectId/:resourceType/:resourceId',
-    name: 'resource-detail',
-    component: () => import('../views/ResourceDetail.vue'),
-    meta: {
-      title: 'QuizForge AI - 資源詳情',
-      requiresAuth: false
-    }
   },
   {
     path: '/:pathMatch(.*)*',

@@ -159,23 +159,48 @@ onMounted(() => {
               />
             </svg>
           </div>
-          <h1 class="text-4xl md:text-5xl font-bold text-gray-900">{{ subjectName }}</h1>
+          <h1 class="text-4xl md:text-5xl font-bold text-gray-900">
+            {{ subjectName }}
+          </h1>
         </div>
-        <p class="text-lg text-gray-600">共 {{ lectures.length }} 個講義</p>
+        <p class="text-lg text-gray-600">
+          共 {{ lectures.length }} 個講義
+        </p>
       </div>
 
       <!-- Loading State -->
-      <div v-if="loading" class="flex justify-center items-center py-20">
-        <div class="animate-spin rounded-full h-16 w-16 border-b-2" :class="`border-${colorClasses.primary}`"></div>
+      <div
+        v-if="loading"
+        class="flex justify-center items-center py-20"
+      >
+        <div
+          class="animate-spin rounded-full h-16 w-16 border-b-2"
+          :class="`border-${colorClasses.primary}`"
+        ></div>
       </div>
 
       <!-- Error State -->
-      <div v-else-if="error" class="text-center py-20">
+      <div
+        v-else-if="error"
+        class="text-center py-20"
+      >
         <div class="bg-red-50 border border-red-200 rounded-xl p-6 max-w-md mx-auto">
-          <svg class="w-12 h-12 text-red-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <svg
+            class="w-12 h-12 text-red-500 mx-auto mb-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
           </svg>
-          <p class="text-red-700 font-semibold">{{ error }}</p>
+          <p class="text-red-700 font-semibold">
+            {{ error }}
+          </p>
         </div>
       </div>
 
@@ -189,9 +214,9 @@ onMounted(() => {
           <div
             v-for="lecture in lectures"
             :key="lecture.id"
-            @click="navigateToLecture(lecture.id)"
             class="bg-white rounded-xl shadow-lg p-6 cursor-pointer border-2 border-transparent transform hover:scale-105 hover:shadow-xl transition-all duration-300"
             :class="`hover:border-${colorClasses.border}`"
+            @click="navigateToLecture(lecture.id)"
           >
             <!-- Chapter Badge -->
             <div class="mb-3">
@@ -204,7 +229,9 @@ onMounted(() => {
             </div>
 
             <!-- Lecture Title -->
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">{{ lecture.title }}</h3>
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">
+              {{ lecture.title }}
+            </h3>
 
             <!-- Arrow Icon -->
             <div class="flex justify-end">
@@ -229,21 +256,41 @@ onMounted(() => {
         <!-- Formula: NavigationButtons = BackToSubjects + BackToHome -->
         <div class="flex flex-col sm:flex-row justify-center gap-4">
           <button
-            @click="navigateToSubjects"
             class="flex items-center justify-center gap-2 px-6 py-3 bg-white text-accent-600 rounded-xl shadow-lg hover:shadow-xl hover:border-accent-500 transition-all duration-300 border-2 border-transparent font-semibold active:scale-95"
+            @click="navigateToSubjects"
           >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
             </svg>
             返回科目
           </button>
 
           <button
-            @click="navigateToHome"
             class="flex items-center justify-center gap-2 px-6 py-3 bg-white text-gray-600 rounded-xl shadow-lg hover:shadow-xl hover:border-gray-500 transition-all duration-300 border-2 border-transparent font-semibold active:scale-95"
+            @click="navigateToHome"
           >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+              />
             </svg>
             返回首頁
           </button>
@@ -253,7 +300,9 @@ onMounted(() => {
       <!-- Footer Info -->
       <div class="mt-12 text-center text-sm text-gray-500">
         <p>Formula-Contract Methodology | Generated with Claude Code</p>
-        <p class="mt-1">INC-3: Subject Lectures List Page</p>
+        <p class="mt-1">
+          INC-3: Subject Lectures List Page
+        </p>
       </div>
     </div>
   </div>

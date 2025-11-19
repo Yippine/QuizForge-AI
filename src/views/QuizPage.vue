@@ -4,7 +4,7 @@
  * Formula: QuizPage = QuestionCard + Navigation + Stats + Controls + MobileOptimization
  * Responsibility: 答題練習頁面，整合題目卡片、導航和統計
  */
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuestionBankStore } from '../stores/questionBank'
 import { useQuizResultsStore } from '../stores/quizResults'
@@ -20,10 +20,10 @@ import LoadingSpinner from '../components/LoadingSpinner.vue'
 const router = useRouter()
 const store = useQuestionBankStore()
 const resultsStore = useQuizResultsStore()
-const { getWrongQuestions, wrongQuestionsCount, saveAnswer } = useAnswerTracking()
+const { wrongQuestionsCount, saveAnswer } = useAnswerTracking()
 const { registerDefaultHandlers, showHelp, toggleHelp, shortcutsHelp } = useKeyboardShortcuts()
 const { start: startTimer, stop: stopTimer, getTimeData } = useTimer()
-const { start: startCountdown, stop: stopCountdown, formattedTime: countdownTime, isWarning, isTimeUp } = useCountdownTimer()
+const { start: startCountdown, stop: stopCountdown, formattedTime: countdownTime, isWarning } = useCountdownTimer()
 
 /**
  * State
@@ -95,7 +95,7 @@ const currentQuestionState = computed(() => {
 /**
  * Swipe Gesture Support
  */
-const { direction } = useSwipe(swipeTarget, {
+useSwipe(swipeTarget, {
   onSwipeEnd(e, direction) {
     if (direction === 'left') {
       handleNextQuestion()
@@ -509,16 +509,29 @@ const isAllAnswered = computed(() => {
 </script>
 
 <template>
-  <div ref="swipeTarget" class="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 py-4 md:py-8 px-2 md:px-4">
+  <div
+    ref="swipeTarget"
+    class="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 py-4 md:py-8 px-2 md:px-4"
+  >
     <!-- Mobile Header -->
     <header class="max-w-4xl mx-auto mb-4 md:mb-8">
       <!-- Back Button -->
       <button
-        @click="goHome"
         class="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors text-sm md:text-base"
+        @click="goHome"
       >
-        <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        <svg
+          class="w-4 h-4 md:w-5 md:h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"
+          />
         </svg>
         返回主頁
       </button>
@@ -528,11 +541,16 @@ const isAllAnswered = computed(() => {
         <h1 class="text-2xl md:text-4xl font-bold text-gray-900 mb-2">
           QuizForge AI
         </h1>
-        <p class="text-sm md:text-base text-gray-600">答題練習</p>
+        <p class="text-sm md:text-base text-gray-600">
+          答題練習
+        </p>
       </div>
 
       <!-- INC-018: Countdown Timer (if time limit is set) -->
-      <div v-if="timeLimitMinutes && countdownTime" class="mb-4">
+      <div
+        v-if="timeLimitMinutes && countdownTime"
+        class="mb-4"
+      >
         <div
           :class="[
             'px-4 py-3 rounded-lg text-center font-bold text-lg md:text-xl transition-colors',
@@ -542,17 +560,35 @@ const isAllAnswered = computed(() => {
           ]"
         >
           <div class="flex items-center justify-center gap-2">
-            <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <svg
+              class="w-5 h-5 md:w-6 md:h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
             <span>剩餘時間：{{ countdownTime }}</span>
           </div>
-          <p v-if="isWarning" class="text-xs md:text-sm mt-1">時間即將結束！</p>
+          <p
+            v-if="isWarning"
+            class="text-xs md:text-sm mt-1"
+          >
+            時間即將結束！
+          </p>
         </div>
       </div>
 
       <!-- Mode Indicator -->
-      <div v-if="practiceMode === 'wrong-practice'" class="mb-4">
+      <div
+        v-if="practiceMode === 'wrong-practice'"
+        class="mb-4"
+      >
         <div class="bg-warning-100 border border-warning-300 text-warning-800 px-3 md:px-4 py-2 rounded-lg text-center text-sm md:text-base">
           <span class="font-semibold">錯題重練模式</span>
           <span class="mx-2">|</span>
@@ -561,33 +597,70 @@ const isAllAnswered = computed(() => {
       </div>
 
       <!-- Stats Bar -->
-      <div v-if="answerHistory.length > 0" class="flex justify-center gap-4 md:gap-6 text-xs md:text-base mb-8">
+      <div
+        v-if="answerHistory.length > 0"
+        class="flex justify-center gap-4 md:gap-6 text-xs md:text-base mb-8"
+      >
         <div class="bg-white rounded-lg shadow px-5 md:px-6 py-4 text-center min-w-[80px] min-h-[52px] md:min-w-[100px]">
-          <div class="text-xs md:text-sm text-gray-600 mb-1">已答</div>
-          <div class="text-lg md:text-xl font-bold text-primary-600">{{ stats.total }}</div>
+          <div class="text-xs md:text-sm text-gray-600 mb-1">
+            已答
+          </div>
+          <div class="text-lg md:text-xl font-bold text-primary-600">
+            {{ stats.total }}
+          </div>
         </div>
         <div class="bg-white rounded-lg shadow px-5 md:px-6 py-4 text-center min-w-[80px] min-h-[52px] md:min-w-[100px]">
-          <div class="text-xs md:text-sm text-gray-600 mb-1">正確</div>
-          <div class="text-lg md:text-xl font-bold text-accent-600">{{ stats.correct }}</div>
+          <div class="text-xs md:text-sm text-gray-600 mb-1">
+            正確
+          </div>
+          <div class="text-lg md:text-xl font-bold text-accent-600">
+            {{ stats.correct }}
+          </div>
         </div>
         <div class="bg-white rounded-lg shadow px-5 md:px-6 py-4 text-center min-w-[80px] min-h-[52px] md:min-w-[100px]">
-          <div class="text-xs md:text-sm text-gray-600 mb-1">錯誤</div>
-          <div class="text-lg md:text-xl font-bold text-red-600">{{ stats.incorrect }}</div>
+          <div class="text-xs md:text-sm text-gray-600 mb-1">
+            錯誤
+          </div>
+          <div class="text-lg md:text-xl font-bold text-red-600">
+            {{ stats.incorrect }}
+          </div>
         </div>
         <div class="bg-white rounded-lg shadow px-5 md:px-6 py-4 text-center min-w-[80px] min-h-[52px] md:min-w-[100px]">
-          <div class="text-xs md:text-sm text-gray-600 mb-1">正確率</div>
-          <div class="text-lg md:text-xl font-bold text-secondary-600">{{ stats.accuracy }}%</div>
+          <div class="text-xs md:text-sm text-gray-600 mb-1">
+            正確率
+          </div>
+          <div class="text-lg md:text-xl font-bold text-secondary-600">
+            {{ stats.accuracy }}%
+          </div>
         </div>
       </div>
 
       <!-- Keyboard Help (Desktop Only) -->
-      <div v-if="showHelp" class="mt-4 hidden md:block">
+      <div
+        v-if="showHelp"
+        class="mt-4 hidden md:block"
+      >
         <div class="bg-primary-50 border border-primary-200 rounded-lg p-4">
           <div class="flex items-center justify-between mb-3">
-            <h3 class="text-lg font-semibold text-primary-900">鍵盤快捷鍵</h3>
-            <button @click="showHelp = false" class="text-primary-600 hover:text-primary-800">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            <h3 class="text-lg font-semibold text-primary-900">
+              鍵盤快捷鍵
+            </h3>
+            <button
+              class="text-primary-600 hover:text-primary-800"
+              @click="showHelp = false"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
@@ -608,8 +681,15 @@ const isAllAnswered = computed(() => {
     <!-- Main Content -->
     <main class="max-w-4xl mx-auto">
       <!-- Loading -->
-      <div v-if="!currentQuestion" class="text-center py-16">
-        <LoadingSpinner size="xl" color="primary" text="載入題目中..." />
+      <div
+        v-if="!currentQuestion"
+        class="text-center py-16"
+      >
+        <LoadingSpinner
+          size="xl"
+          color="primary"
+          text="載入題目中..."
+        />
       </div>
 
       <!-- Question Card -->
@@ -635,8 +715,8 @@ const isAllAnswered = computed(() => {
           <div class="flex flex-wrap gap-3 justify-center items-center">
             <button
               v-if="wrongQuestionsCount > 0"
-              @click="viewWrongQuestions"
               class="px-4 py-2 bg-warning-600 hover:bg-warning-700 text-white rounded-lg text-sm font-medium transition-colors"
+              @click="viewWrongQuestions"
             >
               錯題本
               <span class="ml-1 bg-white text-warning-600 rounded-full px-2 py-0.5 text-xs font-bold">
@@ -644,20 +724,20 @@ const isAllAnswered = computed(() => {
               </span>
             </button>
             <button
-              @click="viewStatistics"
               class="px-4 py-2 bg-secondary-600 hover:bg-secondary-700 text-white rounded-lg text-sm font-medium transition-colors"
+              @click="viewStatistics"
             >
               統計分析
             </button>
             <button
-              @click="toggleHelp"
               class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-medium transition-colors"
+              @click="toggleHelp"
             >
               快捷鍵
             </button>
             <button
-              @click="resetQuiz"
               class="px-4 py-2 bg-accent-600 hover:bg-accent-700 text-white rounded-lg text-sm font-medium transition-colors"
+              @click="resetQuiz"
             >
               重新開始
             </button>

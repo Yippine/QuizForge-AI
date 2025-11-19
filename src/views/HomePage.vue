@@ -199,17 +199,25 @@ onMounted(async () => {
     class="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 py-12 px-4"
   >
     <!-- Loading State -->
-    <div v-if="loading" class="flex items-center justify-center min-h-screen">
+    <div
+      v-if="loading"
+      class="flex items-center justify-center min-h-screen"
+    >
       <div class="text-center">
         <div
           class="inline-block animate-spin rounded-full h-16 w-16 border-b-4 border-primary-600 mb-4"
         ></div>
-        <p class="text-gray-600 text-lg">載入中...</p>
+        <p class="text-gray-600 text-lg">
+          載入中...
+        </p>
       </div>
     </div>
 
     <!-- Main Content -->
-    <div v-else class="max-w-6xl mx-auto">
+    <div
+      v-else
+      class="max-w-6xl mx-auto"
+    >
       <!-- Hero Section -->
       <div class="text-center mb-14 md:mb-16">
         <h1 class="text-5xl font-bold text-gray-900 mb-5 md:mb-6">
@@ -231,7 +239,9 @@ onMounted(async () => {
           <div class="text-3xl font-bold text-primary-600">
             {{ questionBankSize }}
           </div>
-          <div class="text-sm text-gray-600 mt-3">題庫總題數</div>
+          <div class="text-sm text-gray-600 mt-3">
+            題庫總題數
+          </div>
         </div>
         <div
           class="bg-white rounded-xl shadow-lg p-6 text-center transform hover:scale-105 transition-all duration-normal"
@@ -239,7 +249,9 @@ onMounted(async () => {
           <div class="text-3xl font-bold text-accent-600">
             {{ stats.total }}
           </div>
-          <div class="text-sm text-gray-600 mt-3">已答題數</div>
+          <div class="text-sm text-gray-600 mt-3">
+            已答題數
+          </div>
         </div>
         <div
           class="bg-white rounded-xl shadow-lg p-6 text-center transform hover:scale-105 transition-all duration-normal"
@@ -247,7 +259,9 @@ onMounted(async () => {
           <div class="text-3xl font-bold text-secondary-600">
             {{ stats.accuracy }}%
           </div>
-          <div class="text-sm text-gray-600 mt-3">正確率</div>
+          <div class="text-sm text-gray-600 mt-3">
+            正確率
+          </div>
         </div>
         <div
           class="bg-white rounded-xl shadow-lg p-6 text-center transform hover:scale-105 transition-all duration-normal relative"
@@ -255,7 +269,9 @@ onMounted(async () => {
           <div class="text-3xl font-bold text-warning-600">
             {{ wrongQuestionsCount }}
           </div>
-          <div class="text-sm text-gray-600 mt-3">錯題數量</div>
+          <div class="text-sm text-gray-600 mt-3">
+            錯題數量
+          </div>
           <span
             v-if="wrongQuestionsCount > 0"
             class="absolute top-2 right-2 bg-warning-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold"
@@ -267,15 +283,30 @@ onMounted(async () => {
 
       <!-- Subject Selector Section -->
       <div class="mb-12">
-        <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">選擇科目</h2>
+        <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">
+          選擇科目
+        </h2>
 
         <!-- Selected Subject Display -->
-        <div v-if="isSubjectSelected && displayPath" class="mb-6">
+        <div
+          v-if="isSubjectSelected && displayPath"
+          class="mb-6"
+        >
           <div class="bg-green-50 border border-green-200 rounded-xl p-4">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-3">
-                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg
+                  class="w-6 h-6 text-green-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
                 <div>
                   <span class="text-green-800 font-semibold block">
@@ -287,8 +318,8 @@ onMounted(async () => {
                 </div>
               </div>
               <button
-                @click="openResourceSelector"
                 class="text-green-600 hover:text-green-800 transition-colors text-sm font-medium"
+                @click="openResourceSelector"
               >
                 更換
               </button>
@@ -297,45 +328,91 @@ onMounted(async () => {
         </div>
 
         <!-- Modal Trigger Button -->
-        <div v-if="!isSubjectSelected" class="text-center">
+        <div
+          v-if="!isSubjectSelected"
+          class="text-center"
+        >
           <button
-            @click="openResourceSelector"
             class="inline-flex items-center gap-3 bg-primary-600 text-white px-8 py-4 rounded-xl hover:bg-primary-700 transition-colors shadow-lg hover:shadow-xl"
+            @click="openResourceSelector"
           >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+              />
             </svg>
             <span class="text-lg font-semibold">選擇學習科目</span>
           </button>
-          <p class="text-gray-500 mt-3">請先選擇科目以開始學習</p>
+          <p class="text-gray-500 mt-3">
+            請先選擇科目以開始學習
+          </p>
         </div>
 
         <!-- Recent Subjects Cards -->
-        <div v-if="recentSubjects.length > 0" class="mt-8">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">最近學習</h3>
+        <div
+          v-if="recentSubjects.length > 0"
+          class="mt-8"
+        >
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">
+            最近學習
+          </h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <button
               v-for="recent in recentSubjects"
               :key="`${recent.categoryId}-${recent.certificationId}-${recent.levelId}-${recent.subjectId}`"
-              @click="selectRecentSubject(recent)"
               class="rounded-xl shadow-md p-4 text-left transition-all duration-200 border-2"
               :class="isRecentSelected(recent)
                 ? 'bg-primary-50 border-primary-500 shadow-lg'
                 : 'bg-white border-transparent hover:shadow-lg hover:border-primary-300'"
+              @click="selectRecentSubject(recent)"
             >
               <div class="flex items-start gap-3">
-                <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
-                     :class="isRecentSelected(recent) ? 'bg-primary-200' : 'bg-primary-100'">
-                  <svg class="w-5 h-5" :class="isRecentSelected(recent) ? 'text-primary-700' : 'text-primary-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path v-if="isRecentSelected(recent)" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                    <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <div
+                  class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                  :class="isRecentSelected(recent) ? 'bg-primary-200' : 'bg-primary-100'"
+                >
+                  <svg
+                    class="w-5 h-5"
+                    :class="isRecentSelected(recent) ? 'text-primary-700' : 'text-primary-600'"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      v-if="isRecentSelected(recent)"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 13l4 4L19 7"
+                    />
+                    <path
+                      v-else
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                 </div>
                 <div class="flex-1 min-w-0">
-                  <h4 class="font-semibold truncate" :class="isRecentSelected(recent) ? 'text-primary-900' : 'text-gray-900'">
+                  <h4
+                    class="font-semibold truncate"
+                    :class="isRecentSelected(recent) ? 'text-primary-900' : 'text-gray-900'"
+                  >
                     {{ getRecentSubjectName(recent) }}
                   </h4>
-                  <p class="text-xs mt-1 truncate" :class="isRecentSelected(recent) ? 'text-primary-600' : 'text-gray-500'">
+                  <p
+                    class="text-xs mt-1 truncate"
+                    :class="isRecentSelected(recent) ? 'text-primary-600' : 'text-gray-500'"
+                  >
                     {{ getRecentSubjectPath(recent) }}
                   </p>
                 </div>
@@ -347,21 +424,35 @@ onMounted(async () => {
 
       <!-- Quick Functions Section (SubjectHub Style) -->
       <div class="mb-14 md:mb-16">
-        <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">快速功能</h2>
+        <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">
+          快速功能
+        </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <!-- Materials Entry Card (講義區) -->
           <div
-            @click="navigateToMaterials"
             class="bg-white rounded-2xl shadow-xl p-10 cursor-pointer transform hover:scale-105 hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-blue-600"
+            @click="navigateToMaterials"
           >
             <div class="text-center">
               <div class="w-20 h-20 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                <svg
+                  class="w-10 h-10 text-blue-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                  />
                 </svg>
               </div>
 
-              <h2 class="text-3xl font-bold text-gray-900 mb-4">講義區</h2>
+              <h2 class="text-3xl font-bold text-gray-900 mb-4">
+                講義區
+              </h2>
               <p class="text-gray-600 mb-6">
                 <template v-if="isSubjectSelected">
                   瀏覽學習指引、公式化講義、架構圖等學習資源
@@ -387,8 +478,18 @@ onMounted(async () => {
 
               <div class="flex items-center justify-center gap-2 text-blue-600 font-semibold">
                 <span>進入講義區</span>
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  />
                 </svg>
               </div>
             </div>
@@ -396,17 +497,29 @@ onMounted(async () => {
 
           <!-- Practice Entry Card (題目區) -->
           <div
-            @click="navigateToPractice"
             class="bg-white rounded-2xl shadow-xl p-10 cursor-pointer transform hover:scale-105 hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-orange-600"
+            @click="navigateToPractice"
           >
             <div class="text-center">
               <div class="w-20 h-20 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <svg class="w-10 h-10 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                <svg
+                  class="w-10 h-10 text-orange-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                  />
                 </svg>
               </div>
 
-              <h2 class="text-3xl font-bold text-gray-900 mb-4">題目區</h2>
+              <h2 class="text-3xl font-bold text-gray-900 mb-4">
+                題目區
+              </h2>
               <p class="text-gray-600 mb-6">
                 <template v-if="isSubjectSelected">
                   練習題目、模擬測驗，檢驗學習成效
@@ -420,12 +533,20 @@ onMounted(async () => {
                 <template v-if="isSubjectSelected">
                   <div class="flex items-center gap-4">
                     <div class="text-center">
-                      <div class="text-2xl font-bold text-orange-600">{{ subjectInfo?.topicCount }}</div>
-                      <div class="text-xs text-gray-500">主題</div>
+                      <div class="text-2xl font-bold text-orange-600">
+                        {{ subjectInfo?.topicCount }}
+                      </div>
+                      <div class="text-xs text-gray-500">
+                        主題
+                      </div>
                     </div>
                     <div class="text-center">
-                      <div class="text-2xl font-bold text-orange-600">{{ subjectInfo?.questionCount }}</div>
-                      <div class="text-xs text-gray-500">題目</div>
+                      <div class="text-2xl font-bold text-orange-600">
+                        {{ subjectInfo?.questionCount }}
+                      </div>
+                      <div class="text-xs text-gray-500">
+                        題目
+                      </div>
                     </div>
                   </div>
                 </template>
@@ -438,8 +559,18 @@ onMounted(async () => {
 
               <div class="flex items-center justify-center gap-2 text-orange-600 font-semibold">
                 <span>前往題目區</span>
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  />
                 </svg>
               </div>
             </div>
@@ -452,8 +583,8 @@ onMounted(async () => {
         <!-- Wrong Questions -->
         <button
           v-if="wrongQuestionsCount > 0"
-          @click="viewWrongQuestions"
           class="bg-white rounded-xl shadow-lg p-6 text-left hover:shadow-xl transition-all duration-normal border-2 border-transparent hover:border-warning-500"
+          @click="viewWrongQuestions"
         >
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-4">
@@ -475,8 +606,12 @@ onMounted(async () => {
                 </svg>
               </div>
               <div>
-                <h3 class="text-lg font-semibold text-gray-900">錯題本</h3>
-                <p class="text-sm text-gray-600">重點複習錯題</p>
+                <h3 class="text-lg font-semibold text-gray-900">
+                  錯題本
+                </h3>
+                <p class="text-sm text-gray-600">
+                  重點複習錯題
+                </p>
               </div>
             </div>
             <span
@@ -489,8 +624,8 @@ onMounted(async () => {
 
         <!-- Statistics -->
         <button
-          @click="viewStatistics"
           class="bg-white rounded-xl shadow-lg p-6 text-left hover:shadow-xl transition-all duration-normal border-2 border-transparent hover:border-secondary-500"
+          @click="viewStatistics"
         >
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-4">
@@ -512,8 +647,12 @@ onMounted(async () => {
                 </svg>
               </div>
               <div>
-                <h3 class="text-lg font-semibold text-gray-900">學習統計</h3>
-                <p class="text-sm text-gray-600">查看詳細分析</p>
+                <h3 class="text-lg font-semibold text-gray-900">
+                  學習統計
+                </h3>
+                <p class="text-sm text-gray-600">
+                  查看詳細分析
+                </p>
               </div>
             </div>
             <svg
@@ -536,7 +675,9 @@ onMounted(async () => {
       <!-- Footer Info -->
       <div class="mt-12 text-center text-sm text-gray-500">
         <p>Formula-Contract Methodology | Generated with Claude Code</p>
-        <p class="mt-1">INC-033-v2: HomePage Integration with Modal-Based Resource Selection</p>
+        <p class="mt-1">
+          INC-033-v2: HomePage Integration with Modal-Based Resource Selection
+        </p>
       </div>
     </div>
 

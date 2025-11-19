@@ -470,8 +470,8 @@ watch(() => props.initialState, (newState) => {
                 ? 'bg-gray-200 hover:bg-gray-300 active:bg-gray-400 text-gray-800'
                 : 'bg-gray-100 text-gray-400 cursor-not-allowed'
             ]"
-            @click="previousQuestion"
             aria-label="上一題"
+            @click="previousQuestion"
           >
             <ChevronLeftIcon class="w-6 h-6" />
           </button>
@@ -519,8 +519,8 @@ watch(() => props.initialState, (newState) => {
                 ? 'bg-gray-200 hover:bg-gray-300 active:bg-gray-400 text-gray-800'
                 : 'bg-gray-100 text-gray-400 cursor-not-allowed'
             ]"
-            @click="nextQuestion"
             aria-label="下一題"
+            @click="nextQuestion"
           >
             <ChevronRightIcon class="w-6 h-6" />
           </button>
@@ -572,8 +572,8 @@ watch(() => props.initialState, (newState) => {
                   ? 'bg-gray-200 hover:bg-gray-300 active:bg-gray-400 text-gray-800'
                   : 'bg-gray-100 text-gray-400 cursor-not-allowed'
               ]"
-              @click="previousQuestion"
               aria-label="上一題"
+              @click="previousQuestion"
             >
               <ChevronLeftIcon class="w-6 h-6" />
             </button>
@@ -586,8 +586,8 @@ watch(() => props.initialState, (newState) => {
                   ? 'bg-gray-200 hover:bg-gray-300 active:bg-gray-400 text-gray-800'
                   : 'bg-gray-100 text-gray-400 cursor-not-allowed'
               ]"
-              @click="nextQuestion"
               aria-label="下一題"
+              @click="nextQuestion"
             >
               <ChevronRightIcon class="w-6 h-6" />
             </button>
@@ -609,8 +609,8 @@ watch(() => props.initialState, (newState) => {
                 ? 'bg-gray-200 hover:bg-gray-300 active:bg-gray-400 text-gray-800'
                 : 'bg-gray-100 text-gray-400 cursor-not-allowed'
             ]"
-            @click="previousQuestion"
             aria-label="上一題"
+            @click="previousQuestion"
           >
             <ChevronLeftIcon class="w-6 h-6" />
           </button>
@@ -636,8 +636,8 @@ watch(() => props.initialState, (newState) => {
                 ? 'bg-gray-200 hover:bg-gray-300 active:bg-gray-400 text-gray-800'
                 : 'bg-gray-100 text-gray-400 cursor-not-allowed'
             ]"
-            @click="nextQuestion"
             aria-label="下一題"
+            @click="nextQuestion"
           >
             <ChevronRightIcon class="w-6 h-6" />
           </button>
@@ -667,8 +667,8 @@ watch(() => props.initialState, (newState) => {
                   ? 'bg-gray-200 hover:bg-gray-300 active:bg-gray-400 text-gray-800'
                   : 'bg-gray-100 text-gray-400 cursor-not-allowed'
               ]"
-              @click="previousQuestion"
               aria-label="上一題"
+              @click="previousQuestion"
             >
               <ChevronLeftIcon class="w-6 h-6" />
             </button>
@@ -681,8 +681,8 @@ watch(() => props.initialState, (newState) => {
                   ? 'bg-gray-200 hover:bg-gray-300 active:bg-gray-400 text-gray-800'
                   : 'bg-gray-100 text-gray-400 cursor-not-allowed'
               ]"
-              @click="nextQuestion"
               aria-label="下一題"
+              @click="nextQuestion"
             >
               <ChevronRightIcon class="w-6 h-6" />
             </button>
@@ -745,7 +745,10 @@ watch(() => props.initialState, (newState) => {
       <div class="text-xs text-blue-800">
         <span class="font-semibold">鍵盤快捷鍵:</span>
         <span class="ml-2">A/B/C/D - 選擇答案</span>
-        <span v-if="mode === 'practice'" class="mx-2">|</span>
+        <span
+          v-if="mode === 'practice'"
+          class="mx-2"
+        >|</span>
         <span v-if="mode === 'practice'">Enter/Space - 提交</span>
         <span class="mx-2">|</span>
         <span>← → - 切換題目</span>

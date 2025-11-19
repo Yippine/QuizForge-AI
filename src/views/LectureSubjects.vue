@@ -56,7 +56,9 @@ const navigateToHome = () => {
         <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
           講義科目
         </h1>
-        <p class="text-lg text-gray-600">選擇您想學習的科目</p>
+        <p class="text-lg text-gray-600">
+          選擇您想學習的科目
+        </p>
       </div>
 
       <!-- Subject Cards Grid -->
@@ -65,8 +67,8 @@ const navigateToHome = () => {
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
         <!-- Subject 1 Card (Primary Color) -->
         <div
-          @click="navigateToSubject(subjects[0].id)"
           class="bg-white rounded-2xl shadow-xl p-8 cursor-pointer transform hover:scale-105 hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-primary-600 flex flex-col"
+          @click="navigateToSubject(subjects[0].id)"
         >
           <!-- Icon & Title -->
           <div class="flex items-center gap-4 mb-4">
@@ -124,8 +126,8 @@ const navigateToHome = () => {
 
         <!-- Subject 3 Card (Secondary Color) -->
         <div
-          @click="navigateToSubject(subjects[1].id)"
           class="bg-white rounded-2xl shadow-xl p-8 cursor-pointer transform hover:scale-105 hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-secondary-600 flex flex-col"
+          @click="navigateToSubject(subjects[1].id)"
         >
           <!-- Icon & Title -->
           <div class="flex items-center gap-4 mb-4">
@@ -186,8 +188,8 @@ const navigateToHome = () => {
       <!-- Formula: BackButton = button + @click='navigateToHome' + flex items-center gap-2 -->
       <div class="flex justify-center">
         <button
-          @click="navigateToHome"
           class="flex items-center gap-2 px-6 py-3 bg-white text-gray-600 rounded-xl shadow-lg hover:shadow-xl hover:border-gray-500 transition-all duration-300 border-2 border-transparent font-semibold active:scale-95"
+          @click="navigateToHome"
         >
           <svg
             class="w-5 h-5"
@@ -209,7 +211,9 @@ const navigateToHome = () => {
       <!-- Footer Info -->
       <div class="mt-12 text-center text-sm text-gray-500">
         <p>Formula-Contract Methodology | Generated with Claude Code</p>
-        <p class="mt-1">INC-2: Lecture Subjects Selection Page</p>
+        <p class="mt-1">
+          INC-2: Lecture Subjects Selection Page
+        </p>
       </div>
     </div>
   </div>

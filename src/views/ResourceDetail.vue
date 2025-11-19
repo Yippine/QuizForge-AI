@@ -13,10 +13,11 @@ import MarkdownIt from 'markdown-it'
 import { katex } from '@mdit/plugin-katex'
 import 'katex/dist/katex.min.css'
 import mermaid from 'mermaid'
+import TableOfContents from '../components/TableOfContents.vue'
 
 const router = useRouter()
 const route = useRoute()
-const { loading: mapLoading, error: mapError, loadResourcesMap, getCertificationById, getSubjectById, getResourcesByType, getResourceItemById, getCategoryById, getLevelById } = useResourcesMap()
+const { loading: mapLoading, error: mapError, loadResourcesMap, getCertificationById, getSubjectById, getResourcesByType, getResourceItemById, getLevelById } = useResourcesMap()
 
 /**
  * State
@@ -281,96 +282,261 @@ onMounted(async () => {
 <template>
   <div class="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 py-12 px-4">
     <!-- Loading State -->
-    <div v-if="loading || mapLoading" class="flex items-center justify-center min-h-screen">
+    <div
+      v-if="loading || mapLoading"
+      class="flex items-center justify-center min-h-screen"
+    >
       <div class="text-center">
         <div class="inline-block animate-spin rounded-full h-16 w-16 border-b-4 border-primary-600 mb-4"></div>
-        <p class="text-gray-600 text-lg">載入資源內容...</p>
+        <p class="text-gray-600 text-lg">
+          載入資源內容...
+        </p>
       </div>
     </div>
 
     <!-- Error State -->
-    <div v-else-if="error || mapError" class="max-w-2xl mx-auto">
+    <div
+      v-else-if="error || mapError"
+      class="max-w-2xl mx-auto"
+    >
       <div class="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-        <svg class="w-12 h-12 text-red-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <svg
+          class="w-12 h-12 text-red-500 mx-auto mb-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
         </svg>
-        <h3 class="text-xl font-bold text-red-900 mb-2">載入失敗</h3>
-        <p class="text-red-700 mb-4">{{ error || mapError }}</p>
-        <button @click="goBack" class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors">
+        <h3 class="text-xl font-bold text-red-900 mb-2">
+          載入失敗
+        </h3>
+        <p class="text-red-700 mb-4">
+          {{ error || mapError }}
+        </p>
+        <button
+          class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
+          @click="goBack"
+        >
           返回資源列表
         </button>
       </div>
     </div>
 
     <!-- Main Content -->
-    <div v-else-if="resourceItem && subject && certification" class="max-w-7xl mx-auto">
+    <div
+      v-else-if="resourceItem && subject && certification"
+      class="max-w-7xl mx-auto"
+    >
       <div class="flex flex-col lg:flex-row gap-8">
+        <!-- INC-034: Table of Contents Sidebar (Left) -->
+        <TableOfContents
+          :content="markdownContent"
+          container-selector=".markdown-content"
+        />
+
         <!-- Main Content Area -->
-        <div class="flex-1">
+        <div class="flex-1 min-w-0">
           <!-- Header -->
           <div class="mb-8">
-            <button @click="goBack" class="flex items-center gap-2 text-gray-600 hover:text-primary-600 transition-colors mb-6">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            <button
+              class="flex items-center gap-2 text-gray-600 hover:text-primary-600 transition-colors mb-6"
+              @click="goBack"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
               返回資源列表
             </button>
 
             <!-- Breadcrumb (INC-031: Conditional rendering based on structure) -->
-            <div v-if="!isNewStructure" class="flex items-center gap-2 text-sm text-gray-600 mb-4 flex-wrap">
+            <div
+              v-if="!isNewStructure"
+              class="flex items-center gap-2 text-sm text-gray-600 mb-4 flex-wrap"
+            >
               <span>{{ certification.name }}</span>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
               <span>{{ subject.name }}</span>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
               <span>{{ resource.title }}</span>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
               <span class="font-semibold text-gray-900">{{ resourceItem.title }}</span>
             </div>
             <!-- INC-031: New hierarchical breadcrumb matching ResourceTypes.vue format -->
-            <div v-else class="flex items-center gap-2 text-sm text-gray-600 mb-4 flex-wrap">
-              <span class="hover:text-primary-600 cursor-pointer" @click="() => router.push('/resources/ipas')">iPAS</span>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            <div
+              v-else
+              class="flex items-center gap-2 text-sm text-gray-600 mb-4 flex-wrap"
+            >
+              <span
+                class="hover:text-primary-600 cursor-pointer"
+                @click="() => router.push('/resources/ipas')"
+              >iPAS</span>
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
-              <span class="hover:text-primary-600 cursor-pointer" @click="() => router.push(`/resources/ipas/${certificationId}`)">{{ certificationId === 'ai-planning' ? 'AI 應用規劃師' : certificationId }}</span>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              <span
+                class="hover:text-primary-600 cursor-pointer"
+                @click="() => router.push(`/resources/ipas/${certificationId}`)"
+              >{{ certificationId === 'ai-planning' ? 'AI 應用規劃師' : certificationId }}</span>
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
-              <span class="hover:text-primary-600 cursor-pointer" @click="() => router.push(`/resources/ipas/${certificationId}/${levelId}`)">{{ level?.name || levelId }}</span>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              <span
+                class="hover:text-primary-600 cursor-pointer"
+                @click="() => router.push(`/resources/ipas/${certificationId}/${levelId}`)"
+              >{{ level?.name || levelId }}</span>
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
-              <span class="hover:text-primary-600 cursor-pointer" @click="() => router.push(`/resources/ipas/${certificationId}/${levelId}/${subjectId}`)">{{ subject.code }}</span>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              <span
+                class="hover:text-primary-600 cursor-pointer"
+                @click="() => router.push(`/resources/ipas/${certificationId}/${levelId}/${subjectId}`)"
+              >{{ subject.code }}</span>
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
-              <span class="hover:text-primary-600 cursor-pointer" @click="() => router.push(`/resources/ipas/${certificationId}/${levelId}/${subjectId}/materials`)">講義區</span>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              <span
+                class="hover:text-primary-600 cursor-pointer"
+                @click="() => router.push(`/resources/ipas/${certificationId}/${levelId}/${subjectId}/materials`)"
+              >講義區</span>
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
-              <span class="hover:text-primary-600 cursor-pointer" @click="() => router.push(`/resources/ipas/${certificationId}/${levelId}/${subjectId}/materials/${resourceType}`)">{{ currentMetadata.title }}</span>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              <span
+                class="hover:text-primary-600 cursor-pointer"
+                @click="() => router.push(`/resources/ipas/${certificationId}/${levelId}/${subjectId}/materials/${resourceType}`)"
+              >{{ currentMetadata.title }}</span>
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
               <span class="font-semibold text-gray-900">{{ resourceItem.title }}</span>
             </div>
 
             <!-- Title -->
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">{{ resourceItem.title }}</h1>
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+              {{ resourceItem.title }}
+            </h1>
             <div class="flex items-center gap-3">
-              <span class="text-sm font-mono px-3 py-1 rounded"
-                    :class="{
-                      'bg-blue-100 text-blue-700': resourceType === 'handouts',
-                      'bg-green-100 text-green-700': resourceType === 'formulas',
-                      'bg-purple-100 text-purple-700': resourceType === 'diagrams',
-                      'bg-orange-100 text-orange-700': resourceType === 'exercises'
-                    }">
+              <span
+                class="text-sm font-mono px-3 py-1 rounded"
+                :class="{
+                  'bg-blue-100 text-blue-700': resourceType === 'handouts',
+                  'bg-green-100 text-green-700': resourceType === 'formulas',
+                  'bg-purple-100 text-purple-700': resourceType === 'diagrams',
+                  'bg-orange-100 text-orange-700': resourceType === 'exercises'
+                }"
+              >
                 {{ resourceItem.id }}
               </span>
               <span class="text-sm text-gray-500">{{ resourceItem.metadata?.fileType?.toUpperCase() || 'MARKDOWN' }}</span>
@@ -403,11 +569,24 @@ onMounted(async () => {
         </div>
 
         <!-- Sidebar: Related Resources -->
-        <div v-if="relatedResources.length > 0" class="lg:w-80">
+        <div
+          v-if="relatedResources.length > 0"
+          class="lg:w-80"
+        >
           <div class="bg-white rounded-xl shadow-lg p-6 sticky top-4">
             <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              <svg
+                class="w-5 h-5 text-primary-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                />
               </svg>
               相關資源
             </h3>
@@ -415,11 +594,15 @@ onMounted(async () => {
               <div
                 v-for="relatedItem in relatedResources.slice(0, 10)"
                 :key="relatedItem.id"
-                @click="viewRelatedResource(relatedItem.id)"
                 class="p-3 rounded-lg border border-gray-200 hover:border-primary-500 hover:bg-primary-50 cursor-pointer transition-all duration-200"
+                @click="viewRelatedResource(relatedItem.id)"
               >
-                <div class="text-xs font-mono text-gray-500 mb-1">{{ relatedItem.id }}</div>
-                <div class="text-sm font-medium text-gray-900 line-clamp-2">{{ relatedItem.title }}</div>
+                <div class="text-xs font-mono text-gray-500 mb-1">
+                  {{ relatedItem.id }}
+                </div>
+                <div class="text-sm font-medium text-gray-900 line-clamp-2">
+                  {{ relatedItem.title }}
+                </div>
               </div>
             </div>
           </div>

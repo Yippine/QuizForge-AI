@@ -35,33 +35,63 @@ const handleReset = () => emit('reset')
     <div class="grid grid-cols-4 gap-3 p-4">
       <!-- Home -->
       <button
-        @click="handleHome"
         class="flex flex-col items-center justify-center py-3 px-2 rounded-lg hover:bg-gray-100 active:bg-gray-200 transition-colors min-h-touch"
+        @click="handleHome"
       >
-        <svg class="w-6 h-6 text-gray-600 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        <svg
+          class="w-6 h-6 text-gray-600 mb-1"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+          />
         </svg>
         <span class="text-xs text-gray-600 font-medium">主頁</span>
       </button>
 
       <!-- Statistics -->
       <button
-        @click="handleStatistics"
         class="flex flex-col items-center justify-center py-3 px-2 rounded-lg hover:bg-gray-100 active:bg-gray-200 transition-colors min-h-touch"
+        @click="handleStatistics"
       >
-        <svg class="w-6 h-6 text-secondary-600 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        <svg
+          class="w-6 h-6 text-secondary-600 mb-1"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+          />
         </svg>
         <span class="text-xs text-secondary-600 font-medium">統計</span>
       </button>
 
       <!-- Wrong Questions -->
       <button
-        @click="handleWrongQuestions"
         class="flex flex-col items-center justify-center py-3 px-2 rounded-lg hover:bg-gray-100 active:bg-gray-200 transition-colors min-h-touch relative"
+        @click="handleWrongQuestions"
       >
-        <svg class="w-6 h-6 text-warning-600 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        <svg
+          class="w-6 h-6 text-warning-600 mb-1"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+          />
         </svg>
         <span class="text-xs text-warning-600 font-medium">錯題</span>
         <!-- Badge -->
@@ -75,11 +105,21 @@ const handleReset = () => emit('reset')
 
       <!-- Reset -->
       <button
-        @click="handleReset"
         class="flex flex-col items-center justify-center py-3 px-2 rounded-lg hover:bg-gray-100 active:bg-gray-200 transition-colors min-h-touch"
+        @click="handleReset"
       >
-        <svg class="w-6 h-6 text-accent-600 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        <svg
+          class="w-6 h-6 text-accent-600 mb-1"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+          />
         </svg>
         <span class="text-xs text-accent-600 font-medium">重置</span>
       </button>
@@ -87,7 +127,9 @@ const handleReset = () => emit('reset')
 
     <!-- Swipe Hint -->
     <div class="text-center pb-2 px-4">
-      <p class="text-[10px] text-gray-400">左右滑動切換題目</p>
+      <p class="text-[10px] text-gray-400">
+        左右滑動切換題目
+      </p>
     </div>
   </nav>
 </template>

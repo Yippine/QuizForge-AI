@@ -173,7 +173,6 @@ emitValue()
     <div class="flex items-center gap-3 md:gap-4">
       <!-- Left Arrow -->
       <button
-        @click="goLeft"
         :disabled="!canGoLeft"
         :class="[
           'flex-shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center transition-all',
@@ -182,9 +181,20 @@ emitValue()
             : 'bg-gray-200 text-gray-400 cursor-not-allowed'
         ]"
         aria-label="上一個選項"
+        @click="goLeft"
       >
-        <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        <svg
+          class="w-5 h-5 md:w-6 md:h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"
+          />
         </svg>
       </button>
 
@@ -200,7 +210,10 @@ emitValue()
         </div>
 
         <!-- Custom Input -->
-        <div v-else class="space-y-2">
+        <div
+          v-else
+          class="space-y-2"
+        >
           <div class="relative">
             <input
               v-model="customValue"
@@ -215,7 +228,10 @@ emitValue()
               {{ unit }}
             </span>
           </div>
-          <div v-if="customError" class="text-xs md:text-sm text-red-600 text-center">
+          <div
+            v-if="customError"
+            class="text-xs md:text-sm text-red-600 text-center"
+          >
             {{ customError }}
           </div>
         </div>
@@ -223,7 +239,6 @@ emitValue()
 
       <!-- Right Arrow -->
       <button
-        @click="goRight"
         :disabled="!canGoRight"
         :class="[
           'flex-shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center transition-all',
@@ -232,9 +247,20 @@ emitValue()
             : 'bg-gray-200 text-gray-400 cursor-not-allowed'
         ]"
         aria-label="下一個選項"
+        @click="goRight"
       >
-        <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        <svg
+          class="w-5 h-5 md:w-6 md:h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"
+          />
         </svg>
       </button>
     </div>

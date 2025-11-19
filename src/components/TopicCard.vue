@@ -48,7 +48,6 @@ const handleSelect = () => {
 
 <template>
   <div
-    @click="handleSelect"
     :class="[
       'bg-white rounded-xl shadow-lg p-7 md:p-8 cursor-pointer transition-all duration-normal',
       'border-2 hover:shadow-2xl transform hover:scale-105',
@@ -56,26 +55,48 @@ const handleSelect = () => {
         ? 'border-primary-600 ring-4 ring-primary-200'
         : 'border-transparent hover:border-primary-300'
     ]"
+    @click="handleSelect"
   >
     <!-- Icon & Title -->
     <div class="flex items-center gap-4 mb-5 md:mb-6">
-      <div class="text-4xl">{{ topic.icon }}</div>
+      <div class="text-4xl">
+        {{ topic.icon }}
+      </div>
       <div class="flex-1">
-        <h3 class="text-lg font-bold text-gray-900">{{ topic.name }}</h3>
-        <p class="text-xs text-gray-500">{{ topic.id }}</p>
+        <h3 class="text-lg font-bold text-gray-900">
+          {{ topic.name }}
+        </h3>
+        <p class="text-xs text-gray-500">
+          {{ topic.id }}
+        </p>
       </div>
       <!-- Selected Badge -->
-      <div v-if="isSelected" class="flex-shrink-0">
+      <div
+        v-if="isSelected"
+        class="flex-shrink-0"
+      >
         <div class="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center">
-          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+          <svg
+            class="w-5 h-5 text-white"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="3"
+              d="M5 13l4 4L19 7"
+            />
           </svg>
         </div>
       </div>
     </div>
 
     <!-- Description -->
-    <p class="text-sm text-gray-600 mb-5 md:mb-6">{{ topic.description }}</p>
+    <p class="text-sm text-gray-600 mb-5 md:mb-6">
+      {{ topic.description }}
+    </p>
 
     <!-- Stats -->
     <div class="space-y-4">
@@ -87,7 +108,9 @@ const handleSelect = () => {
 
       <!-- Difficulty Distribution -->
       <div>
-        <div class="text-xs text-gray-600 mb-2">難度分佈</div>
+        <div class="text-xs text-gray-600 mb-2">
+          難度分佈
+        </div>
         <div class="flex gap-1 h-2 rounded-full overflow-hidden bg-gray-200">
           <div
             v-if="difficultyBreakdown.simple > 0"
@@ -119,10 +142,12 @@ const handleSelect = () => {
     <!-- Select Indicator -->
     <div class="mt-4 pt-4 border-t border-gray-200">
       <div class="flex items-center justify-between">
-        <span :class="[
-          'text-sm font-medium',
-          isSelected ? 'text-primary-600' : 'text-gray-500'
-        ]">
+        <span
+          :class="[
+            'text-sm font-medium',
+            isSelected ? 'text-primary-600' : 'text-gray-500'
+          ]"
+        >
           {{ isSelected ? '已選擇' : '點擊選擇' }}
         </span>
         <svg
@@ -134,7 +159,12 @@ const handleSelect = () => {
           stroke="currentColor"
           viewBox="0 0 24 24"
         >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"
+          />
         </svg>
       </div>
     </div>

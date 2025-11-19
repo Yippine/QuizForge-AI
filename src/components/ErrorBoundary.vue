@@ -172,7 +172,7 @@ Vue 組件信息: ${errorInfo.value}
   }
 }
 
-const logErrorToService = (err, info) => {
+const logErrorToService = (_err, _info) => {
   // 這裡可以添加遠端錯誤記錄服務
   // 例如：Sentry, LogRocket, 或自定義 API
   try {
@@ -201,7 +201,10 @@ defineExpose({
 </script>
 
 <template>
-  <div v-if="hasError" class="min-h-screen bg-gradient-to-br from-red-50 via-white to-orange-50 py-8 px-4">
+  <div
+    v-if="hasError"
+    class="min-h-screen bg-gradient-to-br from-red-50 via-white to-orange-50 py-8 px-4"
+  >
     <div class="max-w-4xl mx-auto">
       <!-- Error Card -->
       <div class="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -210,12 +213,26 @@ defineExpose({
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3">
               <!-- Error Icon -->
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              <svg
+                class="w-8 h-8 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"
+                />
               </svg>
               <div>
-                <h1 class="text-xl font-bold text-white">{{ title }}</h1>
-                <p class="text-red-100 text-sm">錯誤代碼: {{ errorCode }}</p>
+                <h1 class="text-xl font-bold text-white">
+                  {{ title }}
+                </h1>
+                <p class="text-red-100 text-sm">
+                  錯誤代碼: {{ errorCode }}
+                </p>
               </div>
             </div>
           </div>
@@ -225,7 +242,9 @@ defineExpose({
         <div class="p-6">
           <!-- Error Message -->
           <div class="mb-6">
-            <p class="text-gray-700 text-lg leading-relaxed">{{ errorMessage }}</p>
+            <p class="text-gray-700 text-lg leading-relaxed">
+              {{ errorMessage }}
+            </p>
           </div>
 
           <!-- Error Actions -->
@@ -233,11 +252,21 @@ defineExpose({
             <!-- Retry Button -->
             <button
               v-if="showRetry"
-              @click="retry"
               class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
+              @click="retry"
             >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
               </svg>
               重試
             </button>
@@ -245,32 +274,55 @@ defineExpose({
             <!-- Report Button -->
             <button
               v-if="showReport"
-              @click="reportError"
               class="px-6 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
+              @click="reportError"
             >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m9.032 4.026a9.001 9.001 0 01-7.432 0m9.032-4.026A9.001 9.001 0 0112 3c-4.474 0-8.268 3.12-9.032 7.326m0 0A9.001 9.001 0 0012 21c4.474 0 8.268-3.12 9.032-7.326" />
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m9.032 4.026a9.001 9.001 0 01-7.432 0m9.032-4.026A9.001 9.001 0 0112 3c-4.474 0-8.268 3.12-9.032 7.326m0 0A9.001 9.001 0 0012 21c4.474 0 8.268-3.12 9.032-7.326"
+                />
               </svg>
               回報錯誤
             </button>
 
             <!-- Go Home Button -->
             <button
-              @click="$router.push('/')"
               class="px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
+              @click="$router.push('/')"
             >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                />
               </svg>
               返回首頁
             </button>
           </div>
 
           <!-- Error Details Toggle -->
-          <div v-if="showDetails" class="border-t pt-6">
+          <div
+            v-if="showDetails"
+            class="border-t pt-6"
+          >
             <button
-              @click="toggleDetails"
               class="flex items-center gap-2 text-gray-600 hover:text-gray-800 font-medium mb-4 transition-colors"
+              @click="toggleDetails"
             >
               <svg
                 class="w-4 h-4 transform transition-transform"
@@ -279,16 +331,26 @@ defineExpose({
                 stroke="currentColor"
                 viewBox="0 0 24 24"
               >
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
               {{ showDetailedError ? '隱藏' : '顯示' }}錯誤詳情
             </button>
 
             <!-- Error Details -->
-            <div v-if="showDetailedError" class="space-y-4">
+            <div
+              v-if="showDetailedError"
+              class="space-y-4"
+            >
               <!-- Basic Info -->
               <div class="bg-gray-50 rounded-lg p-4">
-                <h3 class="font-semibold text-gray-900 mb-2">基本資訊</h3>
+                <h3 class="font-semibold text-gray-900 mb-2">
+                  基本資訊
+                </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
                   <div><span class="font-medium">錯誤代碼:</span> {{ errorCode }}</div>
                   <div><span class="font-medium">發生時間:</span> {{ new Date().toLocaleString('zh-TW') }}</div>
@@ -298,12 +360,17 @@ defineExpose({
               </div>
 
               <!-- Error Stack -->
-              <div v-if="error?.stack" class="bg-gray-50 rounded-lg p-4">
+              <div
+                v-if="error?.stack"
+                class="bg-gray-50 rounded-lg p-4"
+              >
                 <div class="flex items-center justify-between mb-2">
-                  <h3 class="font-semibold text-gray-900">錯誤堆疊</h3>
+                  <h3 class="font-semibold text-gray-900">
+                    錯誤堆疊
+                  </h3>
                   <button
-                    @click="copyErrorDetails"
                     class="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                    @click="copyErrorDetails"
                   >
                     複製詳情
                   </button>
@@ -312,8 +379,13 @@ defineExpose({
               </div>
 
               <!-- Vue Component Info -->
-              <div v-if="errorInfo" class="bg-gray-50 rounded-lg p-4">
-                <h3 class="font-semibold text-gray-900 mb-2">Vue 組件資訊</h3>
+              <div
+                v-if="errorInfo"
+                class="bg-gray-50 rounded-lg p-4"
+              >
+                <h3 class="font-semibold text-gray-900 mb-2">
+                  Vue 組件資訊
+                </h3>
                 <pre class="text-xs text-gray-700 bg-white p-2 rounded border">{{ errorInfo }}</pre>
               </div>
             </div>
@@ -323,29 +395,63 @@ defineExpose({
 
       <!-- Helpful Tips -->
       <div class="mt-6 bg-blue-50 rounded-lg p-6">
-        <h2 class="text-lg font-semibold text-blue-900 mb-3">解決建議</h2>
+        <h2 class="text-lg font-semibold text-blue-900 mb-3">
+          解決建議
+        </h2>
         <ul class="space-y-2 text-blue-800">
           <li class="flex items-start gap-2">
-            <svg class="w-5 h-5 text-blue-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            <svg
+              class="w-5 h-5 text-blue-600 mt-0.5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"
+              />
             </svg>
             <span>檢查網路連線是否正常</span>
           </li>
           <li class="flex items-start gap-2">
-            <svg class="w-5 h-5 text-blue-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            <svg
+              class="w-5 h-5 text-blue-600 mt-0.5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"
+              />
             </svg>
             <span>嘗試重新整理頁面</span>
           </li>
           <li class="flex items-start gap-2">
-            <svg class="w-5 h-5 text-blue-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            <svg
+              class="w-5 h-5 text-blue-600 mt-0.5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"
+              />
             </svg>
             <span>清除瀏覽器快取後重試</span>
           </li>
           <li class="flex items-start gap-2">
-            <svg class="w-5 h-5 text-blue-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            <svg
+              class="w-5 h-5 text-blue-600 mt-0.5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"
+              />
             </svg>
             <span>如果問題持續存在，請聯繫技術支援</span>
           </li>
@@ -355,7 +461,7 @@ defineExpose({
   </div>
 
   <!-- Normal Content -->
-  <slot v-else />
+  <slot v-else></slot>
 </template>
 
 <style scoped>

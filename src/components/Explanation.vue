@@ -65,23 +65,45 @@ const hasReferences = computed(() => {
 </script>
 
 <template>
-  <div v-if="show" class="mt-6 p-6 bg-gray-50 rounded-lg border border-gray-200">
+  <div
+    v-if="show"
+    class="mt-6 p-6 bg-gray-50 rounded-lg border border-gray-200"
+  >
     <!-- 解析標題 -->
     <div class="flex items-center gap-2 mb-4">
-      <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      <svg
+        class="w-5 h-5 text-blue-600"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
       </svg>
-      <h3 class="text-lg font-semibold text-gray-900">詳細解析</h3>
+      <h3 class="text-lg font-semibold text-gray-900">
+        詳細解析
+      </h3>
     </div>
 
     <!-- 解析內容 -->
     <div class="mb-4">
-      <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">{{ explanation }}</p>
+      <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">
+        {{ explanation }}
+      </p>
     </div>
 
     <!-- 關鍵字區塊 -->
-    <div v-if="hasKeywords" class="mb-4">
-      <h4 class="text-sm font-semibold text-gray-700 mb-2">關鍵字</h4>
+    <div
+      v-if="hasKeywords"
+      class="mb-4"
+    >
+      <h4 class="text-sm font-semibold text-gray-700 mb-2">
+        關鍵字
+      </h4>
       <div class="flex flex-wrap gap-2">
         <span
           v-for="(keyword, index) in keywords"
@@ -94,8 +116,13 @@ const hasReferences = computed(() => {
     </div>
 
     <!-- 參考資料區塊 -->
-    <div v-if="hasReferences" class="border-t border-gray-200 pt-4">
-      <h4 class="text-sm font-semibold text-gray-700 mb-2">參考資料</h4>
+    <div
+      v-if="hasReferences"
+      class="border-t border-gray-200 pt-4"
+    >
+      <h4 class="text-sm font-semibold text-gray-700 mb-2">
+        參考資料
+      </h4>
       <ul class="space-y-1">
         <li
           v-for="(reference, index) in formattedReferences"

@@ -1,0 +1,172 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "lastUpdated": "2025-11-19",
+    "totalCount": 18,
+    "categories": ["基礎概念", "演算法", "應用領域", "評估指標"]
+  },
+  "terms": [
+    {
+      "id": "term-001",
+      "term": "人工智慧",
+      "english": "Artificial Intelligence",
+      "definition": "人工智慧是指由機器展現的智慧行為，包括學習、推理、問題解決、感知和語言理解等能力。AI 系統能夠從環境中獲取資訊，並利用這些資訊來做出決策或執行任務。",
+      "examples": ["語音助理（如 Siri、Alexa）", "自動駕駛汽車", "智慧推薦系統"],
+      "related": ["term-002", "term-003", "term-004"],
+      "category": "基礎概念"
+    },
+    {
+      "id": "term-002",
+      "term": "機器學習",
+      "english": "Machine Learning",
+      "definition": "機器學習是人工智慧的一個子領域，專注於開發能夠從資料中學習並改進性能的演算法和統計模型，而不需要明確的程式設計指令。",
+      "examples": ["垃圾郵件過濾", "信用評分預測", "產品推薦系統"],
+      "related": ["term-001", "term-003", "term-005", "term-006"],
+      "category": "基礎概念"
+    },
+    {
+      "id": "term-003",
+      "term": "深度學習",
+      "english": "Deep Learning",
+      "definition": "深度學習是機器學習的一個分支，使用多層神經網路來學習資料的階層式表示。它特別擅長處理非結構化資料，如圖像、聲音和文字。",
+      "examples": ["圖像識別", "語音轉文字", "機器翻譯"],
+      "related": ["term-002", "term-007", "term-008"],
+      "category": "基礎概念"
+    },
+    {
+      "id": "term-004",
+      "term": "自然語言處理",
+      "english": "Natural Language Processing",
+      "definition": "自然語言處理（NLP）是 AI 的一個領域，專注於讓電腦理解、解釋和生成人類語言。它結合了語言學、電腦科學和機器學習技術。",
+      "examples": ["聊天機器人", "情感分析", "文本摘要", "機器翻譯"],
+      "related": ["term-001", "term-003", "term-009"],
+      "category": "應用領域"
+    },
+    {
+      "id": "term-005",
+      "term": "監督式學習",
+      "english": "Supervised Learning",
+      "definition": "監督式學習是一種機器學習方法，模型從標記的訓練資料中學習，每個訓練樣本都有對應的輸入和期望輸出。目標是學習輸入到輸出的映射函數。",
+      "examples": ["分類問題（如垃圾郵件偵測）", "迴歸問題（如房價預測）"],
+      "related": ["term-002", "term-006", "term-014"],
+      "category": "演算法"
+    },
+    {
+      "id": "term-006",
+      "term": "非監督式學習",
+      "english": "Unsupervised Learning",
+      "definition": "非監督式學習是一種機器學習方法，模型從未標記的資料中尋找模式和結構。常用於發現資料中的隱藏模式或進行資料分群。",
+      "examples": ["客戶分群", "異常檢測", "降維處理"],
+      "related": ["term-002", "term-005", "term-010"],
+      "category": "演算法"
+    },
+    {
+      "id": "term-007",
+      "term": "神經網路",
+      "english": "Neural Network",
+      "definition": "神經網路是一種受生物神經元啟發的計算模型，由相互連接的節點（神經元）層組成。每個連接都有權重，通過調整這些權重來學習資料中的模式。",
+      "examples": ["多層感知器（MLP）", "卷積神經網路（CNN）", "循環神經網路（RNN）"],
+      "related": ["term-003", "term-008", "term-011"],
+      "category": "演算法"
+    },
+    {
+      "id": "term-008",
+      "term": "卷積神經網路",
+      "english": "Convolutional Neural Network",
+      "definition": "卷積神經網路（CNN）是一種專門用於處理網格結構資料（如圖像）的深度學習架構。它使用卷積層來自動學習空間特徵階層。",
+      "examples": ["圖像分類", "物件偵測", "臉部識別", "醫學影像分析"],
+      "related": ["term-003", "term-007", "term-012"],
+      "category": "演算法"
+    },
+    {
+      "id": "term-009",
+      "term": "大型語言模型",
+      "english": "Large Language Model",
+      "definition": "大型語言模型（LLM）是經過大量文本資料訓練的深度學習模型，能夠理解和生成人類語言。它們通常基於 Transformer 架構，具有數十億甚至數千億參數。",
+      "examples": ["GPT 系列", "Claude", "LLaMA", "PaLM"],
+      "related": ["term-004", "term-003", "term-011"],
+      "category": "應用領域"
+    },
+    {
+      "id": "term-010",
+      "term": "聚類分析",
+      "english": "Clustering Analysis",
+      "definition": "聚類分析是一種非監督式學習技術，將資料點分組成多個群集，使同一群集內的資料點彼此相似，而不同群集間的資料點差異較大。",
+      "examples": ["K-means 聚類", "階層式聚類", "DBSCAN"],
+      "related": ["term-006", "term-002"],
+      "category": "演算法"
+    },
+    {
+      "id": "term-011",
+      "term": "Transformer",
+      "english": "Transformer",
+      "definition": "Transformer 是一種神經網路架構，使用自注意力機制來處理序列資料。它克服了 RNN 的長距離依賴問題，成為現代 NLP 和其他領域的主流架構。",
+      "examples": ["BERT", "GPT", "Vision Transformer (ViT)"],
+      "related": ["term-007", "term-009", "term-004"],
+      "category": "演算法"
+    },
+    {
+      "id": "term-012",
+      "term": "電腦視覺",
+      "english": "Computer Vision",
+      "definition": "電腦視覺是 AI 的一個領域，致力於讓電腦從圖像或影片中獲取高級理解。它涉及圖像處理、模式識別和機器學習技術。",
+      "examples": ["自動駕駛感知系統", "醫學影像診斷", "人臉識別", "視覺品質檢測"],
+      "related": ["term-008", "term-001", "term-003"],
+      "category": "應用領域"
+    },
+    {
+      "id": "term-013",
+      "term": "強化學習",
+      "english": "Reinforcement Learning",
+      "definition": "強化學習是一種機器學習方法，智能體透過與環境互動來學習最佳行為策略。智能體根據其行動獲得獎勵或懲罰，目標是最大化累積獎勵。",
+      "examples": ["遊戲 AI（如 AlphaGo）", "機器人控制", "推薦系統優化"],
+      "related": ["term-002", "term-005", "term-006"],
+      "category": "演算法"
+    },
+    {
+      "id": "term-014",
+      "term": "過擬合",
+      "english": "Overfitting",
+      "definition": "過擬合是指模型在訓練資料上表現很好，但在新資料上表現不佳的現象。這通常發生在模型過於複雜，學習了訓練資料中的噪音而非真正的模式。",
+      "examples": ["決策樹深度過深", "神經網路參數過多", "訓練時間過長"],
+      "related": ["term-005", "term-015", "term-016"],
+      "category": "評估指標"
+    },
+    {
+      "id": "term-015",
+      "term": "正則化",
+      "english": "Regularization",
+      "definition": "正則化是一種用於防止過擬合的技術，通過在損失函數中添加懲罰項來限制模型複雜度。常見方法包括 L1 正則化（Lasso）和 L2 正則化（Ridge）。",
+      "examples": ["L1 正則化", "L2 正則化", "Dropout", "Early Stopping"],
+      "related": ["term-014", "term-002", "term-007"],
+      "category": "評估指標"
+    },
+    {
+      "id": "term-016",
+      "term": "交叉驗證",
+      "english": "Cross-Validation",
+      "definition": "交叉驗證是一種評估模型性能的統計方法，將資料分成多個子集，輪流使用其中一部分作為驗證集，其餘作為訓練集，以獲得更可靠的性能估計。",
+      "examples": ["K-fold 交叉驗證", "留一法（LOOCV）", "分層交叉驗證"],
+      "related": ["term-014", "term-005", "term-017"],
+      "category": "評估指標"
+    },
+    {
+      "id": "term-017",
+      "term": "準確率",
+      "english": "Accuracy",
+      "definition": "準確率是分類模型最常用的評估指標，表示正確預測的樣本數佔總樣本數的比例。然而，在類別不平衡的情況下，準確率可能會產生誤導。",
+      "examples": ["二元分類準確率", "多類別分類準確率"],
+      "related": ["term-016", "term-018", "term-014"],
+      "category": "評估指標"
+    },
+    {
+      "id": "term-018",
+      "term": "混淆矩陣",
+      "english": "Confusion Matrix",
+      "definition": "混淆矩陣是一種用於視覺化分類模型性能的表格，顯示實際類別與預測類別之間的關係。它可以計算出準確率、精確率、召回率等多種指標。",
+      "examples": ["真陽性（TP）", "假陽性（FP）", "真陰性（TN）", "假陰性（FN）"],
+      "related": ["term-017", "term-016", "term-005"],
+      "category": "評估指標"
+    }
+  ]
+}

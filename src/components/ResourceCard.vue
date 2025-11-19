@@ -60,12 +60,19 @@ const handleClick = () => {
       {{ icon }}
     </div>
     <div class="resource-card__content">
-      <h3 class="resource-card__title">{{ title }}</h3>
-      <p v-if="hasDescription" class="resource-card__description">
+      <h3 class="resource-card__title">
+        {{ title }}
+      </h3>
+      <p
+        v-if="hasDescription"
+        class="resource-card__description"
+      >
         {{ description }}
       </p>
     </div>
-    <div class="resource-card__arrow">→</div>
+    <div class="resource-card__arrow">
+      →
+    </div>
   </router-link>
 </template>
 

@@ -193,7 +193,7 @@ const handleTouchMove = (e) => {
 };
 
 // 觸控結束：評估是否為輕觸並顯示所有可用按鈕 (INC-025)
-const handleTouchEnd = (e) => {
+const handleTouchEnd = (_e) => {
   const touchDuration = Date.now() - touchStartTime.value;
   const touchX = touchStartX.value;
   const screenWidth = window.innerWidth;
@@ -503,7 +503,9 @@ watch(
         <div
           class="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mb-4"
         ></div>
-        <p class="text-gray-600">Loading lecture content...</p>
+        <p class="text-gray-600">
+          Loading lecture content...
+        </p>
       </div>
 
       <div
@@ -525,20 +527,24 @@ watch(
             />
           </svg>
           <div>
-            <h3 class="text-red-900 font-semibold mb-1">Loading Failed</h3>
-            <p class="text-red-700">{{ error }}</p>
+            <h3 class="text-red-900 font-semibold mb-1">
+              Loading Failed
+            </h3>
+            <p class="text-red-700">
+              {{ error }}
+            </p>
           </div>
         </div>
         <div class="mt-4 flex gap-3">
           <button
-            @click="loadLectureContent"
             class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            @click="loadLectureContent"
           >
             Retry
           </button>
           <button
-            @click="navigateBack"
             class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            @click="navigateBack"
           >
             Back to List
           </button>
@@ -549,7 +555,10 @@ watch(
         <nav
           class="flex items-center gap-2 text-sm text-gray-600 mb-6 flex-wrap"
         >
-          <template v-for="(crumb, index) in breadcrumbs" :key="index">
+          <template
+            v-for="(crumb, index) in breadcrumbs"
+            :key="index"
+          >
             <router-link
               v-if="crumb.clickable && crumb.path"
               :to="crumb.path"
@@ -557,12 +566,16 @@ watch(
             >
               {{ crumb.text }}
             </router-link>
-            <span v-else class="text-gray-800 font-medium">{{
+            <span
+              v-else
+              class="text-gray-800 font-medium"
+            >{{
               crumb.text
             }}</span>
-            <span v-if="index < breadcrumbs.length - 1" class="text-gray-400"
-              >/</span
-            >
+            <span
+              v-if="index < breadcrumbs.length - 1"
+              class="text-gray-400"
+            >/</span>
           </template>
         </nav>
 
@@ -578,9 +591,9 @@ watch(
         <!-- Left Button -->
         <button
           v-show="showLeftButton"
-          @click="handleButtonClick('previous')"
           class="md:hidden mobile-edge-button fixed left-0 top-1/2 -translate-y-1/2 h-24 bg-gray-800/70 flex items-center justify-center z-20 rounded-r-lg transition-all duration-300 animate-slide-in-left"
           :aria-label="'上一個講義'"
+          @click="handleButtonClick('previous')"
         >
           <ChevronLeftIcon class="w-8 h-8 text-white" />
         </button>
@@ -588,9 +601,9 @@ watch(
         <!-- Right Button -->
         <button
           v-show="showRightButton"
-          @click="handleButtonClick('next')"
           class="md:hidden mobile-edge-button fixed right-0 top-1/2 -translate-y-1/2 h-24 bg-gray-800/70 flex items-center justify-center z-20 rounded-l-lg transition-all duration-300 animate-slide-in-right"
           :aria-label="'下一個講義'"
+          @click="handleButtonClick('next')"
         >
           <ChevronRightIcon class="w-8 h-8 text-white" />
         </button>
@@ -615,10 +628,10 @@ watch(
           <!-- Left Button: Previous Lecture -->
           <button
             v-if="canGoPrevious"
-            @click="navigateToPrevious"
             class="edge-nav-button fixed left-0 top-1/2 -translate-y-1/2 h-24 w-12 bg-gray-800/70 flex items-center justify-center transition-opacity duration-300 rounded-r-lg z-10"
             :aria-label="'上一個講義'"
             :title="'上一個講義 (←)'"
+            @click="navigateToPrevious"
           >
             <ChevronLeftIcon class="w-8 h-8 text-white" />
           </button>
@@ -626,10 +639,10 @@ watch(
           <!-- Right Button: Next Lecture -->
           <button
             v-if="canGoNext"
-            @click="navigateToNext"
             class="edge-nav-button fixed right-0 top-1/2 -translate-y-1/2 h-24 w-12 bg-gray-800/70 flex items-center justify-center transition-opacity duration-300 rounded-l-lg z-10"
             :aria-label="'下一個講義'"
             :title="'下一個講義 (→)'"
+            @click="navigateToNext"
           >
             <ChevronRightIcon class="w-8 h-8 text-white" />
           </button>
@@ -653,7 +666,6 @@ watch(
             <!-- Previous Lecture Button (Circular) -->
             <button
               v-if="canGoPrevious"
-              @click="navigateToPrevious"
               :disabled="!canGoPrevious"
               :class="[
                 'w-11 h-11 rounded-full flex items-center justify-center transition-all duration-200 active:scale-95',
@@ -663,14 +675,15 @@ watch(
               ]"
               :aria-label="canGoPrevious ? '上一個講義' : '已是第一個講義'"
               :title="canGoPrevious ? '上一個講義 (←)' : '已是第一個講義'"
+              @click="navigateToPrevious"
             >
               <ChevronLeftIcon class="w-6 h-6" />
             </button>
 
             <!-- Return Buttons Group -->
             <button
-              @click="navigateBack"
               class="flex items-center justify-center gap-2 px-6 py-3 bg-white text-primary-600 rounded-xl shadow-lg hover:shadow-xl hover:border-primary-500 transition-all duration-300 border-2 border-transparent font-semibold active:scale-95"
+              @click="navigateBack"
             >
               <svg
                 class="w-5 h-5"
@@ -689,8 +702,8 @@ watch(
             </button>
 
             <button
-              @click="navigateToSubjects"
               class="flex items-center justify-center gap-2 px-6 py-3 bg-white text-accent-600 rounded-xl shadow-lg hover:shadow-xl hover:border-accent-500 transition-all duration-300 border-2 border-transparent font-semibold active:scale-95"
+              @click="navigateToSubjects"
             >
               <svg
                 class="w-5 h-5"
@@ -709,8 +722,8 @@ watch(
             </button>
 
             <button
-              @click="navigateToHome"
               class="flex items-center justify-center gap-2 px-6 py-3 bg-white text-gray-600 rounded-xl shadow-lg hover:shadow-xl hover:border-gray-500 transition-all duration-300 border-2 border-transparent font-semibold active:scale-95"
+              @click="navigateToHome"
             >
               <svg
                 class="w-5 h-5"
@@ -731,7 +744,6 @@ watch(
             <!-- Next Lecture Button (Circular) -->
             <button
               v-if="canGoNext"
-              @click="navigateToNext"
               :disabled="!canGoNext"
               :class="[
                 'w-11 h-11 rounded-full flex items-center justify-center transition-all duration-200 active:scale-95',
@@ -741,6 +753,7 @@ watch(
               ]"
               :aria-label="canGoNext ? '下一個講義' : '已是最後一個講義'"
               :title="canGoNext ? '下一個講義 (→)' : '已是最後一個講義'"
+              @click="navigateToNext"
             >
               <ChevronRightIcon class="w-6 h-6" />
             </button>
@@ -750,8 +763,8 @@ watch(
           <div class="flex flex-col gap-4 md:hidden">
             <!-- Return Buttons (Vertical Stack) -->
             <button
-              @click="navigateBack"
               class="flex items-center justify-center gap-2 px-6 py-3 bg-white text-primary-600 rounded-xl shadow-lg hover:shadow-xl hover:border-primary-500 transition-all duration-300 border-2 border-transparent font-semibold active:scale-95"
+              @click="navigateBack"
             >
               <svg
                 class="w-5 h-5"
@@ -770,8 +783,8 @@ watch(
             </button>
 
             <button
-              @click="navigateToSubjects"
               class="flex items-center justify-center gap-2 px-6 py-3 bg-white text-accent-600 rounded-xl shadow-lg hover:shadow-xl hover:border-accent-500 transition-all duration-300 border-2 border-transparent font-semibold active:scale-95"
+              @click="navigateToSubjects"
             >
               <svg
                 class="w-5 h-5"
@@ -790,8 +803,8 @@ watch(
             </button>
 
             <button
-              @click="navigateToHome"
               class="flex items-center justify-center gap-2 px-6 py-3 bg-white text-gray-600 rounded-xl shadow-lg hover:shadow-xl hover:border-gray-500 transition-all duration-300 border-2 border-transparent font-semibold active:scale-95"
+              @click="navigateToHome"
             >
               <svg
                 class="w-5 h-5"
@@ -813,7 +826,6 @@ watch(
             <div class="flex gap-3">
               <button
                 v-if="canGoPrevious"
-                @click="navigateToPrevious"
                 :disabled="!canGoPrevious"
                 :class="[
                   'flex-1 h-12 rounded-full flex items-center justify-center transition-all duration-200 active:scale-95',
@@ -823,13 +835,13 @@ watch(
                 ]"
                 :aria-label="canGoPrevious ? '上一個講義' : '已是第一個講義'"
                 :title="canGoPrevious ? '上一個講義 (←)' : '已是第一個講義'"
+                @click="navigateToPrevious"
               >
                 <ChevronLeftIcon class="w-6 h-6" />
               </button>
 
               <button
                 v-if="canGoNext"
-                @click="navigateToNext"
                 :disabled="!canGoNext"
                 :class="[
                   'flex-1 h-12 rounded-full flex items-center justify-center transition-all duration-200 active:scale-95',
@@ -839,6 +851,7 @@ watch(
                 ]"
                 :aria-label="canGoNext ? '下一個講義' : '已是最後一個講義'"
                 :title="canGoNext ? '下一個講義 (→)' : '已是最後一個講義'"
+                @click="navigateToNext"
               >
                 <ChevronRightIcon class="w-6 h-6" />
               </button>

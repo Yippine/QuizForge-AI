@@ -267,36 +267,114 @@ onMounted(() => {
     <header class="max-w-3xl mx-auto mb-8">
       <!-- Back Button -->
       <button
-        @click="goBack"
         class="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6 transition-colors text-sm md:text-base"
+        @click="goBack"
       >
-        <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        <svg
+          class="w-4 h-4 md:w-5 md:h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"
+          />
         </svg>
         {{ isSubjectScoped ? '返回題目區' : '返回主頁' }}
       </button>
 
       <!-- INC-032: Breadcrumb for scoped mode -->
-      <div v-if="isSubjectScoped && ipasCategory && certification && level && subject" class="flex items-center justify-center gap-2 text-sm text-gray-600 mb-4 flex-wrap">
-        <span class="hover:text-primary-600 cursor-pointer" @click="goToIpas">{{ ipasCategory.name }}</span>
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      <div
+        v-if="isSubjectScoped && ipasCategory && certification && level && subject"
+        class="flex items-center justify-center gap-2 text-sm text-gray-600 mb-4 flex-wrap"
+      >
+        <span
+          class="hover:text-primary-600 cursor-pointer"
+          @click="goToIpas"
+        >{{ ipasCategory.name }}</span>
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"
+          />
         </svg>
-        <span class="hover:text-primary-600 cursor-pointer" @click="goToCertification">{{ certification.name }}</span>
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        <span
+          class="hover:text-primary-600 cursor-pointer"
+          @click="goToCertification"
+        >{{ certification.name }}</span>
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"
+          />
         </svg>
-        <span class="hover:text-primary-600 cursor-pointer" @click="goToLevel">{{ level.name }}</span>
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        <span
+          class="hover:text-primary-600 cursor-pointer"
+          @click="goToLevel"
+        >{{ level.name }}</span>
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"
+          />
         </svg>
-        <span class="hover:text-primary-600 cursor-pointer" @click="goToSubjectHub">{{ subject.code }}</span>
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        <span
+          class="hover:text-primary-600 cursor-pointer"
+          @click="goToSubjectHub"
+        >{{ subject.code }}</span>
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"
+          />
         </svg>
-        <span class="hover:text-primary-600 cursor-pointer" @click="goToPracticeHub">題目區</span>
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        <span
+          class="hover:text-primary-600 cursor-pointer"
+          @click="goToPracticeHub"
+        >題目區</span>
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"
+          />
         </svg>
         <span class="font-semibold text-gray-900">模擬考試</span>
       </div>
@@ -306,7 +384,9 @@ onMounted(() => {
         <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
           模擬考試設定
         </h1>
-        <p class="text-sm md:text-base text-gray-600">選擇題數和時間限制，開始你的練習或考試</p>
+        <p class="text-sm md:text-base text-gray-600">
+          選擇題數和時間限制，開始你的練習或考試
+        </p>
       </div>
     </header>
 
@@ -324,21 +404,39 @@ onMounted(() => {
         />
 
         <!-- INC-032: Show subject info when scoped -->
-        <div v-else class="bg-primary-50 rounded-lg p-4 md:p-6">
-          <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-2">題目範圍</h3>
+        <div
+          v-else
+          class="bg-primary-50 rounded-lg p-4 md:p-6"
+        >
+          <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-2">
+            題目範圍
+          </h3>
           <div class="text-sm md:text-base text-gray-700">
             <span class="font-semibold text-primary-600">{{ subject?.code }} - {{ subject?.name }}</span>
           </div>
         </div>
 
         <!-- INC-021 步驟 2: 空範圍警告區塊 -->
-        <div v-if="isRangeEmpty" class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+        <div
+          v-if="isRangeEmpty"
+          class="bg-yellow-50 border border-yellow-200 rounded-lg p-4"
+        >
           <div class="flex items-start gap-3">
-            <svg class="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+            <svg
+              class="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                clip-rule="evenodd"
+              />
             </svg>
             <div class="text-xs md:text-sm text-yellow-800">
-              <p class="font-semibold mb-1">該範圍暫無題目</p>
+              <p class="font-semibold mb-1">
+                該範圍暫無題目
+              </p>
               <p>請選擇其他範圍以開始練習或考試</p>
             </div>
           </div>
@@ -379,7 +477,9 @@ onMounted(() => {
         <!-- Settings Summary -->
         <!-- INC-019 步驟 6: 更新設定摘要區塊 -->
         <div class="bg-primary-50 rounded-lg p-4 md:p-6">
-          <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-3">設定摘要</h3>
+          <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-3">
+            設定摘要
+          </h3>
           <div class="space-y-2 text-sm md:text-base text-gray-700">
             <div class="flex items-center justify-between">
               <span>題目範圍：</span>
@@ -412,7 +512,6 @@ onMounted(() => {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <!-- Start Practice Button -->
           <button
-            @click="startPractice"
             :disabled="!canStartQuiz"
             :class="[
               'py-3 rounded-lg font-semibold text-base md:text-lg transition-all shadow-md',
@@ -420,10 +519,21 @@ onMounted(() => {
                 ? 'bg-accent-600 hover:bg-accent-700 text-white hover:shadow-lg transform hover:-translate-y-1'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             ]"
+            @click="startPractice"
           >
             <div class="flex items-center justify-center gap-2">
-              <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              <svg
+                class="w-5 h-5 md:w-6 md:h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
               </svg>
               <span>開始練習</span>
             </div>
@@ -432,7 +542,6 @@ onMounted(() => {
 
           <!-- Start Exam Button -->
           <button
-            @click="startExam"
             :disabled="!canStartQuiz"
             :class="[
               'py-3 rounded-lg font-semibold text-base md:text-lg transition-all shadow-md',
@@ -440,10 +549,21 @@ onMounted(() => {
                 ? 'bg-secondary-600 hover:bg-secondary-700 text-white hover:shadow-lg transform hover:-translate-y-1'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             ]"
+            @click="startExam"
           >
             <div class="flex items-center justify-center gap-2">
-              <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                class="w-5 h-5 md:w-6 md:h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
               <span>開始考試</span>
             </div>
@@ -454,11 +574,21 @@ onMounted(() => {
         <!-- Info Box -->
         <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <div class="flex items-start gap-3">
-            <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+            <svg
+              class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                clip-rule="evenodd"
+              />
             </svg>
             <div class="text-sm text-blue-800">
-              <p class="font-semibold mb-1">模式說明</p>
+              <p class="font-semibold mb-1">
+                模式說明
+              </p>
               <ul class="space-y-1 list-disc list-inside">
                 <li><strong>練習模式：</strong>每題作答後立即顯示答案和解析，適合學習</li>
                 <li><strong>考試模式：</strong>完成所有題目後才能查看結果，模擬真實考試</li>
@@ -473,7 +603,9 @@ onMounted(() => {
     <!-- Footer -->
     <footer class="max-w-3xl mx-auto mt-8 text-center text-xs md:text-sm text-gray-500">
       <p>Formula-Contract Methodology | Generated with Claude Code</p>
-      <p class="mt-1">基於 INC-016~021 實現 | 模擬考試完整功能</p>
+      <p class="mt-1">
+        基於 INC-016~021 實現 | 模擬考試完整功能
+      </p>
     </footer>
   </div>
 </template>

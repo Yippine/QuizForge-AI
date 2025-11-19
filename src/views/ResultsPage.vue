@@ -13,7 +13,7 @@ import Explanation from '../components/Explanation.vue'
 
 const router = useRouter()
 const resultsStore = useQuizResultsStore()
-const questionBankStore = useQuestionBankStore()
+const _questionBankStore = useQuestionBankStore()
 
 /**
  * State
@@ -282,7 +282,9 @@ onMounted(() => {
         <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
           答題結果
         </h1>
-        <p class="text-sm md:text-base text-gray-600">Quiz Results</p>
+        <p class="text-sm md:text-base text-gray-600">
+          Quiz Results
+        </p>
       </header>
 
       <!-- Score Panel -->
@@ -300,16 +302,22 @@ onMounted(() => {
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
           <!-- 正確題數 / 總題數 -->
           <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 text-center">
-            <div class="text-sm text-gray-600 mb-1">總分</div>
+            <div class="text-sm text-gray-600 mb-1">
+              總分
+            </div>
             <div class="text-2xl md:text-3xl font-bold text-green-600">
               {{ results.correctCount }} / {{ results.totalQuestions }}
             </div>
-            <div class="text-xs text-gray-500 mt-1">正確 / 總題數</div>
+            <div class="text-xs text-gray-500 mt-1">
+              正確 / 總題數
+            </div>
           </div>
 
           <!-- 答對率 -->
           <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 text-center">
-            <div class="text-sm text-gray-600 mb-1">答對率</div>
+            <div class="text-sm text-gray-600 mb-1">
+              答對率
+            </div>
             <div class="text-2xl md:text-3xl font-bold text-blue-600">
               {{ results.accuracy }}%
             </div>
@@ -320,11 +328,15 @@ onMounted(() => {
 
           <!-- 總用時 -->
           <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 text-center">
-            <div class="text-sm text-gray-600 mb-1">總用時</div>
+            <div class="text-sm text-gray-600 mb-1">
+              總用時
+            </div>
             <div class="text-2xl md:text-3xl font-bold text-purple-600">
               {{ results.formattedTime }}
             </div>
-            <div class="text-xs text-gray-500 mt-1">答題時間</div>
+            <div class="text-xs text-gray-500 mt-1">
+              答題時間
+            </div>
           </div>
         </div>
       </section>
@@ -376,8 +388,8 @@ onMounted(() => {
                   key === item.userAnswer && !item.isCorrect
                     ? 'border-red-500 bg-red-50'
                     : key === getDisplayCorrectAnswer(item)
-                    ? 'border-green-500 bg-green-50'
-                    : 'border-gray-200 bg-white'
+                      ? 'border-green-500 bg-green-50'
+                      : 'border-gray-200 bg-white'
                 ]"
               >
                 <div class="flex items-start gap-2">
@@ -387,8 +399,8 @@ onMounted(() => {
                       key === item.userAnswer && !item.isCorrect
                         ? 'text-red-600'
                         : key === getDisplayCorrectAnswer(item)
-                        ? 'text-green-600'
-                        : 'text-gray-600'
+                          ? 'text-green-600'
+                          : 'text-gray-600'
                     ]"
                   >
                     {{ key }}.
@@ -399,8 +411,8 @@ onMounted(() => {
                       key === item.userAnswer && !item.isCorrect
                         ? 'text-red-900 font-medium'
                         : key === getDisplayCorrectAnswer(item)
-                        ? 'text-green-900 font-medium'
-                        : 'text-gray-700'
+                          ? 'text-green-900 font-medium'
+                          : 'text-gray-700'
                     ]"
                   >
                     {{ option }}
@@ -425,8 +437,8 @@ onMounted(() => {
 
             <!-- Toggle Explanation Button -->
             <button
-              @click="toggleExplanation(item.question.question_id)"
               class="w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-800 font-medium transition-colors"
+              @click="toggleExplanation(item.question.question_id)"
             >
               {{ isExplanationExpanded(item.question.question_id) ? '收起解析' : '查看解析' }}
             </button>
@@ -450,14 +462,14 @@ onMounted(() => {
       <!-- Action Buttons -->
       <section class="flex flex-col md:flex-row gap-4 mb-8">
         <button
-          @click="retryQuiz"
           class="flex-1 py-3 md:py-4 px-6 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-semibold text-base md:text-lg transition-colors shadow-md hover:shadow-lg"
+          @click="retryQuiz"
         >
           🔄 重新練習
         </button>
         <button
-          @click="goHome"
           class="flex-1 py-3 md:py-4 px-6 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-semibold text-base md:text-lg transition-colors shadow-md hover:shadow-lg"
+          @click="goHome"
         >
           🏠 返回首頁
         </button>

@@ -139,8 +139,8 @@ const handleClick = () => {
   <button
     :class="buttonClasses"
     :disabled="isDisabled || answerState !== 'unanswered'"
-    @click="handleClick"
     :aria-label="`選項 ${label}: ${option}`"
+    @click="handleClick"
   >
     <!-- 選項標籤 (A/B/C/D) -->
     <div :class="labelClasses">
@@ -153,16 +153,42 @@ const handleClick = () => {
     </div>
 
     <!-- INC-016: 正確答案標記（僅練習模式） -->
-    <div v-if="mode === 'practice' && answerState !== 'unanswered' && isCorrect" class="flex-shrink-0 text-green-600">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+    <div
+      v-if="mode === 'practice' && answerState !== 'unanswered' && isCorrect"
+      class="flex-shrink-0 text-green-600"
+    >
+      <svg
+        class="w-6 h-6"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M5 13l4 4L19 7"
+        />
       </svg>
     </div>
 
     <!-- INC-016: 錯誤選擇標記（僅練習模式） -->
-    <div v-if="mode === 'practice' && answerState !== 'unanswered' && isSelected && !isCorrect" class="flex-shrink-0 text-red-600">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+    <div
+      v-if="mode === 'practice' && answerState !== 'unanswered' && isSelected && !isCorrect"
+      class="flex-shrink-0 text-red-600"
+    >
+      <svg
+        class="w-6 h-6"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12"
+        />
       </svg>
     </div>
   </button>
