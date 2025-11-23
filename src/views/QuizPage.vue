@@ -411,6 +411,10 @@ onMounted(async () => {
     console.log(`🎯 Range filter: ${range}`)
   }
 
+  // INC-045: Extract source parameter from route query
+  const source = route.query.source || 'all'
+  console.log(`🎯 Source filter: ${source}`)
+
   // INC-019: Shuffle configuration - [shouldShuffleQuestions, shouldShuffleOptions]
   const shuffleConfig = {
     'topic-practice': [false, true],   // 主題學習+練習：題目不隨機，選項隨機
@@ -418,6 +422,10 @@ onMounted(async () => {
     'mock-practice': [true, true],     // 模擬考試+練習：題目隨機，選項隨機
     'mock-exam': [true, true]          // 模擬考試+考試：題目隨機，選項隨機
   }
+
+  // INC-046: Reset filters to clear stale state from previous navigation
+  store.resetFilters()
+  console.log(`🔄 Filters reset before applying new filters`)
 
   // INC-012: Wrong questions mode 初始化
   if (routeMode === 'wrong-questions') {
@@ -430,7 +438,13 @@ onMounted(async () => {
       console.warn('⚠️ Wrong questions mode activated but no question IDs provided')
     }
   } else {
-    // INC-021: Apply range filter before topic filter
+    // INC-046: Set source filter FIRST to avoid stale state in applyFilters
+    if (source !== 'all') {
+      store.currentFilters.source = source
+      console.log(`🔧 Source filter set in currentFilters: ${source}`)
+    }
+
+    // INC-021: Apply range filter (will call applyFilters with correct source)
     if (range === 'all') {
       // 選擇「全部主題」時，不套用任何範圍過濾（但仍會套用後續的 topic filter）
       // 如果之前有設定範圍過濾，這裡不會重置，因為可能是主題學習模式
@@ -444,9 +458,12 @@ onMounted(async () => {
     }
 
     // INC-011: Topic filter mode (after range filter)
-    if (topicId) {
+    // INC-046: Only apply topic filter if NOT coming from mock exam (no range parameter)
+    if (topicId && !range) {
       store.filterByTopic(topicId)
       console.log(`🔍 Topic filter applied: ${topicId}, filtered questions: ${store.filteredQuestions.length}`)
+    } else if (topicId && range) {
+      console.log(`⚠️ Topic filter skipped: Mock exam mode uses range filter (${range}) instead of topic filter (${topicId})`)
     }
   }
 

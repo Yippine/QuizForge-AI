@@ -23,7 +23,9 @@ const { getCategoryById, getCertificationByPath, getLevelById } = useResourcesMa
 const selectedSubject = ref(null) // 科目選擇狀態 (null | 'L21' | 'L23' | 'OFFICIAL')
 const selectedTopic = ref(null)
 const selectedDifficulty = ref([]) // INC-021: 改為陣列支援複選 (string[])
+const difficultyFilter = ref('all') // INC-043: 難度下拉選單狀態 ('all' | 'simple' | 'medium' | 'hard' | 'simple,medium' | 'medium,hard' | 'simple,medium,hard')
 const searchQuery = ref('')
+const selectedSource = ref('all') // INC-043: 來源篩選狀態 ('all' | 'official' | 'ai')
 
 /**
  * INC-032: Route params detection for filtered mode
@@ -71,6 +73,32 @@ const filteredTopics = computed(() => {
     }
   }
 
+  // INC-040: 來源篩選
+  // INC-044: Fix - Add difficulty parameter and zero-topic check
+  if (selectedSource.value !== 'all') {
+    topics = topics.filter(topic => {
+      const stats = getTopicStats(topic.id, selectedDifficulty.value)
+
+      // INC-044: Zero-topic check before source filtering
+      if (stats.total === 0) return false
+
+      if (selectedSource.value === 'official') {
+        return stats.official > 0
+      } else if (selectedSource.value === 'ai') {
+        return stats.ai > 0
+      } else if (selectedSource.value === 'mixed') {
+        return stats.official > 0 && stats.ai > 0
+      }
+      return true
+    })
+  }
+
+  // INC-044: Global zero-topic filter (catch topics when selectedSource === 'all')
+  topics = topics.filter(topic => {
+    const stats = getTopicStats(topic.id, selectedDifficulty.value)
+    return stats.total > 0
+  })
+
   // 按搜尋過濾
   return topics.filter(topic => {
     const matchesSearch = searchQuery.value === '' ||
@@ -90,6 +118,8 @@ const canStartPractice = computed(() => {
  * Topic Statistics
  * 支援一般主題和官方題目主題的統計
  * INC-021: 支援難度過濾參數（selectedDifficulties）
+ * INC-042: 新增來源過濾邏輯（selectedSource）
+ * Formula: getTopicStats = Extract(topicQuestions) -> ApplySourceFilter(selectedSource) -> ApplyDifficultyFilter(selectedDifficulties) -> Calculate(stats)
  */
 const getTopicStats = (topicId, selectedDifficulties = []) => {
   let topicQuestions = []
@@ -113,13 +143,27 @@ const getTopicStats = (topicId, selectedDifficulties = []) => {
     })
   }
 
+  // INC-042: 來源過濾（根據 selectedSource 狀態）
+  if (selectedSource.value === 'official') {
+    topicQuestions = topicQuestions.filter(q => q.question_id.startsWith('OFF_'))
+  } else if (selectedSource.value === 'ai') {
+    topicQuestions = topicQuestions.filter(q => !q.question_id.startsWith('OFF_'))
+  }
+  // 'all' 不過濾來源
+
   // INC-021: 根據選中的難度過濾題目
   if (selectedDifficulties.length > 0) {
     topicQuestions = topicQuestions.filter(q => selectedDifficulties.includes(q.difficulty))
   }
 
+  // INC-039: 來源統計 - 區分官方題目和 AI 題目
+  const officialQuestions = topicQuestions.filter(q => q.question_id.startsWith('OFF_'))
+  const aiQuestions = topicQuestions.filter(q => !q.question_id.startsWith('OFF_'))
+
   return {
     total: topicQuestions.length,
+    official: officialQuestions.length,
+    ai: aiQuestions.length,
     difficulties: {
       simple: topicQuestions.filter(q => q.difficulty === 'simple').length,
       medium: topicQuestions.filter(q => q.difficulty === 'medium').length,
@@ -142,20 +186,19 @@ const selectTopic = (topicId) => {
   selectedTopic.value = topicId === selectedTopic.value ? null : topicId
 }
 
-// INC-021: 複選模式 - toggle 邏輯
-const selectDifficulty = (difficulty) => {
-  if (selectedDifficulty.value.includes(difficulty)) {
-    // 已選中 -> 移除
-    selectedDifficulty.value = selectedDifficulty.value.filter(d => d !== difficulty)
+// INC-043: 難度下拉選單處理函數
+const handleDifficultyChange = () => {
+  if (difficultyFilter.value === 'all') {
+    selectedDifficulty.value = []
   } else {
-    // 未選中 -> 加入
-    selectedDifficulty.value.push(difficulty)
+    selectedDifficulty.value = difficultyFilter.value.split(',')
   }
 }
 
 /**
  * INC-015: Start Practice Mode
- * Formula: startPractice() -> router.push({ path: '/quiz', query: { mode: 'practice' } })
+ * INC-042: 新增來源篩選
+ * Formula: startPractice = filterByTopic -> filterBySource [NEW] -> filterByDifficulties -> navigate
  * INC-021: 使用 filterByDifficulties 支援複選
  */
 const startPractice = () => {
@@ -163,6 +206,10 @@ const startPractice = () => {
 
   // Apply filters
   store.filterByTopic(selectedTopic.value)
+
+  // INC-042: 新增來源篩選
+  store.filterBySource(selectedSource.value)
+
   // INC-021: 使用 filterByDifficulties 處理陣列
   if (selectedDifficulty.value.length > 0) {
     store.filterByDifficulties(selectedDifficulty.value)
@@ -177,7 +224,8 @@ const startPractice = () => {
 
 /**
  * INC-015: Start Exam Mode
- * Formula: startExam() -> router.push({ path: '/quiz', query: { mode: 'exam' } })
+ * INC-042: 新增來源篩選
+ * Formula: startExam = filterByTopic -> filterBySource [NEW] -> filterByDifficulties -> navigate
  * INC-021: 使用 filterByDifficulties 支援複選
  */
 const startExam = () => {
@@ -185,6 +233,10 @@ const startExam = () => {
 
   // Apply filters
   store.filterByTopic(selectedTopic.value)
+
+  // INC-042: 新增來源篩選
+  store.filterBySource(selectedSource.value)
+
   // INC-021: 使用 filterByDifficulties 處理陣列
   if (selectedDifficulty.value.length > 0) {
     store.filterByDifficulties(selectedDifficulty.value)
@@ -458,56 +510,68 @@ onMounted(() => {
 
         <!-- Search & Filters -->
         <div class="bg-white rounded-xl shadow-lg p-7 md:p-8 mb-8">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Search -->
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-3">搜尋主題</label>
-              <input
-                v-model="searchQuery"
-                type="text"
-                placeholder="搜尋主題名稱或描述..."
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-600 focus:border-transparent transition-all"
-              />
-            </div>
+          <!-- Search -->
+          <div class="mb-6">
+            <label class="block text-sm font-semibold text-gray-700 mb-3">搜尋主題</label>
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="搜尋主題名稱或描述..."
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-600 focus:border-transparent transition-all"
+            />
+          </div>
 
-            <!-- Difficulty Filter -->
+          <!-- INC-043: Difficulty and Source Filters in Grid Layout -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Difficulty Filter Dropdown -->
             <div>
               <label class="block text-sm font-semibold text-gray-700 mb-3">難度篩選</label>
-              <div class="flex gap-3 md:gap-4">
-                <button
-                  :class="[
-                    'flex-1 py-3 px-4 rounded-lg font-medium transition-all',
-                    selectedDifficulty.includes('simple')
-                      ? 'bg-accent-600 text-white shadow-lg'
-                      : 'bg-accent-100 text-accent-800 hover:bg-accent-200'
-                  ]"
-                  @click="selectDifficulty('simple')"
-                >
+              <select
+                v-model="difficultyFilter"
+                class="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
+                @change="handleDifficultyChange"
+              >
+                <option value="all">
+                  全部難度
+                </option>
+                <option value="simple">
                   簡單
-                </button>
-                <button
-                  :class="[
-                    'flex-1 py-3 px-4 rounded-lg font-medium transition-all',
-                    selectedDifficulty.includes('medium')
-                      ? 'bg-warning-600 text-white shadow-lg'
-                      : 'bg-warning-100 text-warning-800 hover:bg-warning-200'
-                  ]"
-                  @click="selectDifficulty('medium')"
-                >
+                </option>
+                <option value="medium">
                   中等
-                </button>
-                <button
-                  :class="[
-                    'flex-1 py-3 px-4 rounded-lg font-medium transition-all',
-                    selectedDifficulty.includes('hard')
-                      ? 'bg-red-600 text-white shadow-lg'
-                      : 'bg-red-100 text-red-800 hover:bg-red-200'
-                  ]"
-                  @click="selectDifficulty('hard')"
-                >
+                </option>
+                <option value="hard">
                   困難
-                </button>
-              </div>
+                </option>
+                <option value="simple,medium">
+                  簡單 + 中等
+                </option>
+                <option value="medium,hard">
+                  中等 + 困難
+                </option>
+                <option value="simple,medium,hard">
+                  全部（簡單 + 中等 + 困難）
+                </option>
+              </select>
+            </div>
+
+            <!-- Source Filter Dropdown -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-3">來源篩選</label>
+              <select
+                v-model="selectedSource"
+                class="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
+              >
+                <option value="all">
+                  📚 全部
+                </option>
+                <option value="official">
+                  🏛️ 官方題目
+                </option>
+                <option value="ai">
+                  🤖 AI 題目
+                </option>
+              </select>
             </div>
           </div>
 

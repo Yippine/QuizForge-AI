@@ -93,19 +93,42 @@ const handleSelect = () => {
       </div>
     </div>
 
+    <!-- INC-044: Unified Stat Line - 來源標籤與總題數統一顯示 -->
+    <div
+      v-if="stats.official > 0 || stats.ai > 0"
+      class="flex items-center gap-2 text-sm mb-4"
+    >
+      <span
+        v-if="stats.official > 0"
+        class="px-2.5 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-md"
+      >
+        🏛️ 官方 {{ stats.official }}
+      </span>
+      <span
+        v-if="stats.ai > 0"
+        class="px-2.5 py-1 bg-green-50 text-green-700 text-xs font-medium rounded-md"
+      >
+        🤖 AI {{ stats.ai }}
+      </span>
+      <span
+        v-if="stats.official > 0 && stats.ai > 0"
+        class="text-gray-400"
+      >
+        •
+      </span>
+      <span class="text-gray-700 font-semibold">
+        共 {{ totalQuestions }} 題
+      </span>
+    </div>
+
     <!-- Description -->
     <p class="text-sm text-gray-600 mb-5 md:mb-6">
       {{ topic.description }}
     </p>
 
     <!-- Stats -->
-    <div class="space-y-4">
-      <!-- Total Questions -->
-      <div class="flex items-center justify-between text-sm">
-        <span class="text-gray-600">題目數量</span>
-        <span class="font-bold text-primary-600">{{ totalQuestions }} 題</span>
-      </div>
-
+    <!-- INC-044: Removed redundant Total Questions block, adjusted spacing -->
+    <div class="space-y-3">
       <!-- Difficulty Distribution -->
       <div>
         <div class="text-xs text-gray-600 mb-2">

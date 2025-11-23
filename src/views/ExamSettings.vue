@@ -1,14 +1,15 @@
 <script setup>
 /**
  * ExamSettings Page
- * Formula: ExamSettings = RangeSelector + [EmptyWarningBlock(isRangeEmpty)] + QuestionCountSelector(filteredQuestionOptions, smartDefaultIndex) + TimeLimitSelector + ModeButtons
- * Responsibility: 模擬考試設定頁面，用於設定題目範圍、題數和時間限制
+ * Formula: ExamSettings = SourceSelector + RangeSelector + [EmptyWarningBlock(isRangeEmpty)] + QuestionCountSelector(filteredQuestionOptions, smartDefaultIndex) + TimeLimitSelector + ModeButtons
+ * Responsibility: 模擬考試設定頁面，用於設定題目來源、範圍、題數和時間限制
  * INC-018: Exam settings interface
  * INC-019: 模擬考試主題範圍選擇器
  * INC-020: 智慧題數選項調整（動態過濾 + 智慧預設 + 響應式重置）
  * INC-021: UI 優化與使用者體驗提升（空範圍警告 + Footer 更新）
+ * INC-041: 題目來源選擇器（混合題目/官方題目/AI 題目）
  */
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useQuestionBankStore } from '../stores/questionBank'
 import { extractTopicID } from '../constants/ipas'
@@ -23,8 +24,10 @@ const { getCategoryById, getCertificationByPath, getLevelById } = useResourcesMa
 /**
  * State
  * INC-019: 新增 selectedRange 狀態
+ * INC-042: 統一「混合」-> 「全部」語意
  */
 const selectedRange = ref('all') // 預設「全部題目」
+const selectedSource = ref('all') // INC-042: 來源篩選狀態 ('all' | 'official' | 'ai')
 const questionCount = ref(20) // 預設 20 題
 const timeLimit = ref(null) // 預設不限時
 const isQuestionCountValid = ref(true)
@@ -48,7 +51,16 @@ const subject = computed(() => isSubjectScoped.value ? level.value?.subjects.fin
 /**
  * Options
  * INC-019: 新增 rangeOptions（步驟 1）
+ * INC-041: 新增 sourceOptions（題目來源選項）
+ * INC-042: 統一「混合」-> 「全部」語意
  */
+// INC-042: 來源選項（統一為「全部」）
+const sourceOptions = [
+  { label: '全部', value: 'all', description: '官方題目 + AI 題目' },
+  { label: '官方題目', value: 'official', description: '只選擇官方題目' },
+  { label: 'AI 題目', value: 'ai', description: '只選擇 AI 題目' }
+]
+
 const rangeOptions = [
   { label: '全部主題', value: 'all', description: '從所有題庫出題' },
   { label: '官方題目', value: 'official', description: '官方考試題目' },
@@ -77,30 +89,52 @@ const timeOptions = [
  * INC-019: 新增 availableQuestions 和 rangeQuestionCount（步驟 3-4）
  */
 // 步驟 3: 題目過濾邏輯（參考 TopicSelection.vue:69-89）
+// INC-041: 新增來源過濾邏輯 (RangeFilter -> SourceFilter)
 const availableQuestions = computed(() => {
-  const allQuestions = store.questions
+  let questions = store.questions
 
+  // 1. 範圍過濾 (RangeFilter)
   if (selectedRange.value === 'all') {
     // 全部題目
-    return allQuestions
+    questions = questions
   } else if (selectedRange.value === 'official') {
     // 官方題目：過濾 question_id.startsWith('OFF_')
-    return allQuestions.filter(q => q.question_id.startsWith('OFF_'))
+    questions = questions.filter(q => q.question_id.startsWith('OFF_'))
   } else if (selectedRange.value === 'L21' || selectedRange.value === 'L23') {
     // 科目過濾：使用 extractTopicID 判斷科目歸屬
-    return allQuestions.filter(q => {
+    questions = questions.filter(q => {
       const topicId = extractTopicID(q.topic) || q.topic
       // 檢查主題ID是否以 L21 或 L23 開頭
       return topicId.startsWith(selectedRange.value)
     })
   }
 
-  return allQuestions
+  // 2. 來源過濾 (SourceFilter) - INC-041, INC-042
+  if (selectedSource.value === 'official') {
+    // 官方題目：只選擇 OFF_ 開頭的題目
+    questions = questions.filter(q => q.question_id.startsWith('OFF_'))
+  } else if (selectedSource.value === 'ai') {
+    // AI 題目：排除 OFF_ 開頭的題目
+    questions = questions.filter(q => !q.question_id.startsWith('OFF_'))
+  }
+  // INC-042: 'all' 不過濾，保留範圍過濾結果
+
+  // INC-046: Debug - 輸出過濾結果
+  console.log(`📊 [ExamSettings] availableQuestions computed:`, {
+    range: selectedRange.value,
+    source: selectedSource.value,
+    totalQuestions: questions.length,
+    sampleIds: questions.slice(0, 3).map(q => q.question_id)
+  })
+
+  return questions
 })
 
 // 步驟 4: 動態題數計算
 const rangeQuestionCount = computed(() => {
-  return availableQuestions.value.length
+  const count = availableQuestions.value.length
+  console.log(`📊 [ExamSettings] rangeQuestionCount computed: ${count}`)
+  return count
 })
 
 /**
@@ -160,6 +194,7 @@ const canStartQuiz = computed(() => {
 /**
  * Actions
  * INC-019: 新增 handleRangeUpdate
+ * INC-041: 新增 resetSelections（來源變更時的響應處理）
  */
 const handleRangeUpdate = (value) => {
   selectedRange.value = value
@@ -168,6 +203,42 @@ const handleRangeUpdate = (value) => {
     questionCount.value = Math.min(questionCount.value, rangeQuestionCount.value)
   }
 }
+
+// INC-041: 來源變更處理
+const handleSourceUpdate = (value) => {
+  selectedSource.value = value
+  console.log(`📊 [ExamSettings] handleSourceUpdate: ${value}`)
+
+  // 當來源改變時，如果題數超過新的可用題數，自動調整
+  nextTick(() => {
+    if (questionCount.value > rangeQuestionCount.value) {
+      questionCount.value = Math.min(questionCount.value, rangeQuestionCount.value)
+    }
+  })
+}
+
+// INC-043: 監聽 selectedSource 變化，確保響應式更新
+watch(selectedSource, (newSource, oldSource) => {
+  console.log(`📊 [ExamSettings] selectedSource changed: ${oldSource} -> ${newSource}`)
+  console.log(`📊 [ExamSettings] Current rangeQuestionCount: ${rangeQuestionCount.value}`)
+
+  nextTick(() => {
+    if (questionCount.value !== 'custom' && questionCount.value !== null) {
+      // 如果當前題數超過新的最大值，自動調整
+      if (questionCount.value > rangeQuestionCount.value) {
+        console.log(`📊 [ExamSettings] Adjusting questionCount: ${questionCount.value} -> ${rangeQuestionCount.value}`)
+        questionCount.value = rangeQuestionCount.value
+      }
+    } else if (questionCount.value === 'custom') {
+      // 自定義模式下也需要驗證
+      const customCount = parseInt(questionCount.value)
+      if (customCount > rangeQuestionCount.value) {
+        console.log(`📊 [ExamSettings] Adjusting custom count: ${customCount} -> ${rangeQuestionCount.value}`)
+        questionCount.value = rangeQuestionCount.value
+      }
+    }
+  })
+})
 
 const handleQuestionCountUpdate = (value) => {
   questionCount.value = value
@@ -187,8 +258,18 @@ const startPractice = () => {
   if (!canStartQuiz.value) return
 
   // INC-019 步驟 8: 擴展路由參數（新增 range 參數）
+  // INC-041: 新增 source 參數
   // 如果 questionCount 為 null（全部題目），使用 rangeQuestionCount
   const finalQuestionCount = questionCount.value !== null ? questionCount.value : rangeQuestionCount.value
+
+  // INC-046: Debug
+  console.log(`📊 [ExamSettings] startPractice:`, {
+    questionCount: questionCount.value,
+    rangeQuestionCount: rangeQuestionCount.value,
+    finalQuestionCount,
+    range: selectedRange.value,
+    source: selectedSource.value
+  })
 
   router.push({
     path: '/quiz',
@@ -196,7 +277,8 @@ const startPractice = () => {
       mode: 'practice',
       questionCount: finalQuestionCount,
       timeLimit: timeLimit.value || undefined,
-      range: selectedRange.value
+      range: selectedRange.value,
+      source: selectedSource.value
     }
   })
 }
@@ -205,6 +287,7 @@ const startExam = () => {
   if (!canStartQuiz.value) return
 
   // INC-019 步驟 8: 擴展路由參數（新增 range 參數）
+  // INC-041: 新增 source 參數
   // 如果 questionCount 為 null（全部題目），使用 rangeQuestionCount
   const finalQuestionCount = questionCount.value !== null ? questionCount.value : rangeQuestionCount.value
 
@@ -214,7 +297,8 @@ const startExam = () => {
       mode: 'exam',
       questionCount: finalQuestionCount,
       timeLimit: timeLimit.value || undefined,
-      range: selectedRange.value
+      range: selectedRange.value,
+      source: selectedSource.value
     }
   })
 }
@@ -393,6 +477,7 @@ onMounted(() => {
     <!-- Main Content -->
     <main class="max-w-3xl mx-auto">
       <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 space-y-8">
+        <!-- INC-042: 調整 Scoped 模式 UI 順序 - 題目範圍置於題目來源之前 -->
         <!-- INC-019 步驟 5: 新增 Range Selector -->
         <!-- INC-032: Hide range selector when scoped to a subject -->
         <OptionSelector
@@ -415,6 +500,18 @@ onMounted(() => {
             <span class="font-semibold text-primary-600">{{ subject?.code }} - {{ subject?.name }}</span>
           </div>
         </div>
+
+        <!-- Divider -->
+        <div class="border-t border-gray-200"></div>
+
+        <!-- INC-041: 題目來源選擇器 -->
+        <!-- INC-046: 修復 v-model 問題，改用 @update:value -->
+        <OptionSelector
+          label="題目來源"
+          :options="sourceOptions"
+          :default-index="0"
+          @update:value="handleSourceUpdate"
+        />
 
         <!-- INC-021 步驟 2: 空範圍警告區塊 -->
         <div
@@ -476,11 +573,18 @@ onMounted(() => {
 
         <!-- Settings Summary -->
         <!-- INC-019 步驟 6: 更新設定摘要區塊 -->
+        <!-- INC-041: 新增題目來源顯示 -->
         <div class="bg-primary-50 rounded-lg p-4 md:p-6">
           <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-3">
             設定摘要
           </h3>
           <div class="space-y-2 text-sm md:text-base text-gray-700">
+            <div class="flex items-center justify-between">
+              <span>題目來源：</span>
+              <span class="font-semibold text-primary-600">
+                {{ sourceOptions.find(o => o.value === selectedSource)?.label || '全部' }}
+              </span>
+            </div>
             <div class="flex items-center justify-between">
               <span>題目範圍：</span>
               <span class="font-semibold text-primary-600">
@@ -604,7 +708,7 @@ onMounted(() => {
     <footer class="max-w-3xl mx-auto mt-8 text-center text-xs md:text-sm text-gray-500">
       <p>Formula-Contract Methodology | Generated with Claude Code</p>
       <p class="mt-1">
-        基於 INC-016~021 實現 | 模擬考試完整功能
+        基於 INC-016~021, INC-041 實現 | 模擬考試完整功能
       </p>
     </footer>
   </div>

@@ -45,7 +45,8 @@ export const useQuestionBankStore = defineStore('questionBank', {
       topic: null,      // Formula 主題代碼 (e.g., "L21201")
       difficulty: null, // 難度 ("simple" | "medium" | "hard") - 單一難度過濾
       difficulties: [], // INC-021: 多難度過濾 (string[])
-      subject: null     // 科目 ("L21" | "L23")
+      subject: null,    // 科目 ("L21" | "L23")
+      source: 'all'     // INC-045: 來源過濾 ('all' | 'official' | 'ai')
     },
 
     // 載入狀態
@@ -345,12 +346,9 @@ export const useQuestionBankStore = defineStore('questionBank', {
     applyFilters() {
       let result = this.questions
 
-      // 按科目過濾（排除官方題目）
+      // INC-046: 按科目過濾（不應排除官方題目，來源過濾由 source 控制）
       if (this.currentFilters.subject) {
-        result = result.filter(q =>
-          q.subject === this.currentFilters.subject &&
-          !q.question_id.startsWith('OFF_')
-        )
+        result = result.filter(q => q.subject === this.currentFilters.subject)
       }
 
       // 按 Formula 主題過濾
@@ -389,6 +387,14 @@ export const useQuestionBankStore = defineStore('questionBank', {
         result = result.filter(q => q.difficulty === this.currentFilters.difficulty)
       }
 
+      // INC-045: 按來源過濾
+      if (this.currentFilters.source === 'official') {
+        result = result.filter(q => q.question_id.startsWith('OFF_'))
+      } else if (this.currentFilters.source === 'ai') {
+        result = result.filter(q => !q.question_id.startsWith('OFF_'))
+      }
+      // source === 'all' 時不過濾
+
       this.filteredQuestions = result
 
       console.log(`🔍 Filtered: ${result.length} questions match current filters`, this.currentFilters)
@@ -403,7 +409,8 @@ export const useQuestionBankStore = defineStore('questionBank', {
         topic: null,
         difficulty: null,
         difficulties: [], // INC-021: 清除多難度過濾
-        subject: null
+        subject: null,
+        source: 'all'     // INC-045: 重置來源過濾
       }
       this.filteredQuestions = []
       this.shuffledQuestions = null  // INC-019: 同時清除打亂的題目
@@ -425,6 +432,16 @@ export const useQuestionBankStore = defineStore('questionBank', {
     clearShuffledQuestions() {
       this.shuffledQuestions = null
       console.log('🔄 Shuffled questions cleared')
+    },
+
+    /**
+     * INC-045: 按題目來源過濾（重構版本）
+     * Formula: filterBySource(source) = (this.currentFilters.source = source) -> this.applyFilters()
+     * @param {string} source - 來源類型 ('all' | 'official' | 'ai')
+     */
+    filterBySource(source) {
+      this.currentFilters.source = source
+      this.applyFilters()
     },
 
     /**
