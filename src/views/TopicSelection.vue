@@ -198,7 +198,8 @@ const handleDifficultyChange = () => {
 /**
  * INC-015: Start Practice Mode
  * INC-042: 新增來源篩選
- * Formula: startPractice = filterByTopic -> filterBySource [NEW] -> filterByDifficulties -> navigate
+ * INC-047: 傳遞完整篩選參數到 URL，與 ExamSettings 保持一致
+ * Formula: startPractice = filterByTopic -> filterBySource [NEW] -> filterByDifficulties -> navigate(with params)
  * INC-021: 使用 filterByDifficulties 支援複選
  */
 const startPractice = () => {
@@ -215,17 +216,29 @@ const startPractice = () => {
     store.filterByDifficulties(selectedDifficulty.value)
   }
 
-  // INC-015: Navigate to quiz with mode=practice parameter
+  // INC-047: Navigate to quiz with complete filter parameters
+  const query = {
+    mode: 'practice',
+    topic: selectedTopic.value,
+    source: selectedSource.value
+  }
+
+  // INC-047: Add difficulty parameter if selected
+  if (selectedDifficulty.value.length > 0) {
+    query.difficulties = selectedDifficulty.value.join(',')
+  }
+
   router.push({
     path: '/quiz',
-    query: { mode: 'practice' }
+    query
   })
 }
 
 /**
  * INC-015: Start Exam Mode
  * INC-042: 新增來源篩選
- * Formula: startExam = filterByTopic -> filterBySource [NEW] -> filterByDifficulties -> navigate
+ * INC-047: 傳遞完整篩選參數到 URL，與 ExamSettings 保持一致
+ * Formula: startExam = filterByTopic -> filterBySource [NEW] -> filterByDifficulties -> navigate(with params)
  * INC-021: 使用 filterByDifficulties 支援複選
  */
 const startExam = () => {
@@ -242,10 +255,21 @@ const startExam = () => {
     store.filterByDifficulties(selectedDifficulty.value)
   }
 
-  // INC-015: Navigate to quiz with mode=exam parameter
+  // INC-047: Navigate to quiz with complete filter parameters
+  const query = {
+    mode: 'exam',
+    topic: selectedTopic.value,
+    source: selectedSource.value
+  }
+
+  // INC-047: Add difficulty parameter if selected
+  if (selectedDifficulty.value.length > 0) {
+    query.difficulties = selectedDifficulty.value.join(',')
+  }
+
   router.push({
     path: '/quiz',
-    query: { mode: 'exam' }
+    query
   })
 }
 

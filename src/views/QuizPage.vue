@@ -415,6 +415,12 @@ onMounted(async () => {
   const source = route.query.source || 'all'
   console.log(`🎯 Source filter: ${source}`)
 
+  // INC-047: Extract difficulties parameter from route query
+  const difficulties = route.query.difficulties ? route.query.difficulties.split(',') : []
+  if (difficulties.length > 0) {
+    console.log(`🎯 Difficulty filter: ${difficulties.join(', ')}`)
+  }
+
   // INC-019: Shuffle configuration - [shouldShuffleQuestions, shouldShuffleOptions]
   const shuffleConfig = {
     'topic-practice': [false, true],   // 主題學習+練習：題目不隨機，選項隨機
@@ -464,6 +470,12 @@ onMounted(async () => {
       console.log(`🔍 Topic filter applied: ${topicId}, filtered questions: ${store.filteredQuestions.length}`)
     } else if (topicId && range) {
       console.log(`⚠️ Topic filter skipped: Mock exam mode uses range filter (${range}) instead of topic filter (${topicId})`)
+    }
+
+    // INC-047: Apply difficulty filter if provided
+    if (difficulties.length > 0) {
+      store.filterByDifficulties(difficulties)
+      console.log(`🔍 Difficulty filter applied: ${difficulties.join(', ')}, filtered questions: ${store.filteredQuestions.length}`)
     }
   }
 
