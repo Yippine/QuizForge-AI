@@ -28,8 +28,8 @@ dist-ssr
 
 # Formula-Contract work files
 .claude/
-FORMULA.md
-FORMULA-*.md
+!.claude/skills/
+.ai-core/tasks
 
 # Knowledge-base: Exclude large lecture materials
 knowledge-base/ipas/1 handout/
