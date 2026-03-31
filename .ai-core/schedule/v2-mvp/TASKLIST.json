@@ -1,0 +1,314 @@
+{
+  "period": "v2-mvp",
+  "created": "2026-03-27T00:00:00.000Z",
+  "updated": "2026-03-27T06:00:00.000Z",
+  "status": "active",
+  "current_index": 27,
+  "total_count": 38,
+  "description": "QuizForge-AI v2 MVP — 刷題 + 匯入 + 統計 + Auth，MVP 優先快速復現，之後迭代",
+
+  "architecture": {
+    "data_layer": "certifications.json（動態結構config） + Supabase questions表（扁平+metadata）",
+    "import_format": "XLSX（實習生操作）→ 系統解析 → Supabase，JSON 是內部格式實習生不碰",
+    "structure_vs_data": "結構（certifications.json）和資料（questions欄位）完全解耦，靠 cert_id/subject_id/topic_id 對應",
+    "frontend": "Vertical Slice — src/features/{quiz,bank,analytics,auth} + src/shared + src/lib",
+    "import_model": "Manual Publish（MVP）：上傳→預覽→確認→寫入DB，不做 Realtime",
+    "image_questions": "MVP：has_image=TRUE + image_note文字說明，前端顯示提示框。v2.1再做圖片上傳"
+  },
+
+  "xlsx_schema": {
+    "columns": [
+      "cert_id", "subject_id", "topic_id", "topic_name",
+      "source_type", "source_year", "source_batch",
+      "question_no", "question",
+      "option_a", "option_b", "option_c", "option_d", "answer",
+      "explanation", "has_image", "image_note", "difficulty"
+    ],
+    "intern_workflow": "PDF → AI工具提取（提供標準prompt） → 填入XLSX template → GUI上傳 → 系統驗證預覽 → 確認匯入"
+  },
+
+  "modules": {
+    "A": "Quiz Engine（刷題核心）",
+    "B": "Question Bank GUI（XLSX 匯入 + 題庫管理）",
+    "C": "Analytics（統計分析）",
+    "X": "Auth + 基礎建設（橫切關注點）"
+  },
+
+  "tasks": [
+    {
+      "id": 1,
+      "module": "X",
+      "title": "初始化 Supabase 專案並設定 .env 環境變數",
+      "status": "done",
+      "priority": "P0"
+    },
+    {
+      "id": 2,
+      "module": "X",
+      "title": "安裝 @supabase/supabase-js + xlsx，建立 src/lib/supabase.js 連線模組",
+      "status": "done",
+      "note": "xlsx 套件用於解析實習生上傳的 XLSX 檔案"
+      "priority": "P0",
+      "note": "xlsx 套件用於解析實習生上傳的 XLSX 檔案"
+    },
+    {
+      "id": 3,
+      "module": "X",
+      "title": "設計並建立 Supabase DB schema（certifications, subjects, questions, users, user_progress）",
+      "status": "done",
+      "priority": "P0",
+      "note": "questions 表扁平化，含 cert_id/subject_id/topic_id/has_image 等 metadata 欄位"
+    },
+    {
+      "id": 4,
+      "module": "X",
+      "title": "建立 certifications.json — 動態認證結構 config，實習生可直接編輯不碰程式碼",
+      "status": "done",
+      "priority": "P0",
+      "note": "存放認證/級別/科目的層級定義，與 questions 資料完全解耦，靠 ID 對應"
+    },
+    {
+      "id": 5,
+      "module": "X",
+      "title": "建立 Vertical Slice 目錄骨架：src/features/{quiz,bank,analytics,auth} + src/shared + src/lib",
+      "status": "done",
+      "priority": "P0"
+    },
+    {
+      "id": 6,
+      "module": "X",
+      "title": "重寫 App.vue + main.js + router 骨架（/login /quiz /bank /analytics + guards）",
+      "status": "done",
+      "priority": "P0"
+    },
+    {
+      "id": 7,
+      "module": "X",
+      "title": "建立 Pinia authStore 管理 session、user、role（student/admin）狀態",
+      "status": "done",
+      "priority": "P0"
+    },
+    {
+      "id": 8,
+      "module": "X",
+      "title": "建立 LoginPage.vue — Google OAuth 一鍵登入，未登入自動跳轉",
+      "status": "done",
+      "priority": "P0"
+    },
+    {
+      "id": 9,
+      "module": "X",
+      "title": "建立 AppNavbar.vue — 頂部導航含用戶頭像、登出按鈕、三大模塊入口",
+      "status": "done",
+      "priority": "P0"
+    },
+    {
+      "id": 10,
+      "module": "A",
+      "title": "建立 useCertifications composable — 讀取 certifications.json，提供科目/主題查詢方法",
+      "status": "done",
+      "priority": "P0",
+      "note": "取代舊版 hardcoded ipas.ts 常數，所有科目資訊從 config 動態讀取"
+    },
+    {
+      "id": 11,
+      "module": "A",
+      "title": "重建 HomePage.vue — 從 certifications.json 動態渲染科目卡片，≤2 步進入刷題",
+      "status": "done",
+      "priority": "P0"
+    },
+    {
+      "id": 12,
+      "module": "A",
+      "title": "建立 TopicSelectPage.vue — 主題列表含完成率進度條，一鍵直接開始練習",
+      "status": "done",
+      "priority": "P0"
+    },
+    {
+      "id": 13,
+      "module": "A",
+      "title": "重構 QuizPage.vue — 純刷題模式，Supabase 查詢題目，整合鍵盤快捷鍵與即時解析",
+      "status": "done",
+      "priority": "P0"
+    },
+    {
+      "id": 14,
+      "module": "A",
+      "title": "實作 useQuizSession composable — 答題狀態、進度追蹤、has_image 題目顯示處理",
+      "status": "done",
+      "priority": "P0",
+      "note": "has_image=TRUE 的題目顯示提示框，說明需參照原試題頁數（MVP圖片策略）"
+    },
+    {
+      "id": 15,
+      "module": "A",
+      "title": "同步答題結果到 Supabase user_progress 表（批次寫入，含 offline queue fallback）",
+      "status": "done",
+      "priority": "P0"
+    },
+    {
+      "id": 16,
+      "module": "A",
+      "title": "建立 ExamPage.vue — 模擬考模式（限時倒數、全題亂序、考後才顯示解析）",
+      "status": "done",
+      "priority": "P0"
+    },
+    {
+      "id": 17,
+      "module": "A",
+      "title": "建立 ExamResultPage.vue — 得分、各主題正確率、錯題列表、再練一次按鈕",
+      "status": "done",
+      "priority": "P0"
+    },
+    {
+      "id": 18,
+      "module": "A",
+      "title": "建立 WrongQuestionsPage.vue — 錯題列表、標記已複習、一鍵重練",
+      "status": "pending",
+      "priority": "P1"
+    },
+    {
+      "id": 19,
+      "module": "A",
+      "title": "實作難度 + 來源篩選（官方/樣題/AI），整合進 TopicSelectPage 過濾列",
+      "status": "pending",
+      "priority": "P1"
+    },
+    {
+      "id": 20,
+      "module": "A",
+      "title": "實作 localStorage → Supabase 進度遷移（v1 舊進度首次登入時自動搬移）",
+      "status": "pending",
+      "priority": "P1"
+    },
+    {
+      "id": 21,
+      "module": "B",
+      "title": "產出 XLSX template + 欄位說明文件（docs/intern-guide/IMPORT_TEMPLATE.xlsx + README）",
+      "status": "done",
+      "priority": "P0",
+      "note": "含下拉選單驗證（cert_id/source_type/answer/difficulty）+ 填寫範例列"
+    },
+    {
+      "id": 22,
+      "module": "B",
+      "title": "撰寫 AI 提取 Prompt 範本 — 實習生用來從 PDF 快速提取題目至 XLSX 格式",
+      "status": "done",
+      "priority": "P0",
+      "note": "支援兩種 PDF 格式：歷屆考題（答案|題目）和樣題（題號|答案|題目）"
+    },
+    {
+      "id": 23,
+      "module": "B",
+      "title": "建立 BankPage.vue — 題庫管理主頁，從 certifications.json 渲染認證/科目卡片與題數統計",
+      "status": "done",
+      "priority": "P0"
+    },
+    {
+      "id": 24,
+      "module": "B",
+      "title": "建立 BankImportPage.vue — XLSX 拖拉上傳 + 解析預覽表格（含錯誤行標紅）+ 確認匯入",
+      "status": "done",
+      "priority": "P0"
+    },
+    {
+      "id": 25,
+      "module": "B",
+      "title": "實作 useXLSXParser composable — 解析 XLSX、驗證 18 個欄位、收集錯誤行回饋",
+      "status": "done",
+      "priority": "P0"
+    },
+    {
+      "id": 26,
+      "module": "B",
+      "title": "實作 XLSX 批次寫入 Supabase questions 表，以 source_year+source_batch+question_no 偵測重複",
+      "status": "done",
+      "priority": "P0"
+    },
+    {
+      "id": 27,
+      "module": "B",
+      "title": "建立 CertConfigEditorPage.vue — GUI 編輯 certifications.json（新增/修改認證/科目/主題）",
+      "status": "pending",
+      "priority": "P1",
+      "note": "實習生可手動調整科目結構，存檔即生效，不需碰程式碼"
+    },
+    {
+      "id": 28,
+      "module": "B",
+      "title": "建立 BankEditorPage.vue — 題目列表含搜尋/過濾、逐題編輯、刪除操作",
+      "status": "pending",
+      "priority": "P1"
+    },
+    {
+      "id": 29,
+      "module": "B",
+      "title": "實作題庫存取權限控制（public 公開 / private 私有 / org 企業內）",
+      "status": "pending",
+      "priority": "P2"
+    },
+    {
+      "id": 30,
+      "module": "C",
+      "title": "建立 AnalyticsPage.vue — 個人統計：總答題數、整體正確率、最近 7 日趨勢",
+      "status": "pending",
+      "priority": "P1"
+    },
+    {
+      "id": 31,
+      "module": "C",
+      "title": "實作主題正確率長條圖（Chart.js），從 Supabase user_progress 聚合查詢",
+      "status": "pending",
+      "priority": "P1"
+    },
+    {
+      "id": 32,
+      "module": "C",
+      "title": "實作學習活躍度熱力日曆（GitHub 風格，每格 = 當日答題數）",
+      "status": "pending",
+      "priority": "P1"
+    },
+    {
+      "id": 33,
+      "module": "C",
+      "title": "實作弱點主題推薦卡（正確率最低 3 個主題 + 一鍵直接練習）",
+      "status": "pending",
+      "priority": "P1"
+    },
+    {
+      "id": 34,
+      "module": "C",
+      "title": "建立 OrgDashboardPage.vue — 企業管理員：學員列表、各人進度、整體統計",
+      "status": "pending",
+      "priority": "P2"
+    },
+    {
+      "id": 35,
+      "module": "X",
+      "title": "響應式設計全面審查（手機優先 375px，觸控按鈕 44px+，題目/選項排版）",
+      "status": "pending",
+      "priority": "P1"
+    },
+    {
+      "id": 36,
+      "module": "X",
+      "title": "全面補齊 loading states + error boundary + 空狀態 empty state UI",
+      "status": "pending",
+      "priority": "P1"
+    },
+    {
+      "id": 37,
+      "module": "X",
+      "title": "更新 vite.config.js 環境設定 + Cloudflare Pages 部署驗證（v2-quiz-engine 分支）",
+      "status": "pending",
+      "priority": "P1"
+    },
+    {
+      "id": 38,
+      "module": "X",
+      "title": "撰寫 docs/intern-guide/CONTRIBUTING.md — XLSX格式 + AI提取prompt + 匯入流程完整說明",
+      "status": "pending",
+      "priority": "P1"
+    }
+  ]
+}
