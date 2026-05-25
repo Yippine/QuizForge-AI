@@ -65,6 +65,18 @@ const routes = [
     component: () => import('@/features/bank/BankImportPage.vue'),
     meta: { requiresAuth: true, requiresAdmin: true }
   },
+  {
+    path: '/bank/config-editor',
+    name: 'CertConfigEditor',
+    component: () => import('@/features/bank/CertConfigEditorPage.vue'),
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/bank/editor',
+    name: 'BankEditor',
+    component: () => import('@/features/bank/BankEditorPage.vue'),
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
 
   // ── Analytics ────────────────────────────────────────────
   {

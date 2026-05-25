@@ -1,7 +1,7 @@
-# TASK #1 — 初始化 Supabase 專案並設定 .env 環境變數
+# TASK #29 — 實作題庫存取權限控制
 
-**Module**: X — Auth + 基礎建設
-**Priority**: P0
+**Module**: B — Question Bank GUI（XLSX 匯入 + 題庫管理）
+**Priority**: P2
 **Schedule**: v2-mvp
 **Status**: pending
 
@@ -9,58 +9,168 @@
 
 ## What（做什麼）
 
-在 Supabase 建立新專案，取得 API 金鑰，並在本地建立 `.env` 環境變數檔案，讓後續所有 Supabase 相關模組可以透過環境變數取得連線資訊，不寫死在程式碼中。
+為題庫實作細粒度的**存取權限控制**機制，支援三種權限模式：
+
+1. **public** — 所有已登入使用者都可查看和刷題
+2. **private** — 僅建立者和管理員可查看
+3. **org** — 限定組織 (enterprise_id) 內的使用者查看
+
+這使得 QuizForge 可支援：
+- 公開的社群題庫（如官方 iPAS 試題）
+- 企業內部培訓題庫（僅該企業員工可見）
+- 個人私密題庫（僅所有者可見）
 
 ## Why（為什麼）
 
-v2 的核心差異是「有後端」：進度雲端同步、會員登入、CSV 題庫存入資料庫，全部仰賴 Supabase。這是整個 v2 的地基，必須最先完成，其他 35 個任務都依賴它。
+v2 MVP 的核心競爭力之一是**題庫靈活性**。不同組織有不同的題庫需求：
+- **公開題庫** — 用於示範和免費服務
+- **企業題庫** — 用於培訓認證，需要隱私保護
+- **私密題庫** — 用於課程測驗，僅限特定課程參與者
+
+權限控制讓我們支援這些場景，同時降低資料洩露風險。
 
 ## How（怎麼做）
 
-### 1. 建立 Supabase 專案
-- 前往 https://supabase.com → New Project
-- 專案名稱：`quizforge-ai`
-- 資料庫密碼：設定強密碼並記錄
-- Region：選 `Northeast Asia (Tokyo)` 降低台灣延遲
+### 1. 資料庫 Schema 更新
 
-### 2. 取得 API 金鑰
-Supabase Dashboard → Project Settings → API：
-- `Project URL` → `VITE_SUPABASE_URL`
-- `anon public key` → `VITE_SUPABASE_ANON_KEY`
+在 Supabase `questions` 表添加三個欄位：
 
-### 3. 建立本地 .env 檔案
+```sql
+ALTER TABLE questions ADD COLUMN (
+  access_level VARCHAR(10) DEFAULT 'public',  -- 'public' | 'private' | 'org'
+  owner_id UUID,  -- 建立者 ID (users.id)
+  enterprise_id UUID  -- 所屬企業 ID（如果是 org 級別）
+);
 
-```bash
-# .env（根目錄，不納入 git）
-VITE_SUPABASE_URL=https://xxxxxxxxxxxx.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+CREATE INDEX idx_access_level ON questions(access_level);
+CREATE INDEX idx_owner_id ON questions(owner_id);
+CREATE INDEX idx_enterprise_id ON questions(enterprise_id);
 ```
 
-### 4. 確認 .gitignore 包含 .env
+### 2. 查詢邏輯（存取控制）
+
+修改 useBankEditor.js 的 `buildQuery()` 函數：
+
+```javascript
+function buildQuery() {
+  let query = supabase.from('questions').select('*', { count: 'exact' })
+  
+  // ── Permission filter ─────────────────────────────────────
+  const userId = auth.user?.id
+  const enterpriseId = auth.user?.enterprise_id  // 從 auth store 取得
+  
+  query = query.or(
+    `access_level.eq.public,` +
+    `and(access_level.eq.private,owner_id.eq.${userId}),` +
+    `and(access_level.eq.org,enterprise_id.eq.${enterpriseId})`
+  )
+  
+  // ── Other filters ─────────────────────────────────────────
+  // ... (existing filters: subject_id, topic_id, etc.)
+}
+```
+
+### 3. 編輯時的權限控制
+
+修改 BankEditorPage.vue：
+
+**編輯權限**：
+- 僅**建立者和管理員**可編輯題目
+- 編輯模態框添加「存取權限」下拉菜單
+- 管理員可修改題目的 `access_level`、`owner_id`、`enterprise_id`
+- 普通使用者只能編輯自己建立的題目
+
+**刪除權限**：
+- 僅**建立者和管理員**可刪除題目
+
+### 4. 匯入時的權限分配
+
+修改 useBankImport.js：
+
+```javascript
+async function importRows(rows) {
+  const userId = auth.user?.id
+  const isAdmin = auth.user?.role === 'admin'
+  
+  // Admin 匯入 → questions 預設為 public
+  // 普通使用者匯入 → 預設為 private（僅自己可見）
+  const accessLevel = isAdmin ? 'public' : 'private'
+  
+  const enrichedRows = rows.map(row => ({
+    ...row,
+    access_level: accessLevel,
+    owner_id: userId,
+    enterprise_id: auth.user?.enterprise_id
+  }))
+  
+  // ... insert enrichedRows
+}
+```
+
+### 5. 表格顯示
+
+在 BankEditorPage 的表格中添加「存取權限」列：
 
 ```
-# .gitignore 確認有這行
-.env
-.env.local
-.env.*.local
+| # | 科目 | 主題 | 難度 | 來源 | 存取 | 題目預覽 | 操作 |
+|---|------|------|------|------|------|---------|------|
+| 1 | AI基礎 | AI定義 | 中 | official | public | AI的定義... | ✎ ✕ |
 ```
 
-### 5. 建立 .env.example（給其他開發者參考）
+權限圖示：
+- 🔓 public — 所有使用者
+- 🔒 private — 僅所有者
+- 🏢 org — 企業內部
 
-```bash
-# .env.example（納入 git）
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-key-here
+### 6. 編輯模態框權限欄位
+
 ```
+存取權限: [public v]  （僅管理員可修改）
+  - public 所有已登入使用者可查看
+  - private 僅所有者和管理員可查看
+  - org 限定企業內使用者
+  
+所有者: [user-xxx]  （唯讀）
+所屬企業: [org-yyy]  （如果適用，管理員可修改）
+```
+
+---
 
 ## 完成條件
 
-- [ ] Supabase 專案建立完成，Dashboard 可正常登入
-- [ ] 根目錄有 `.env` 且包含 `VITE_SUPABASE_URL` 與 `VITE_SUPABASE_ANON_KEY`
-- [ ] `.gitignore` 確認 `.env` 不會被 commit
-- [ ] 根目錄有 `.env.example` 作為範本
-- [ ] `npm run dev` 可正常啟動（不報環境變數錯誤）
+- [ ] Supabase `questions` 表添加 `access_level`, `owner_id`, `enterprise_id` 欄位
+- [ ] 資料庫索引建立完成
+- [ ] useBankEditor.js 的查詢邏輯整合權限篩選
+- [ ] 新增 useAuth 或擴展 authStore，提供 `userId` 和 `enterpriseId`
+- [ ] BankEditorPage 表格显示「存取權限」列
+- [ ] 編輯模態框显示「存取權限」、「所有者」、「所屬企業」欄位
+- [ ] 編輯權限控制：非建立者無法編輯（按鈕 disabled 或不顯示）
+- [ ] 刪除權限控制：非建立者無法刪除（確認對話提示無權限）
+- [ ] useBankImport.js 匯入時自動設置 `access_level` 和 `owner_id`
+- [ ] 刷題頁面 (QuizPage) 也整合權限篩選（僅顯示有權限的題目）
+- [ ] 統計頁面 (AnalyticsPage) 只統計使用者有權限查看的題目
+- [ ] 單位測試涵蓋權限檢驗邏輯
+- [ ] 權限切換後，題目列表自動更新
+
+---
+
+## 實施建議
+
+由於 MVP 階段很多組織功能還未完成，可採取**漸進式實施**：
+
+**Phase 1（本 Task）**：
+- 添加欄位和基本查詢邏輯
+- 實作 public / private 權限
+- admin 可強制查看所有題目
+
+**Phase 2（後續迭代）**：
+- 完成 org 級別權限
+- 從 authStore 讀取 enterprise_id
+- 企業管理面板管理權限
+
+---
 
 ## 下一步
 
-完成後推進至 Task #2：安裝 `@supabase/supabase-js` + `xlsx` 套件，建立 `src/lib/supabase.js` 連線模組。
+完成後推進至 Task #30：建立 AnalyticsPage.vue — 個人統計頁面。
+

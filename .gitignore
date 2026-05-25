@@ -30,11 +30,55 @@ dist-ssr
 *.sln
 *.sw?
 
-# Formula-Contract work files
-.claude/
-!.claude/skills/
-.ai-core/tasks
-
 # Knowledge-base: Exclude large lecture materials
 knowledge-base/ipas/1 handout/
 knowledge-base/ipas/2 mermaid/
+
+# Question Bank: Official question sets & user uploads
+# Track official question sets (named with L21, L23, etc.) but ignore user uploads
+data/**/[0-9]*.xlsx
+!data/**/*-L[0-9][0-9]-*.xlsx
+
+# --- BEGIN AI-CORE MANAGED (gitignore-sync) ---
+# ============================================================
+# AI Core .gitignore 模板
+# 維護：.claude/skills/gitignore-sync/references/gitignore.template
+# ============================================================
+
+# ── Claude Code：保留設定與技能，忽略執行狀態 ──────────────
+.claude/*
+
+# ── AI Core：忽略任務執行與對話狀態 ────────────────────────
+.ai-core/tasks/
+.ai-core/sessions/
+
+# ── AI Core Entity Cache ────────────────────────────────────
+.ai-core/projects/*/.cache/
+.ai-core/repos/*/.cache/
+
+# ── Obsidian App Config ─────────────────────────────────────
+.obsidian/
+
+# ── Resources：忽略媒體，保留 HTML Canvas ───────────────────
+**/resources/*
+!**/resources/*.html
+# 未來擴增格式加在此處（e.g. !**/resources/*.canvas）
+
+# ── External References（根目錄錨定）───────────────────────
+/references/
+
+# ── 圖片 / 影片 ─────────────────────────────────────────────
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.mp4
+*.webm
+*.mov
+
+# ── 二進位文件格式 ──────────────────────────────────────────
+*.xmind
+
+# ── 暫存檔 ──────────────────────────────────────────────────
+.tmp_xmind*/
+# --- END AI-CORE MANAGED ---

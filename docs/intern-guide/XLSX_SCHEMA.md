@@ -28,7 +28,7 @@ Supabase 題庫（自動寫入）
 | 2 | `subject_id` | 科目代碼 | ✅ | L11 / L12 / L21 / L22 / L23 |
 | 3 | `topic_id` | 主題代碼 | ✅ | 見下方「主題代碼表」 |
 | 4 | `topic_name` | 主題名稱 | ⬜ | 可留空，系統自動對應；填寫可供自行核對 |
-| 5 | `source_type` | 來源類型 | ✅ | `official` / `sample` / `ai` |
+| 5 | `source_type` | 來源類型 | ✅ | `sample` / `exercise` / `ai` / `past` |
 | 6 | `source_year` | 年度（民國年） | ⬜ | 整數，如 `114`；不確定可留空 |
 | 7 | `source_batch` | 批次 | ⬜ | 如 `第一梯次`、`樣題`；自由填寫 |
 | 8 | `question_no` | 題號 | ✅ | 字串，如 `001`、`1`；同批次不可重複 |
@@ -58,9 +58,10 @@ Supabase 題庫（自動寫入）
 
 | 值 | 說明 | 對應 PDF 類型 |
 |----|------|--------------|
-| `official` | 官方歷屆考題 | 歷屆考題目錄下的 PDF |
-| `sample` | 官方樣題 | 樣題目錄下的 PDF |
-| `ai` | AI 生成題目 | 人工智慧輔助生成，非官方 |
+| `sample` | 官方樣題（官方發布，了解題型用，非正式考題） | 樣題目錄下的 PDF |
+| `exercise` | 講義習題（講義中輔助理解的練習，非考題） | 講義 PDF 中的練習題 |
+| `ai` | AI 試題（AI 生成，快速適應考場題目變化） | 非官方，程式生成 |
+| `past` | 歷屆試題（歷屆正式考場題目） | 歷屆考題目錄下的 PDF |
 
 ### subject_id + topic_id（科目與主題代碼）
 
@@ -137,7 +138,7 @@ cert_id:      ipas-ai-planning
 subject_id:   L21
 topic_id:     L21101
 topic_name:   自然語言處理技術與應用
-source_type:  official
+source_type:  past
 source_year:  114
 source_batch: 第二梯次
 question_no:  001
@@ -153,7 +154,7 @@ image_note:   （留空）
 difficulty:   medium
 ```
 
-### 範例二：樣題（含圖片）
+### 範例二：官方樣題（含圖片）
 
 ```
 cert_id:      ipas-ai-planning
@@ -162,7 +163,7 @@ topic_id:     L23202
 topic_name:   深度學習基礎與網路架構
 source_type:  sample
 source_year:  114
-source_batch: 樣題
+source_batch: 官方樣題
 question_no:  015
 question:     如圖所示的神經網路架構，該網路包含幾個隱藏層？
 option_a:     1層
@@ -176,7 +177,7 @@ image_note:   請參照原PDF第12頁圖示
 difficulty:   easy
 ```
 
-### 範例三：AI生成題目
+### 範例三：AI 試題
 
 ```
 cert_id:      ipas-ai-planning
@@ -208,7 +209,7 @@ difficulty:   easy
 | answer 填 `b` 或 `(B)` | 只能填 `A` `B` `C` `D` 大寫單字元 |
 | has_image 填 `True` 或 `是` | 只能填 `FALSE` 或 `TRUE`（全大寫）|
 | difficulty 填 `簡單` | 只能填 `easy` `medium` `hard` |
-| source_type 填 `歷屆` | 只能填 `official` `sample` `ai` |
+| source_type 填 `歷屆` 或 `official` | 只能填 `sample` `exercise` `ai` `past` |
 | 同一批次重複的 question_no | 同 cert/subject/year/batch 內 question_no 不可重複 |
 | question 欄位含換行符 | 換行改用空格，保持單行 |
 

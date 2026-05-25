@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS public.questions (
   topic_id      TEXT        NOT NULL,
   topic_name    TEXT,
   source_type   TEXT        NOT NULL
-                            CHECK (source_type IN ('official', 'sample', 'ai')),
+                            CHECK (source_type IN ('sample', 'exercise', 'ai', 'past')),
   source_year   INT,
   source_batch  TEXT,
   question_no   TEXT        NOT NULL,
@@ -67,7 +67,8 @@ CREATE TABLE IF NOT EXISTS public.questions (
   created_at    TIMESTAMPTZ DEFAULT NOW(),
 
   -- Dedup key: same question cannot be imported twice
-  UNIQUE (cert_id, subject_id, source_year, source_batch, question_no)
+  -- NOTE: replaced by expression index in migration 005 (NULL-safe + topic_id)
+  UNIQUE (cert_id, subject_id, source_type, topic_id, source_year, source_batch, question_no)
 );
 
 CREATE INDEX IF NOT EXISTS idx_questions_cert_subject

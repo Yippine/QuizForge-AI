@@ -44,9 +44,17 @@ function certTotal(cert) {
         <h1 class="page-title">題庫管理</h1>
         <p class="page-subtitle">管理認證考試題目，僅管理員可操作</p>
       </div>
-      <button class="btn-import" @click="router.push({ name: 'BankImport' })">
-        ＋ 匯入 XLSX
-      </button>
+      <div class="header-actions">
+        <button class="btn-secondary" @click="router.push({ name: 'CertConfigEditor' })">
+          ⚙️ 編輯結構
+        </button>
+        <button class="btn-secondary" @click="router.push({ name: 'BankEditor' })">
+          ✎ 編輯題目
+        </button>
+        <button class="btn-import" @click="router.push({ name: 'BankImport' })">
+          ＋ 匯入 XLSX
+        </button>
+      </div>
     </div>
 
     <div v-if="loading" class="loading">載入統計中...</div>
@@ -119,6 +127,12 @@ function certTotal(cert) {
   margin-bottom: 1.75rem;
 }
 
+.header-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
 .page-title {
   font-size: 1.4rem;
   font-weight: 700;
@@ -131,6 +145,21 @@ function certTotal(cert) {
   color: #94a3b8;
   margin: 0;
 }
+
+.btn-secondary {
+  padding: 0.55rem 1.1rem;
+  background: #f1f5f9;
+  color: #475569;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  min-height: 40px;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.btn-secondary:hover { background: #e2e8f0; }
 
 .btn-import {
   padding: 0.55rem 1.1rem;

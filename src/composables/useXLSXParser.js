@@ -31,7 +31,7 @@ const ALL_FIELDS = [
 const ENUM = {
   cert_id:      ['ipas-ai-planning', 'ipas-ai-planning-basic'],
   subject_id:   ['L11', 'L12', 'L21', 'L22', 'L23'],
-  source_type:  ['official', 'sample', 'ai'],
+  source_type:  ['sample', 'exercise', 'ai', 'past'],
   answer:       ['A', 'B', 'C', 'D'],
   has_image:    ['FALSE', 'TRUE'],
   difficulty:   ['easy', 'medium', 'hard', ''],  // '' = blank is OK

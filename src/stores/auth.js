@@ -10,12 +10,14 @@ export const useAuthStore = defineStore('auth', () => {
 
   // ── Getters ────────────────────────────────────────────
   const isLoggedIn  = computed(() => !!user.value)
+  const userId      = computed(() => user.value?.id ?? null)
   const role        = computed(() => profile.value?.role ?? 'student')
   const isAdmin     = computed(() => role.value === 'admin')
   const displayName = computed(
     () => profile.value?.display_name ?? user.value?.email ?? ''
   )
   const avatarUrl = computed(() => profile.value?.avatar_url ?? null)
+  const enterpriseId = computed(() => profile.value?.enterprise_id ?? null)
 
   // ── Helpers ────────────────────────────────────────────
   // Fire-and-forget only — never awaited in the auth event path.
@@ -110,7 +112,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   return {
     user, profile, initialized,
-    isLoggedIn, role, isAdmin, displayName, avatarUrl,
+    isLoggedIn, userId, role, isAdmin, displayName, avatarUrl, enterpriseId,
     init, signInWithGoogle, signOut
   }
 })

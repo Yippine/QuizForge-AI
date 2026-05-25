@@ -140,7 +140,7 @@ const pageTitle = computed(() => {
             {{ { easy: '易', medium: '中', hard: '難' }[current.difficulty] }}
           </span>
           <span v-if="current.source_type" class="q-source">
-            {{ { official: '官方', sample: '樣題', ai: 'AI' }[current.source_type] }}
+            {{ { sample: '樣題', exercise: '習題', ai: 'AI', past: '歷屆' }[current.source_type] }}
           </span>
         </div>
 

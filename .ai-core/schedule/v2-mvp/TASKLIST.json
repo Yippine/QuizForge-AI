@@ -1,9 +1,9 @@
 {
   "period": "v2-mvp",
   "created": "2026-03-27T00:00:00.000Z",
-  "updated": "2026-03-27T06:00:00.000Z",
+  "updated": "2026-04-07T00:00:00.000Z",
   "status": "active",
-  "current_index": 27,
+  "current_index": 30,
   "total_count": 38,
   "description": "QuizForge-AI v2 MVP — 刷題 + 匯入 + 統計 + Auth，MVP 優先快速復現，之後迭代",
 

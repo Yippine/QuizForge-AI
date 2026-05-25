@@ -1,0 +1,29 @@
+{
+  "period": "ipas-quizforge-ai",
+  "title": "iPAS 題庫 QuizForge AI 應用",
+  "status": "active",
+  "current_index": 1,
+  "total_count": 3,
+  "created": "2026-03-26T00:00:00+08:00",
+  "modified": "2026-05-25T00:00:00+08:00",
+  "items": [
+    {
+      "index": 0,
+      "description": "iPAS 初級 AI 應用規劃師題庫生成（750 題，科目一 L11×375 + 科目二 L12×375，含難度梯度 T1:T2:T3=3:4:3）",
+      "status": "completed",
+      "linked_tasks": ["ipas-initial-quiz-generation"]
+    },
+    {
+      "index": 1,
+      "description": "將 750 題匯入 QuizForge 系統（XLSX 格式轉換 + BankImportPage 匯入 + 去重驗證 + Supabase 寫入確認）",
+      "status": "pending",
+      "linked_tasks": []
+    },
+    {
+      "index": 2,
+      "description": "iPAS 中高級題庫研究與生成（視副總備考進度啟動；中級題庫對初級助益評估）",
+      "status": "pending",
+      "linked_tasks": []
+    }
+  ]
+}

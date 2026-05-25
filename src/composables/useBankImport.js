@@ -1,5 +1,5 @@
 /**
- * useBankImport — Task #26
+ * useBankImport — Task #26 / Task #29
  * Batch-write parsed XLSX rows to Supabase `questions` table.
  *
  * Dedup strategy: client-side pre-filter.
@@ -8,24 +8,35 @@
  * and works correctly with expression-based indexes that PostgREST can't
  * reference by name in ON CONFLICT clauses.
  *
- * Dedup key: cert_id | subject_id | source_year | source_batch | question_no
- * (matches migration 002 COALESCE logic)
+ * Dedup key: cert_id | subject_id | source_type | topic_id | source_year | source_batch | question_no
+ * (matches migration 005 COALESCE logic)
+ *
+ * Task #29 增強：權限設置
+ * - Admin 匯入 → questions.access_level = 'public'
+ * - 普通使用者匯入 → questions.access_level = 'private'
+ * - 所有匯入的題目設置 owner_id = 當前使用者
  */
 
 import { ref } from 'vue'
 import { supabase } from '@/lib/supabase'
+import { useAuthStore } from '@/stores/auth'
 
 const BATCH_SIZE = 100
 
-/** Build a dedup key matching migration 002's COALESCE expression index */
-function makeKey(cert_id, subject_id, source_year, source_batch, question_no) {
+/** Build a dedup key matching migration 005's COALESCE expression index */
+function makeKey(cert_id, subject_id, source_type, topic_id, source_year, source_batch, question_no) {
   const year  = source_year  != null ? String(source_year)  : '0'
   const batch = source_batch != null ? String(source_batch) : ''
-  return `${cert_id}|${subject_id}|${year}|${batch}|${question_no}`
+  return `${cert_id}|${subject_id}|${source_type}|${topic_id}|${year}|${batch}|${question_no}`
 }
 
-/** Normalize a parsed XLSX row to the Supabase questions schema */
-function toDbRow(row) {
+/**
+ * 標準化已解析的 XLSX 列到 Supabase questions schema
+ * @param {Object} row — 從 useXLSXParser 得到的行
+ * @param {String} userId — 當前使用者 ID
+ * @param {Boolean} isAdmin — 是否為管理員
+ */
+function toDbRow(row, userId, isAdmin) {
   return {
     cert_id:      row.cert_id,
     subject_id:   row.subject_id,
@@ -45,6 +56,10 @@ function toDbRow(row) {
     has_image:    row.has_image === 'TRUE',
     image_note:   row.image_note     || null,
     difficulty:   row.difficulty     || null,
+    // ── 權限欄位 ──────────────────────────────────────────────
+    access_level: isAdmin ? 'public' : 'private',  // Admin 匯入 = public，普通使用者 = private
+    owner_id:     userId,                           // 設置匯入者為所有者
+    enterprise_id: null,                            // MVP: 先不設置企業 ID
   }
 }
 
@@ -56,11 +71,13 @@ export function useBankImport() {
   const errorMsg  = ref(null)
 
   /**
-   * Import validated rows into Supabase, skipping duplicates.
-   * @param {Array} validRows — from useXLSXParser().parseFile()
+   * 匯入驗證過的列到 Supabase，跳過重複項目
+   * @param {Array} validRows — 來自 useXLSXParser().parseFile()
    * @returns {Promise<{ imported: number, skipped: number }>}
    */
   async function importRows(validRows) {
+    const auth = useAuthStore()
+
     importing.value = true
     progress.value  = 0
     imported.value  = 0
@@ -71,23 +88,24 @@ export function useBankImport() {
       // ── Step 1: Load existing dedup keys ──────────────────────────────
       const { data: existing, error: fetchErr } = await supabase
         .from('questions')
-        .select('cert_id, subject_id, source_year, source_batch, question_no')
+        .select('cert_id, subject_id, source_type, topic_id, source_year, source_batch, question_no')
 
       if (fetchErr) throw fetchErr
 
       const existingKeys = new Set()
       for (const row of (existing ?? [])) {
         existingKeys.add(
-          makeKey(row.cert_id, row.subject_id, row.source_year, row.source_batch, row.question_no)
+          makeKey(row.cert_id, row.subject_id, row.source_type, row.topic_id, row.source_year, row.source_batch, row.question_no)
         )
       }
 
       // ── Step 2: Filter to only new rows ───────────────────────────────
       const newRows = []
       for (const row of validRows) {
-        const dbRow = toDbRow(row)
+        // Task #29: 傳遞 userId 和 isAdmin 來設置權限欄位
+        const dbRow = toDbRow(row, auth.userId, auth.isAdmin)
         const key   = makeKey(
-          dbRow.cert_id, dbRow.subject_id,
+          dbRow.cert_id, dbRow.subject_id, dbRow.source_type, dbRow.topic_id,
           dbRow.source_year, dbRow.source_batch,
           dbRow.question_no,
         )
