@@ -1,3 +1,11 @@
+---
+created: 2026-05-28
+modified: 2026-05-28
+tags: ["quizforge", "ai-prompt"]
+source_system: imported
+note_type: literature
+---
+
 # AI 提取 Prompt：歷屆考題
 
 > **使用方式：**

@@ -1,3 +1,11 @@
+---
+created: 2026-05-28
+modified: 2026-05-28
+tags: ["quizforge", "ai-prompt"]
+source_system: imported
+note_type: literature
+---
+
 # AI 提取 Prompt：樣題
 
 > **使用方式：與歷屆考題相同，但 source_type 改為 `sample`，且樣題通常含有詳細解析。**

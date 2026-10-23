@@ -9,7 +9,6 @@ modified: 2026-05-25
 
 | 緊急度 | Name | 描述 | 類別 | 狀態 | 被阻塞於 | 並行 | 專案 | 備註 |
 |--------|------|------|------|------|----------|------|------|------|
-| 🟡 中 | frappe-migration-assessment | QuizForge-AI 轉型 Frappe Custom App 評估 | 技術評估 | 待推進 | — | — | — | |
 | 🟡 中 | fix-xlsx-import-dedup | XLSX 匯入去重修復 | 技術修復 | 待推進 | — | — | — | |
 
 ## Schedules

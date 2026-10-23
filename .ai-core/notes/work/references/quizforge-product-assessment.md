@@ -1,3 +1,11 @@
+---
+created: 2026-05-28
+modified: 2026-05-28
+tags: ["quizforge", "product", "analysis"]
+source_system: imported
+note_type: literature
+---
+
 # QuizForge-AI 深度評估報告
 
 ## 一、專案規劃與實作現況

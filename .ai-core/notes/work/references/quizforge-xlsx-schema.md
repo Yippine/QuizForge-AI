@@ -1,3 +1,11 @@
+---
+created: 2026-05-28
+modified: 2026-05-28
+tags: ["quizforge", "schema", "xlsx"]
+source_system: imported
+note_type: literature
+---
+
 # QuizForge-AI · XLSX 匯入規格（正式版）
 
 > **實習生請讀這份文件。** 本文件定義了所有題目匯入的欄位標準、有效值與範例。
