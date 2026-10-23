@@ -1,64 +1,33 @@
-import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
-import tailwindcss from "@tailwindcss/vite";
-import fs from "fs";
-import path from "path";
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import tailwindcss from '@tailwindcss/vite'
+import { fileURLToPath, URL } from 'node:url'
 
-// Plugin to selectively copy knowledge-base files (exclude handout and mermaid)
-function selectiveKnowledgeBaseCopy() {
-  return {
-    name: "selective-knowledge-base-copy",
-    writeBundle(options, bundle) {
-      const outDir = options.dir || "dist";
-      const kbSource = path.resolve(__dirname, "knowledge-base");
-      const kbDest = path.resolve(outDir, "knowledge-base");
-
-      // Remove the auto-copied knowledge-base directory
-      if (fs.existsSync(kbDest)) {
-        fs.rmSync(kbDest, { recursive: true, force: true });
-      }
-
-      // Create knowledge-base/ipas structure
-      fs.mkdirSync(path.join(kbDest, "ipas"), { recursive: true });
-
-      // Copy ai-planning directory with questions and learning resources
-      const aiPlanningSource = path.join(kbSource, "ipas", "ai-planning");
-      const aiPlanningDest = path.join(kbDest, "ipas", "ai-planning");
-
-      if (fs.existsSync(aiPlanningSource)) {
-        fs.cpSync(aiPlanningSource, aiPlanningDest, { recursive: true });
-      }
-
-      console.log(
-        "✅ Copied knowledge-base/ipas/ai-planning to dist"
-      );
-    },
-  };
-}
-
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [
     vue({ features: { customElement: false } }),
     tailwindcss(),
-    selectiveKnowledgeBaseCopy(),
   ],
+
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url))
+    }
+  },
+
   optimizeDeps: {
-    esbuildOptions: {
-      charset: "utf8",
-    },
+    esbuildOptions: { charset: 'utf8' }
   },
+
   build: {
-    charset: "utf8",
+    charset: 'utf8'
   },
+
   server: {
     host: true,
-    port: 3002,
+    port: 3003,
     open: true,
-    allowedHosts: [".trycloudflare.com", "ipas.leopilot.com"],
-    hmr: {
-      protocol: "ws",
-      clientPort: 3002,
-    },
-  },
-});
+    allowedHosts: ['.trycloudflare.com', 'ipas.leopilot.com'],
+    hmr: { protocol: 'ws', clientPort: 3003 }
+  }
+})
